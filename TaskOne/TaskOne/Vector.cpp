@@ -9,7 +9,7 @@
 
 namespace mat_vec {
 
-	mat_vec::Vector mat_vec::operator*(double k, const Vector& v)
+	mat_vec::Vector mat_vec::operator*(double k, const mat_vec::Vector& v)
 	{
 		mat_vec::Vector new_vec(v.size());
 		for (int i = 0; i < v.size(); i++)
@@ -24,12 +24,12 @@ namespace mat_vec {
 		std::fill_n(this->m_data, size, value);
 	}
 
-	mat_vec::Vector::Vector(const Vector& src) : m_data(new double[src.m_size]), m_size(src.m_size)
+	mat_vec::Vector::Vector(const mat_vec::Vector& src) : m_data(new double[src.m_size]), m_size(src.m_size)
 	{
 		std::copy(src.m_data, src.m_data + src.m_size, this->m_data);
 	}
 
-	mat_vec::Vector& mat_vec::Vector::operator=(const Vector& rhs)
+	mat_vec::Vector& mat_vec::Vector::operator=(const mat_vec::Vector& rhs)
 	{
 		mat_vec::Vector new_vec(rhs.m_size);
 		std::copy(rhs.m_data, rhs.m_data + rhs.m_size, new_vec.m_data);
@@ -93,7 +93,7 @@ namespace mat_vec {
 			this->m_data[i] = this->m_data[i] / v_len;
 	}
 
-	mat_vec::Vector mat_vec::Vector::operator+(const Vector& rhs) const
+	mat_vec::Vector mat_vec::Vector::operator+(const mat_vec::Vector& rhs) const
 	{
 		if (this->m_size != rhs.m_size)
 			throw std::runtime_error("RE");
@@ -107,7 +107,7 @@ namespace mat_vec {
 		return new_vec;
 	}
 
-	mat_vec::Vector& mat_vec::Vector::operator+=(const Vector& rhs)
+	mat_vec::Vector& mat_vec::Vector::operator+=(const mat_vec::Vector& rhs)
 	{
 		if (this->m_size != rhs.m_size)
 			throw std::runtime_error("RE");
@@ -121,7 +121,7 @@ namespace mat_vec {
 		return new_vec;
 	}
 
-	mat_vec::Vector mat_vec::Vector::operator-(const Vector& rhs) const
+	mat_vec::Vector mat_vec::Vector::operator-(const mat_vec::Vector& rhs) const
 	{
 		if (this->m_size != rhs.m_size)
 			throw std::runtime_error("RE");
@@ -135,7 +135,7 @@ namespace mat_vec {
 		return new_vec;
 	}
 
-	mat_vec::Vector& mat_vec::Vector::operator-=(const Vector& rhs)
+	mat_vec::Vector& mat_vec::Vector::operator-=(const mat_vec::Vector& rhs)
 	{
 		if (this->m_size != rhs.m_size)
 			throw std::runtime_error("RE");
@@ -149,7 +149,7 @@ namespace mat_vec {
 		return new_vec;
 	}
 
-	mat_vec::Vector mat_vec::Vector::operator^(const Vector& rhs) const
+	mat_vec::Vector mat_vec::Vector::operator^(const mat_vec::Vector& rhs) const
 	{
 		if (this->m_size != rhs.m_size)
 			throw std::runtime_error("RE");
@@ -163,7 +163,7 @@ namespace mat_vec {
 		return new_vec;
 	}
 
-	mat_vec::Vector& mat_vec::Vector::operator^=(const Vector& rhs)
+	mat_vec::Vector& mat_vec::Vector::operator^=(const mat_vec::Vector& rhs)
 	{
 		if (this->m_size != rhs.m_size)
 			throw std::runtime_error("RE");
@@ -177,7 +177,7 @@ namespace mat_vec {
 		return new_vec;
 	}
 
-	double mat_vec::Vector::operator*(const Vector& rhs) const
+	double mat_vec::Vector::operator*(const mat_vec::Vector& rhs) const
 	{
 		if (this->m_size != rhs.m_size)
 			throw std::runtime_error("RE");
@@ -235,7 +235,7 @@ namespace mat_vec {
 		return new_vec;
 	}
 
-	/*mat_vec::Vector mat_vec::Vector::operator*(const Matrix& mat) const
+	mat_vec::Vector mat_vec::Vector::operator*(const mat_vec::Matrix& mat) const
 	{
 		if (this->m_size != mat.shape().first)
 		{
@@ -254,7 +254,7 @@ namespace mat_vec {
 		return new_vec;
 	}
 
-	mat_vec::Vector& mat_vec::Vector::operator*=(const Matrix& mat)
+	mat_vec::Vector& mat_vec::Vector::operator*=(const mat_vec::Matrix& mat)
 	{
 		if (this->m_size != mat.shape().first)
 		{
@@ -271,9 +271,9 @@ namespace mat_vec {
 		}
 
 		return new_vec;
-	}*/
+	}
 
-	bool mat_vec::Vector::operator==(const Vector& rhs) const
+	bool mat_vec::Vector::operator==(const mat_vec::Vector& rhs) const
 	{
 		if (this->m_size != rhs.m_size)
 			throw std::runtime_error("RE");
@@ -291,7 +291,7 @@ namespace mat_vec {
 		return is_equal;
 	}
 
-	bool mat_vec::Vector::operator!=(const Vector& rhs) const
+	bool mat_vec::Vector::operator!=(const mat_vec::Vector& rhs) const
 	{
 		if (this->m_size != rhs.m_size)
 			throw std::runtime_error("RE");
