@@ -112,6 +112,13 @@ namespace mat_vec
 		return this->m_data[row][col];
 	}
 
+	void mat_vec::Matrix::set(size_t row, size_t col, double val)
+	{
+		if (row >= this->m_rows || col >= this->m_cols)
+			throw std::runtime_error("RE");
+		this->m_data[row][col] = val;
+	}
+
 	mat_vec::Matrix mat_vec::Matrix::operator+(const mat_vec::Matrix& rhs) const
 	{
 		if (this->m_rows != rhs.m_rows || this->m_cols != rhs.m_cols)
@@ -216,7 +223,6 @@ namespace mat_vec
 				}
 			}
 		}
-
 		return new_matr;
 	}
 
@@ -307,9 +313,36 @@ namespace mat_vec
 		this->m_cols = newMatr.m_cols;
 	}
 
-	//
+	double mat_vec::Matrix::det()
+	{
+		if (this->m_rows != this->m_cols)
+			throw std::runtime_error("RE");
 
-	//
+		return deter(this->m_data, this->m_rows);
+	}
+
+	mat_vec::Matrix mat_vec::Matrix::inv()
+	{
+		if (this->m_rows != this->m_cols)
+			throw std::runtime_error("RE");
+		
+		double de = deter(this->m_data, this->m_rows);
+		if (de == 0)
+			throw std::runtime_error("Inverse doesn't exist");
+
+		mat_vec::Matrix inver(this->m_rows);
+
+		for (int i = 0; i < this->m_rows; i++)
+		{
+			for (int j = 0; j < this->m_rows; j++)
+			{
+				int sign;
+				(i + j) % 2 == 1 ? sign = -1 : sign = 1;
+				inver.m_data[j][i] = sign * deter(cofactor( i, j, this->m_data, this->m_rows), this->m_rows - 1) / de;
+			}
+		}
+		return inver;
+	}
 
 	mat_vec::Vector mat_vec::Matrix::operator*(const mat_vec::Vector& vec) const
 	{
@@ -362,5 +395,44 @@ namespace mat_vec
 		}
 
 		return !is_equal;
+	}
+
+	double** mat_vec::Matrix::cofactor(int i_, int j_, double** matr, int n)
+	{
+		double** buf = new double* [n];
+		int row = 0, col = 0;
+		for (int i = 0; i < n; i++)
+		{
+			buf[i] = new double[n];
+			if (i == i_)
+				continue;
+			for (int j = 0; j < n; j++)
+			{
+				if (j == j_)
+					continue;
+				buf[row][col++] = matr[i][j];
+				if (col == n - 1)
+				{
+					row++;
+					col = 0;
+				}
+			}
+		}
+		return buf;
+	}
+	
+	double mat_vec::Matrix::deter(double** matr, int n)
+	{
+		int de = 0;
+		if (n == 1)
+			return matr[0][0];
+		if (n == 2)
+			return matr[0][0] * matr[1][1] - matr[0][1] * matr[1][0];
+
+		for (int el = 0; el < n; el++)
+		{
+			de += matr[0][el] * pow(-1, el) * deter(cofactor(0, el, matr, n), n - 1);
+		}
+		return de;
 	}
 }

@@ -39,6 +39,8 @@ namespace mat_vec {
 		// Возвращает элемент на позиции [row, col]
 		double get(size_t row, size_t col) const;
 
+		void set(size_t row, size_t col, double val);
+
 		// Поэлементное сложение
 		Matrix operator+(const Matrix& rhs) const;
 		Matrix& operator+=(const Matrix& rhs);
@@ -66,10 +68,10 @@ namespace mat_vec {
 		void transpose();
 
 		// Определитель
-		double det() const;
+		double det();
 
 		// Обратная матрица
-		Matrix inv() const;
+		Matrix inv();
 
 		// УМножение матрицы на вектор
 		Vector operator*(const Vector& vec) const;
@@ -82,6 +84,9 @@ namespace mat_vec {
 		double** m_data;
 		rsize_t m_rows;
 		rsize_t m_cols;
+
+		double deter(double** matr, int n);
+		double** cofactor(int i_, int j_, double** matr, int n);
 	};
 
 } // namespace mat_vec
