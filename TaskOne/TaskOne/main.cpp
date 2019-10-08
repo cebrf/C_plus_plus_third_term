@@ -61,7 +61,7 @@ TEST_CASE("normalized")
 	REQUIRE(v[1] == (3 / sqrt(14)));
 }
 
-TEST_CASE("operator+")
+TEST_CASE("operator+ & +=")
 {
 	mat_vec::Vector v1(4, 6.7);
 	mat_vec::Vector v2(4, 0.3);
@@ -71,6 +71,139 @@ TEST_CASE("operator+")
 	v1 += v2;      
 	REQUIRE(v1[0] == 7.3);
 }
+
+TEST_CASE("operator- & -=")
+{
+	mat_vec::Vector v1(4, 8.6);
+	mat_vec::Vector v2(4, 1.3);
+
+	v1 = v1 - v2;
+	REQUIRE(v1[3] == 7.3);
+	v1 -= v2;
+	REQUIRE(v1[0] == 6.0);
+}
+
+TEST_CASE("operator^")
+{
+	mat_vec::Vector v1(4);
+	mat_vec::Vector v2(4);
+	
+	v1[0] = -1.9;
+	v1[1] = 2.3;
+	v1[2] = -4.5;
+	v1[3] = 0;
+	v2[0] = 0.1;
+	v2[1] = 8;
+	v2[2] = 0.76;
+	v2[3] = -1;
+
+	mat_vec::Vector v3 = v1 ^ v2;
+	v1 ^= v2;
+
+	REQUIRE(v1[0] == v3[0]);
+	REQUIRE(v1[2] == v3[2]);
+}
+
+TEST_CASE("a*b")
+{
+	mat_vec::Vector v1(4);
+	mat_vec::Vector v2(4);
+
+	v1[0] = -19;
+	v1[1] = 23;
+	v1[2] = -45;
+	v1[3] = 3;
+
+	v2[0] = 13;
+	v2[1] = 8;
+	v2[2] = 6;
+	v2[3] = -0.1;
+
+	double res = v1 * v2;
+
+	REQUIRE(res == -333.3);
+}
+
+TEST_CASE("vectorv * double k && double k * vector")
+{
+	mat_vec::Vector v2(4);
+	v2[0] = 13;
+	v2[1] = 8;
+	v2[2] = 6;
+	v2[3] = -0.1;
+	double k = 38.02;
+
+	mat_vec::Vector v1 = v2 * k;
+	mat_vec::Vector v3 = k * v2;
+	v2 *= k;
+	for (int i = 0; i < 4; i++)
+	{
+		REQUIRE(v1[i] == v2[i]);
+		REQUIRE(v1[i] == v3[i]);
+	}
+}
+
+TEST_CASE("vectorv / double k")
+{
+	mat_vec::Vector v2(4);
+	v2[0] = 13;
+	v2[1] = 8;
+	v2[2] = 6;
+	v2[3] = -0.1;
+	double k = 38.02;
+
+	mat_vec::Vector v1 = v2 / k;
+	v2 /= k;
+	for (int i = 0; i < 4; i++)
+	{
+		REQUIRE(v1[i] == v2[i]);
+	}
+}
+
+TEST_CASE("vector * matrix")
+{
+	mat_vec::Vector v(4);
+	v[0] = 5;
+	v[1] = 3;
+	v[2] = 16;
+	v[3] = -7;
+	mat_vec::Matrix m(4, 2, 0);
+	m.set(0, 0, 7.5);
+	m.set(0, 1, -8.9);
+	m.set(1, 0, -1);
+	m.set(1, 1, 4);
+	m.set(2, 0, 3.8);
+	m.set(2, 1, 4.4);
+	m.set(3, 0, -7.3);
+	m.set(3, 1, 3.0);
+
+	mat_vec::Vector res = v * m;
+	v *= m;
+	for (int i = 0; i < 2; i++)
+	{
+		REQUIRE(v[i] == res[i]);
+	}
+	REQUIRE((int)(res[0] * 10) == 1464);
+	REQUIRE((int)(res[1] * 10) == 169);
+}
+
+TEST_CASE("operators == & !=")
+{
+	mat_vec::Vector v1(5, 8.3);
+	mat_vec::Vector v2(5, 5.73);
+	mat_vec::Vector v3(5, 8.3);
+	mat_vec::Vector v4(2, 8.3);
+	REQUIRE((v1 == v2) == false);
+	REQUIRE((v1 == v3) == true);
+	REQUIRE((v3 == v4) == false);
+	REQUIRE((v1 != v2) == true);
+	REQUIRE((v1 != v3) == false);
+	REQUIRE((v3 != v4) == true);
+}
+
+
+
+
 
 /*
 TEST_CASE("deter")

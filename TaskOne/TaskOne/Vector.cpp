@@ -141,13 +141,12 @@ namespace mat_vec {
 		if (this->m_size != rhs.m_size)
 			throw std::runtime_error("RE");
 
-		mat_vec::Vector new_vec(this->m_size);
 		for (int i = 0; i < this->m_size; i++)
 		{
-			new_vec[i] = this->m_data[i] - rhs.m_data[i];
+			this->m_data[i] -= rhs.m_data[i];
 		}
 
-		return new_vec;
+		return *this;
 	}
 
 	mat_vec::Vector mat_vec::Vector::operator^(const mat_vec::Vector& rhs) const
@@ -245,7 +244,7 @@ namespace mat_vec {
 		{
 			for (int k = 0; k < this->m_size; k++)
 			{
-				new_vec.m_data[j] += this->m_data[k] * mat.get(j, k);
+				new_vec.m_data[j] += this->m_data[k] * mat.get(k, j);
 			}
 		}
 
@@ -255,16 +254,15 @@ namespace mat_vec {
 	mat_vec::Vector& mat_vec::Vector::operator*=(const mat_vec::Matrix& mat)
 	{
 		if (this->m_size != mat.shape().first)
-		{
 			throw std::runtime_error("RE");
-		}
 
 		double* new_data = new double[mat.shape().second];
 		for (int j = 0; j < mat.shape().second; j++)
 		{
+			new_data[j] = 0;
 			for (int k = 0; k < this->m_size; k++)
 			{
-				new_data[j] += this->m_data[k] * mat.get(j, k);
+				new_data[j] += this->m_data[k] * mat.get(k, j);
 			}
 		}
 		delete[] this->m_data;
@@ -277,16 +275,13 @@ namespace mat_vec {
 	bool mat_vec::Vector::operator==(const mat_vec::Vector& rhs) const
 	{
 		if (this->m_size != rhs.m_size)
-			throw std::runtime_error("RE");
+			return false;
 
 		bool is_equal = 1;
-		for (int i = 0; i < this->m_size; i++)
+		for (int i = 0; i < this->m_size && is_equal; i++)
 		{
 			if (this->m_data[i] != rhs.m_data[i])
-			{
 				is_equal = 0;
-				break;
-			}
 		}
 
 		return is_equal;
@@ -295,16 +290,13 @@ namespace mat_vec {
 	bool mat_vec::Vector::operator!=(const mat_vec::Vector& rhs) const
 	{
 		if (this->m_size != rhs.m_size)
-			throw std::runtime_error("RE");
+			return true;
 
 		bool is_equal = 1;
-		for (int i = 0; i < this->m_size; i++)
+		for (int i = 0; i < this->m_size && is_equal; i++)
 		{
 			if (this->m_data[i] != rhs.m_data[i])
-			{
 				is_equal = 0;
-				break;
-			}
 		}
 
 		return !is_equal;
