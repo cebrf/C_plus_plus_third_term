@@ -61,18 +61,16 @@ TEST_CASE("normalized")
 	REQUIRE(v[1] == (3 / sqrt(14)));
 }
 
-/*TEST_CASE("operator+")
+TEST_CASE("operator+")
 {
 	mat_vec::Vector v1(4, 6.7);
 	mat_vec::Vector v2(4, 0.3);
 	
-	//v1 = v1 + v2;  
-	//REQUIRE(v1[3] == 7.0);
-	mat_vec::Vector v3 = v1 + v2;
-	REQUIRE(v3[3] == 7.0);
-	v3 += v2;       // TODO fix +=
+	v1 = v1 + v2;  
+	REQUIRE(v1[3] == 7.0);
+	v1 += v2;      
 	REQUIRE(v1[0] == 7.3);
-}*/
+}
 
 /*
 TEST_CASE("deter")
