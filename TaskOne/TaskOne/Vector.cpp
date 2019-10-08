@@ -31,9 +31,11 @@ namespace mat_vec {
 
 	mat_vec::Vector& mat_vec::Vector::operator=(const mat_vec::Vector& rhs)
 	{
-		mat_vec::Vector new_vec(rhs.m_size);
-		std::copy(rhs.m_data, rhs.m_data + rhs.m_size, new_vec.m_data);
-		return new_vec;
+		delete[] this->m_data;
+		this->m_size = rhs.m_size;
+		this->m_data = new double[this->m_size];
+		std::copy(rhs.m_data, rhs.m_data + rhs.m_size, this->m_data);
+		return *this;
 	}
 
 	mat_vec::Vector::~Vector()
