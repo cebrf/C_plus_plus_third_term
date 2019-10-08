@@ -322,6 +322,33 @@ TEST_CASE("m * m")
 			REQUIRE(m0.get(i, j) == res.get(i, j));
 }
 
+TEST_CASE("m * v")
+{
+	mat_vec::Matrix m(3, 3);
+	m.set(0, 0, 2);
+	m.set(0, 1, 4);
+	m.set(0, 2, 0);
+
+	m.set(1, 0, -2);
+	m.set(1, 1, 1);
+	m.set(1, 2, 3);
+
+	m.set(2, 0, -1);
+	m.set(2, 1, 0);
+	m.set(2, 2, 1);
+
+	mat_vec::Vector v(3);
+	v[0] = 1;
+	v[1] = 2;
+	v[2] = -1;
+
+	mat_vec::Vector res = m * v;
+	REQUIRE(res[0] == 10);
+	REQUIRE(res[1] == -3);
+	REQUIRE(res[2] == -2);
+
+}
+
 TEST_CASE("matrix * double k")
 {
 	mat_vec::Matrix m1(4, 5, 8);
@@ -365,7 +392,6 @@ TEST_CASE("TRANS")
 		for (int j = 0; j < 2; j++)
 			REQUIRE(m1.get(i, j) == m2.get(i, j));
 }
-
 
 TEST_CASE("deter")
 {

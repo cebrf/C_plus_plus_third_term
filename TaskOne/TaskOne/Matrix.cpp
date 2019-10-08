@@ -386,7 +386,7 @@ namespace mat_vec
 		{
 			for (int k = 0; k < this->m_cols; k++)
 			{
-				new_vec[k] += this->m_data[i][k] * vec[k];
+				new_vec[i] += this->m_data[i][k] * vec[k];
 			}
 		}
 
