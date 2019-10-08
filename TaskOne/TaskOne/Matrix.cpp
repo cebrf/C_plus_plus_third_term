@@ -49,13 +49,22 @@ namespace mat_vec
 
 	mat_vec::Matrix& mat_vec::Matrix::operator=(const mat_vec::Matrix& rhs)
 	{
-		Matrix new_matr(rhs.m_rows, rhs.m_cols);
+		for (int i = 0; i < this->m_rows; i++)
+		{
+			delete[] this->m_data[i];
+		}
+		delete[] this->m_data;
+
+		this->m_rows = rhs.m_rows;
+		this->m_cols = rhs.m_cols;
+		this->m_data = new double*[rhs.m_rows];
 		for (int i = 0; i < rhs.m_rows; i++)
 		{
-			std::copy(rhs.m_data[i], rhs.m_data[i] + rhs.m_cols, new_matr.m_data[i]);
+			this->m_data[i] = new double[rhs.m_cols];
+			std::copy(rhs.m_data[i], rhs.m_data[i] + rhs.m_cols, this->m_data[i]);
 		}
 
-		return new_matr;
+		return *this;
 	}
 
 	mat_vec::Matrix::~Matrix()
@@ -141,16 +150,15 @@ namespace mat_vec
 		if (this->m_rows != rhs.m_rows || this->m_cols != rhs.m_cols)
 			throw std::runtime_error("RE");
 
-		mat_vec::Matrix new_matr(rhs.m_rows, rhs.m_cols);
 		for (int i = 0; i < this->m_rows; i++)
 		{
 			for (int j = 0; j < this->m_cols; j++)
 			{
-				new_matr.m_data[i][j] = this->m_data[i][j] + rhs.m_data[i][j];
+				this->m_data[i][j] += rhs.m_data[i][j];
 			}
 		}
 
-		return new_matr;
+		return *this;
 	}
 
 	mat_vec::Matrix mat_vec::Matrix::operator-(const mat_vec::Matrix& rhs) const
@@ -175,16 +183,15 @@ namespace mat_vec
 		if (this->m_rows != rhs.m_rows || this->m_cols != rhs.m_cols)
 			throw std::runtime_error("RE");
 
-		mat_vec::Matrix new_matr(rhs.m_rows, rhs.m_cols);
 		for (int i = 0; i < this->m_rows; i++)
 		{
 			for (int j = 0; j < this->m_cols; j++)
 			{
-				new_matr.m_data[i][j] = this->m_data[i][j] - rhs.m_data[i][j];
+				this->m_data[i][j] -= rhs.m_data[i][j];
 			}
 		}
 
-		return new_matr;
+		return *this;
 	}
 
 	mat_vec::Matrix mat_vec::Matrix::operator*(const Matrix& rhs) const
@@ -212,18 +219,27 @@ namespace mat_vec
 		if (this->m_cols != rhs.m_rows)
 			throw std::runtime_error("RE");
 
-		mat_vec::Matrix new_matr(this->m_rows, rhs.m_cols);
+		double** new_data = new double* [this->m_rows];
 		for (int i = 0; i < this->m_rows; i++)
 		{
+			new_data[i] = new double[rhs.m_cols];
 			for (int j = 0; j < rhs.m_cols; j++)
 			{
 				for (int k = 0; k < this->m_cols; k++)
 				{
-					new_matr.m_data[i][j] += this->m_data[i][k] * rhs.m_data[k][j];
+					new_data[i][j] += this->m_data[i][k] * rhs.m_data[k][j];
 				}
 			}
 		}
-		return new_matr;
+
+		for (int i = 0; i < this->m_rows; i++)
+		{
+			delete[] this->m_data[i];
+		}
+		delete[] this->m_data;
+		this->m_cols = rhs.m_cols;
+		this->m_data = new_data;
+		return *this;
 	}
 
 	mat_vec::Matrix mat_vec::Matrix::operator*(double k) const
@@ -241,15 +257,14 @@ namespace mat_vec
 
 	mat_vec::Matrix& mat_vec::Matrix::operator*=(double k)
 	{
-		Matrix new_matr(this->m_rows, this->m_cols);
 		for (int i = 0; i < this->m_rows; i++)
 		{
 			for (int j = 0; j < this->m_cols; j++)
 			{
-				new_matr.m_data[i][j] = this->m_data[i][j] * k;
+				this->m_data[i][j] *= k;
 			}
 		}
-		return new_matr;
+		return *this;
 	}
 
 	mat_vec::Matrix mat_vec::Matrix::operator/(double k) const
@@ -267,15 +282,14 @@ namespace mat_vec
 
 	mat_vec::Matrix& mat_vec::Matrix::operator/=(double k)
 	{
-		Matrix new_matr(this->m_rows, this->m_cols);
 		for (int i = 0; i < this->m_rows; i++)
 		{
 			for (int j = 0; j < this->m_cols; j++)
 			{
-				new_matr.m_data[i][j] = this->m_data[i][j] / k;
+				this->m_data[i][j] /= k;
 			}
 		}
-		return new_matr;
+		return *this;
 	}
 
 	mat_vec::Matrix mat_vec::Matrix::transposed() const
