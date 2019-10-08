@@ -7,18 +7,18 @@
 
 namespace mat_vec
 {
-	mat_vec::Matrix::Matrix(size_t size, double value) : m_data(new double* [size]), m_rows(size), m_cols(size)
+	/*mat_vec::Matrix::Matrix(size_t size, double value) : m_data(new double* [size]), m_rows(size), m_cols(size)
 	{
 		for (int i = 0; i < size; i++)
 		{
 			this->m_data[i] = new double[size];
 			std::fill_n(this->m_data[i], size, value);
 		}
-	}
+	}*/
 
 	mat_vec::Matrix mat_vec::Matrix::eye(size_t size)
 	{
-		mat_vec::Matrix new_matr(size);
+		mat_vec::Matrix new_matr(size, size);
 		for (int i = 0; i < size; i++)
 		{
 			new_matr.m_data[i][i] = 1;
@@ -225,6 +225,7 @@ namespace mat_vec
 			new_data[i] = new double[rhs.m_cols];
 			for (int j = 0; j < rhs.m_cols; j++)
 			{
+				new_data[i][j] = 0;
 				for (int k = 0; k < this->m_cols; k++)
 				{
 					new_data[i][j] += this->m_data[i][k] * rhs.m_data[k][j];
@@ -238,7 +239,15 @@ namespace mat_vec
 		}
 		delete[] this->m_data;
 		this->m_cols = rhs.m_cols;
-		this->m_data = new_data;
+		this->m_data = new double*[this->m_rows];
+		for (int i = 0; i < this->m_rows; i++)
+		{
+			this->m_data[i] = new double[this->m_cols];
+			for (int j = 0; j < this->m_cols; j++)
+			{
+				std::copy(new_data[i], new_data[i] + this->m_cols, this->m_data[i]);
+			}
+		}
 		return *this;
 	}
 
@@ -322,9 +331,18 @@ namespace mat_vec
 		}
 		delete[] this->m_data;
 
-		this->m_data = newMatr.m_data;
 		this->m_rows = newMatr.m_rows;
 		this->m_cols = newMatr.m_cols;
+
+		this->m_data = new double* [this->m_rows];
+		for (int i = 0; i < this->m_rows; i++)
+		{
+			this->m_data[i] = new double[this->m_cols];
+			for (int j = 0; j < this->m_cols; j++)
+			{
+				std::copy(newMatr.m_data[i], newMatr.m_data[i] + this->m_cols, this->m_data[i]);
+			}
+		}
 	}
 
 	double mat_vec::Matrix::det()
@@ -344,7 +362,7 @@ namespace mat_vec
 		if (de == 0)
 			throw std::runtime_error("Inverse doesn't exist");
 
-		mat_vec::Matrix inver(this->m_rows);
+		mat_vec::Matrix inver(this->m_rows, this->m_rows);
 
 		for (int i = 0; i < this->m_rows; i++)
 		{
@@ -378,7 +396,7 @@ namespace mat_vec
 	bool mat_vec::Matrix::operator==(const mat_vec::Matrix& rhs) const
 	{
 		if (this->m_cols != rhs.m_cols || this->m_rows != rhs.m_rows)
-			throw std::runtime_error("RE");
+			return false;
 
 		bool is_equal = 1;
 		for (int i = 0; i < this->m_rows && is_equal; i++)
@@ -396,7 +414,7 @@ namespace mat_vec
 	bool mat_vec::Matrix::operator!=(const mat_vec::Matrix& rhs) const
 	{
 		if (this->m_cols != rhs.m_cols || this->m_rows != rhs.m_rows)
-			throw std::runtime_error("RE");
+			return true;
 
 		bool is_equal = 1;
 		for (int i = 0; i < this->m_rows && is_equal; i++)

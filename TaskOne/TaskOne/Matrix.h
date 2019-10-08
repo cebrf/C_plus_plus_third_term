@@ -8,7 +8,7 @@ namespace mat_vec {
 	class Matrix {
 	public:
 		// Конструирует матрицу с размерами size x size, заполненную value
-		explicit Matrix(size_t size, double value = 0);
+		/*explicit Matrix(size_t size, double value = 0);*/
 
 		// Возвращает единичную матрицу
 		static Matrix eye(size_t size);
