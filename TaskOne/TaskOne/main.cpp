@@ -7,6 +7,8 @@
 #include "Vector.h"
 #include "Matrix.h"
 
+const double eps = 0.00001;
+
 using namespace mat_vec;
 
 //VECTOR TESTS
@@ -31,15 +33,13 @@ TEST_CASE("size")
 TEST_CASE("operator[]")
 {
 	mat_vec::Vector v1(4, 5.6);
-	REQUIRE(v1[3] == 5.6);
-	//REQUIRE(v1[4] == 5.6);
+	REQUIRE((v1[3] - 5.6) < eps);
 }
 
 TEST_CASE("operator[] const")
 {
 	const mat_vec::Vector v1(4, 5.6);
 	REQUIRE(v1[3] == 5.6);
-	//REQUIRE(v1[4] == 5.6);
 }
 
 TEST_CASE("norm")
@@ -67,9 +67,9 @@ TEST_CASE("operator+ & +=")
 	mat_vec::Vector v2(4, 0.3);
 	
 	v1 = v1 + v2;  
-	REQUIRE(v1[3] == 7.0);
+	REQUIRE((v1[3] - 7.0) < eps);
 	v1 += v2;      
-	REQUIRE(v1[0] == 7.3);
+	REQUIRE((v1[0] - 7.3) < eps);
 }
 
 TEST_CASE("operator- & -=")
@@ -78,9 +78,9 @@ TEST_CASE("operator- & -=")
 	mat_vec::Vector v2(4, 1.3);
 
 	v1 = v1 - v2;
-	REQUIRE(v1[3] == 7.3);
+	REQUIRE((v1[3] - 7.3) < eps);
 	v1 -= v2;
-	REQUIRE(v1[0] == 6.0);
+	REQUIRE((v1[0] - 6.0) < eps);
 }
 
 TEST_CASE("operator^")
@@ -88,18 +88,18 @@ TEST_CASE("operator^")
 	mat_vec::Vector v1(4);
 	mat_vec::Vector v2(4);
 	
-	v1[0] = -1.9;
+	v1[0] = 8;
 	v1[1] = 2.3;
 	v1[2] = -4.5;
 	v1[3] = 0;
-	v2[0] = 0.1;
+	v2[0] = 5;
 	v2[1] = 8;
 	v2[2] = 0.76;
 	v2[3] = -1;
 
 	mat_vec::Vector v3 = v1 ^ v2;
 	v1 ^= v2;
-
+	REQUIRE((v1[0] - 40) < 0.00001);
 	REQUIRE(v1[0] == v3[0]);
 	REQUIRE(v1[2] == v3[2]);
 }
@@ -121,7 +121,7 @@ TEST_CASE("a*b")
 
 	double res = v1 * v2;
 
-	REQUIRE(res == -333.3);
+	REQUIRE((res - (-333.3)) < eps);
 }
 
 TEST_CASE("vectorv * double k && double k * vector")
@@ -136,6 +136,8 @@ TEST_CASE("vectorv * double k && double k * vector")
 	mat_vec::Vector v1 = v2 * k;
 	mat_vec::Vector v3 = k * v2;
 	v2 *= k;
+	REQUIRE((v1[0] - 494.26) < eps);
+	REQUIRE((v1[2] - 228.12) < eps);
 	for (int i = 0; i < 4; i++)
 	{
 		REQUIRE(v1[i] == v2[i]);
@@ -154,6 +156,8 @@ TEST_CASE("vectorv / double k")
 
 	mat_vec::Vector v1 = v2 / k;
 	v2 /= k;
+	REQUIRE((v1[0] - 0.34192) < eps);
+	REQUIRE((v1[1] - 0.2104155) < eps);
 	for (int i = 0; i < 4; i++)
 	{
 		REQUIRE(v1[i] == v2[i]);
@@ -183,8 +187,8 @@ TEST_CASE("vector * matrix")
 	{
 		REQUIRE(v[i] == res[i]);
 	}
-	REQUIRE((int)(res[0] * 10) == 1464);
-	REQUIRE((int)(res[1] * 10) == 169);
+	REQUIRE((res[0] - 146.4) < eps);
+	REQUIRE((res[1] - 16.9) < eps);
 }
 
 TEST_CASE("operators == & !=")
@@ -265,6 +269,8 @@ TEST_CASE("operator + && += ")
 
 	mat_vec::Matrix m3 = m1 + m2;
 	m1 += m2;
+	REQUIRE((m1.get(0, 0) -3) < eps);
+	REQUIRE((m1.get(1, 1) - 27) < eps);
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 2; j++)
 			REQUIRE(m1.get(i, j) == m3.get(i, j));
@@ -291,6 +297,8 @@ TEST_CASE("operator - && -= ")
 
 	mat_vec::Matrix m3 = m1 - m2;
 	m1 -= m2;
+	REQUIRE((m1.get(0, 1) + 87) < eps);
+	REQUIRE((m1.get(2, 0) - 36) < eps);
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 2; j++)
 			REQUIRE(m1.get(i, j) == m3.get(i, j));
@@ -317,6 +325,8 @@ TEST_CASE("m * m")
 	REQUIRE(res.shape().first == 1);
 	REQUIRE(res.shape().second == 2);
 	m0 *= m;
+	REQUIRE((res.get(0, 0) - 146.4) < eps);
+	REQUIRE((res.get(0, 1) - 16.9) < eps);
 	for (int i = 0; i < 1; i++)
 		for (int j = 0; j < 2; j++)
 			REQUIRE(m0.get(i, j) == res.get(i, j));
@@ -343,9 +353,9 @@ TEST_CASE("m * v")
 	v[2] = -1;
 
 	mat_vec::Vector res = m * v;
-	REQUIRE(res[0] == 10);
-	REQUIRE(res[1] == -3);
-	REQUIRE(res[2] == -2);
+	REQUIRE((res[0] - 10) < eps);
+	REQUIRE((res[1] + 3) < eps);
+	REQUIRE((res[2] + 2) < eps);
 
 }
 
@@ -356,6 +366,7 @@ TEST_CASE("matrix * double k")
 	mat_vec::Matrix m2 = m1 * k;
 	REQUIRE(m2.get(3, 4) == m1.get(3, 4) * k);
 	m1 *= k;
+	REQUIRE((m1.get(0, 2) - 41.6) < eps);
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 5; j++)
 			REQUIRE(m1.get(i, j) == m2.get(i, j));
@@ -368,6 +379,7 @@ TEST_CASE("matrix / double k")
 	mat_vec::Matrix m2 = m1 / k;
 	REQUIRE(m2.get(3, 4) == m1.get(3, 4) / k);
 	m1 /= k;
+	REQUIRE((m1.get(0, 0) - 1.5384615) < eps);
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 5; j++)
 			REQUIRE(m1.get(i, j) == m2.get(i, j));
@@ -408,7 +420,7 @@ TEST_CASE("deter")
 	m1.set(2, 1, -2);
 	m1.set(2, 2, -2);
 
-	REQUIRE(m1.det() == 54.0);
+	REQUIRE((m1.det() - 54.0) < eps);
 }
 
 TEST_CASE("inver")
@@ -435,7 +447,7 @@ TEST_CASE("inver")
 	m2.set(3, 3, 4);
 
 	Matrix m = m2.inv();
-	REQUIRE((int)(m.get(1, 1) * 10000) == -74285);
+	REQUIRE((m.get(1, 1) - 74285) < eps);
 }
 
 TEST_CASE("operator == & != ")

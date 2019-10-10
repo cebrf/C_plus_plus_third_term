@@ -5,6 +5,7 @@
 #include "Matrix.h"
 #include "Vector.h"
 
+
 namespace mat_vec
 {
 	/*mat_vec::Matrix::Matrix(size_t size, double value) : m_data(new double* [size]), m_rows(size), m_cols(size)
@@ -463,7 +464,11 @@ namespace mat_vec
 
 		for (int el = 0; el < n; el++)
 		{
-			de += matr[0][el] * pow(-1, el) * deter(cofactor(0, el, matr, n), n - 1);
+			double** matr_ = cofactor(0, el, matr, n);
+			de += matr[0][el] * pow(-1, el) * deter(matr_, n - 1);
+			for (int i = 0; i < n - 1; i++)
+				delete[] matr_[i];
+			delete[] matr_;
 		}
 		return de;
 	}
