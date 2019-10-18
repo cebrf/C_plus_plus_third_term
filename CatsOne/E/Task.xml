@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CATS version="1.11">
+<Problem title="Finite Field (Hard version)" lang="ru" tlimit="5" mlimit="512"
+  author="" inputFile="*STDIN" outputFile="*STDOUT"
+  saveInputPrefix="50B" saveOutputPrefix="50B" saveAnswerPrefix="50B">
+
+<Keyword code="lang.cpp"/>
+
+<Attachment name="main" src="main.cpp"/>
+<Attachment name="task" src="task.xml"/>
+<Attachment name="num" src="num.h"/>
+
+<ProblemStatement>
+  <p>
+Вам необходимо написать <code>.cpp</code> файл с реализацией хедера <a attachment="num"><code>num.h</code></a>
+  </p>
+  
+  <h3>Материалы задачи</h3>
+  <p><a attachment="main"><code>main.cpp</code></a></p>
+  <p><a attachment="task"><code>task.xml</code></a></p>
+  <p><a attachment="num"><code>num.h</code></a></p>
+</ProblemStatement>
+
+<Import type="linter" guid="std.cpplint"/>
+
+<Import type="checker" guid="std.nums"/>
+
+<Module type="solution" src="num.h" de_code="1"/>
+<Module type="solution" src="main.cpp" main="num.cpp" de_code="107"></Module>
+
+<Test rank="1"><In>0</In><Out>1</Out></Test>
+
+</Problem>
+</CATS>
