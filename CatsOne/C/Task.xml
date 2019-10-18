@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CATS version="1.11">
+<Problem title="Date" lang="ru" tlimit="1" mlimit="512"
+  author="" inputFile="*STDIN" outputFile="*STDOUT"
+  saveInputPrefix="50B" saveOutputPrefix="50B" saveAnswerPrefix="50B">
+
+<Keyword code="lang.cpp"/>
+
+<Attachment name="main" src="main.cpp"/>
+<Attachment name="task" src="task.xml"/>
+
+<ProblemStatement>
+  <p>Реализовать класс <code>Date</code> со следующими методами:
+  </p>
+  <p>
+    Конструктор <code>Date(int year, int month, int day)</code>
+  </p>
+  <p>
+     Метод <code>bool IsLeap() const</code>, возвращающий <code>true</code> в случае, если год является високосным и <code>false</code> в противном случае.
+  </p>
+  <p>
+     Метод <code>std::string ToString() const</code>, возвращающий строковое представление даты в формате <code>dd.mm.yyyy</code>.
+  </p>
+  <p>
+     Метод <code>Date DaysLater(int days) const</code>, возвращающий дату, которая наступит спустя <code>days</code> дней от текущей.
+  </p>
+  <p>
+     Метод <code>int DaysLeft(const Date&amp; date) const</code>, возвращающий разницу между указанной и текущей датой (в днях).
+  </p>
+  <h3>Материалы задачи</h3>
+  <p><a attachment="main"><code>main.cpp</code></a></p>
+  <p><a attachment="task"><code>task.xml</code></a></p>
+</ProblemStatement>
+<!--
+<InputFormat>
+  <p>
+  </p>
+</InputFormat>
+-->
+<OutputFormat>
+  <p>
+     Файл с решением должен содержать только реализацию описанного
+     класса, без функции $main$.
+  </p>
+</OutputFormat>
+
+<Import type="linter" guid="std.cpplint"/>
+
+<Import type="checker" guid="std.nums"/>
+
+<Module type="solution" src="main.cpp" main="date.h" de_code="107"></Module>
+
+<Test rank="1"><In>1</In><Out>1</Out></Test>
+
+</Problem>
+</CATS>
