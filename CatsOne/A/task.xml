@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CATS version="1.11">
+<Problem title="PrimeNumberGenerator" lang="ru" tlimit="1" mlimit="512M"
+  author="" inputFile="*STDIN" outputFile="*STDOUT"
+  saveInputPrefix="50B" saveOutputPrefix="50B" saveAnswerPrefix="50B">
+
+<Keyword code="lang.cpp"/>
+
+<Attachment name="main" src="main.cpp"/>
+<Attachment name="task" src="task.xml"/>
+
+<ProblemStatement>
+  <p>Необходимо реализовать класс <code>PrimeNumberGenerator</code> -- генератор
+  простых чисел. 
+  </p>
+  <p>У класса должен быть конструктор, 
+  принимающий (<code>int start</code>), и функция <code>int GetNextPrime()</code>, 
+  возвращающая ближайшее справа от <code>start</code>-а простое число (включая <code>start</code>). 
+  </p>
+  <p>
+  Функция <code>GetNextPrime</code> должна изменять состояние объекта -- при повторном 
+  ее вызове нужно возвращать уже следующее простое число.
+  </p>
+  <pre>
+      <code>
+         
+class PrimeNumberGenerator {
+  public:
+    explicit PrimeNumberGenerator(int start);
+    int GetNextPrime();
+};
+      </code>
+  </pre>
+  <h3>Материалы задачи</h3>
+  <p><a attachment="main"><code>main.cpp</code></a></p>
+  <p><a attachment="task"><code>task.xml</code></a></p>
+</ProblemStatement>
+<!--
+<InputFormat>
+  <p>
+  </p>
+</InputFormat>
+-->
+<OutputFormat>
+  <p>
+     Файл с решением должен содержать только реализацию описанного
+     класса, без функции <code>main</code>.
+  </p>
+</OutputFormat>
+
+<Import type="linter" guid="std.cpplint"/>
+
+<Import type="checker" guid="std.nums"/>
+<Module type="solution" src="main.cpp" main="prime_gen.h" de_code="107"></Module>
+
+<Test rank="1"><In>2 3</In><Out>2 3 5</Out></Test>
+<Test rank="2"><In>11 3</In><Out>11 13 17</Out></Test>
+<Test rank="3"><In>1234567 5</In><Out>1234577 1234603 1234613 1234627 1234657</Out></Test>
+<Test rank="4"><In>15 10</In><Out>17 19 23 29 31 37 41 43 47 53</Out></Test>
+<Test rank="5"><In>100 1</In><Out>101</Out></Test>
+<Test rank="6"><In>1 40</In><Out>2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 101 103 107 109 113 127 131 137 139 149 151 157 163 167 173 </Out></Test>
+<Test rank="7"><In>2948737 8</In><Out>2948747 2948779 2948783 2948797 2948839 2948851 2948861 2948873</Out></Test>
+<Test rank="8"><In>1293821 13</In><Out>1293821 1293829 1293839 1293841 1293857 1293869 1293899 1293917 1293923 1293931 1293947 1293949 1293961</Out></Test>
+
+</Problem>
+</CATS>
