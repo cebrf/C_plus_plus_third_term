@@ -1,0 +1,39 @@
+«адача F. BufferedReader
+
+”словие
+“ребуетс€ реализовать класс BufferedReader со следующим интерфейсом:
+
+        
+class BufferedReader {
+public:
+    explicit BufferedReader(PackageStream* stream);
+    int32_t Read(char* output_buffer, int32_t buffer_len);
+};
+
+¬ конструктор BufferedReader передаетс€ указатель на объект класса PackageStream (см. описание ниже), 
+с помощью которого будут считыватьс€ пакеты некоторой длины.
+
+ћетод int32_t Read(char* output_buffer, int32_t buffer_len) записывает по указателю output_buffer пакет 
+длины не более buffer_len и возвращает реальный размер записанного пакета (это число может быть меньше, 
+чем заданна€ длина, если строка закончилась раньше).
+
+
+»нтерфейс класса PackageStream:
+
+        
+class PackageStream {
+public:
+    PackageStream(std::string source, int32_t package_len);
+
+    int32_t PackageLen() const;
+    int32_t ReadPackage(char* output_package);
+};
+        
+    
+¬ конструктор PackageStream передаетс€ строка source, из которой впоследствии побайтово будут считыватьс€ пакеты длины package_len и, 
+собственно, длина пакетов package_len.
+
+ћетод int32_t PackageLen() возвращает длину пакета (package_len), который считывает метод ReadPackage.
+
+ћетод int32_t ReadPackage(char* output_package) записывает по указателю output_package пакет длины не более package_len и 
+возвращает реальный размер записанного пакета.

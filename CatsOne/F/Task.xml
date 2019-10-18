@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CATS version="1.11">
+<Problem title="BufferedReader" lang="ru" tlimit="1" mlimit="512"
+  author="" inputFile="*STDIN" outputFile="*STDOUT"
+  saveInputPrefix="50B" saveOutputPrefix="50B" saveAnswerPrefix="50B">
+
+<Keyword code="lang.cpp"/>
+
+<Attachment name="main" src="main.cpp"/>
+<Attachment name="task" src="task.xml"/>
+
+<ProblemStatement>
+  <p>
+    Требуется реализовать класс <code>BufferedReader</code> со следующим интерфейсом:
+    <pre>
+        <code>
+class BufferedReader {
+public:
+    explicit BufferedReader(PackageStream* stream);
+    int32_t Read(char* output_buffer, int32_t buffer_len);
+};
+        </code>
+    </pre>
+  </p>
+  <p>
+    В конструктор <code>BufferedReader</code> передается указатель на объект класса <code>PackageStream</code> (см. описание ниже), с помощью которого будут считываться пакеты некоторой длины.
+  </p>
+  <p>
+    Метод <code>int32_t Read(char* output_buffer, int32_t buffer_len)</code> записывает по указателю <code>output_buffer</code> пакет длины не более <code>buffer_len</code> и возвращает реальный размер записанного пакета  (это число может быть меньше, чем заданная длина, если строка закончилась раньше). 
+  </p>
+  <p>
+  Интерфейс класса <code>PackageStream</code>:
+    <pre>
+        <code>
+class PackageStream {
+public:
+    PackageStream(std::string source, int32_t package_len);
+
+    int32_t PackageLen() const;
+    int32_t ReadPackage(char* output_package);
+};
+        </code>
+    </pre>
+  </p>
+  <p>
+    В конструктор <code>PackageStream</code> передается строка <code>source</code>, из которой впоследствии побайтово будут считываться пакеты длины <code>package_len</code> и, собственно, длина пакетов <code>package_len</code>.
+  </p>
+  <p>
+    Метод <code>int32_t PackageLen()</code> возвращает длину пакета (<code>package_len</code>), который считывает метод <code>ReadPackage</code>.
+  </p>
+  <p>
+    Метод <code>int32_t ReadPackage(char* output_package)</code> записывает по указателю <code>output_package</code> пакет длины не более <code>package_len</code> и возвращает реальный размер записанного пакета.
+  </p>
+  <h3>Материалы задачи</h3>
+  <p><a attachment="main"><code>main.cpp</code></a></p>
+  <p><a attachment="task"><code>task.xml</code></a></p>
+</ProblemStatement>
+<!--
+<InputFormat>
+  <p>
+  </p>
+</InputFormat>
+-->
+<OutputFormat>
+  <p>
+     Файл с решением должен содержать только реализацию описанного
+     класса, без функции $main$.
+  </p>
+</OutputFormat>
+<Import type="linter" guid="std.cpplint"/>
+
+<Import type="checker" guid="std.nums"/>
+
+<Module type="solution" src="main.cpp" main="buffered_reader.h" de_code="107"></Module>
+
+<Test rank="1-4"><In src="%0n.in"/><Out src="%0n.out"/></Test>
+
+</Problem>
+</CATS>
