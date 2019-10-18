@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CATS version="1.11">
+<Problem title="Set" lang="ru" tlimit="1" mlimit="512"
+  author="" inputFile="*STDIN" outputFile="*STDOUT"
+  saveInputPrefix="50B" saveOutputPrefix="50B" saveAnswerPrefix="50B">
+
+<Keyword code="lang.cpp"/>
+
+<Attachment name="main" src="main.cpp"/>
+<Attachment name="task" src="task.xml"/>
+
+<ProblemStatement>
+  <p>Необходимо реализовать <code>Set</code> -- класс, 
+  в котором реализованы основные операции над множествами: 
+  </p>
+  <p>
+  <code>Set Union(const Set&amp;) const</code>,  </p>
+  <p> <code>Set Intersection(const Set&amp;) const</code>,   </p>
+  <p><code>Set Difference(const Set&amp;) const</code>,   </p>
+  <p><code>Set SymmetricDifference(const Set&amp;) const</code>.   </p>
+  <p>Также необходимо
+  реализовать конструктор <code>Set(const std::vector&#60;int64_t&#62;&amp;)</code> и функции добавления, удаления и проверки
+  наличия элемента во множестве:   </p>
+  <p><code>void Add(int64_t)</code>,   </p>
+  <p><code>void Remove(int64_t)</code>, <code>bool Contains(int64_t) const</code>.  </p>
+  <p> Для доступа ко всем элементам множества реализовать функцию <code>std::vector&#60;int64_t&#62; Data() const</code>.
+  </p>
+  <p>
+  Предполагается, что класс будет использован для хранения целых чисел типа <code>int64_t</code>. Для хранения элементов
+  следует использовать <code>std::vector&#60;int64_t&#62;</code> с соответствующим параметром шаблона.
+  </p>
+  <h3>Материалы задачи</h3>
+  <p><a attachment="main"><code>main.cpp</code></a></p>
+  <p><a attachment="task"><code>task.xml</code></a></p>
+</ProblemStatement>
+<!--
+<InputFormat>
+  <p>
+  </p>
+</InputFormat>
+-->
+<OutputFormat>
+  <p>
+     Файл с решением должен содержать только реализацию описанного
+     класса, без функции $main$.
+  </p>
+</OutputFormat>
+
+<Import type="linter" guid="std.cpplint"/>
+<Import type="checker" guid="std.nums"/>
+
+<Module type="solution" src="main.cpp" main="set.h" de_code="107"></Module>
+
+<Test rank="1"><In>4 3 union
+1 2 3 4
+5 6 7</In><Out>7
+1 2 3 4 5 6 7</Out></Test>
+
+<Test rank="2"><In>4 3 union
+1 2 3 4
+3 4 5</In><Out>5
+1 2 3 4 5</Out></Test>
+
+<Test rank="3"><In>4 3 intersection
+1 2 3 4
+3 5 7</In><Out>1
+3</Out></Test>
+
+<Test rank="4"><In>4 3 intersection
+1 2 3 4
+5 6 7</In><Out>0</Out></Test>
+
+<Test rank="5"><In>4 3 difference
+1 2 3 4
+3 4 5</In><Out>2
+1 2</Out></Test>
+
+<Test rank="6"><In>4 3 difference
+1 2 3 4
+5 6 7</In><Out>4
+1 2 3 4</Out></Test>
+
+<Test rank="7"><In>4 3 symmetricDifference
+1 2 3 4
+3 4 5</In><Out>3
+1 2 5</Out></Test>
+
+<Test rank="8"><In>4 3 symmetricDifference
+1 2 3 4
+1 2 3</In><Out>1
+4</Out></Test>
+
+<Test rank="9"><In>4 3 add
+1 1 1 1
+2 3 3</In><Out>3
+1 2 3</Out></Test>
+
+<Test rank="10"><In>4 3 add
+1 2 3 4
+1 2 3</In><Out>4
+1 2 3 4</Out></Test>
+
+<Test rank="11"><In>4 3 remove
+1 2 3 4
+1 2 3</In><Out>1
+4</Out></Test>
+
+<Test rank="12"><In>4 3 remove
+1 1 2 3
+1 2 3</In><Out>0</Out></Test>
+
+<Test rank="13"><In>4 3 contains
+1 2 3 4
+3 4 5</In><Out>6
+1 2 3 4 9 16</Out></Test>
+
+<Test rank="14"><In>4 3 contains
+1 2 3 4
+1 3 5</In><Out>5
+1 2 3 4 9</Out></Test>
+
+</Problem>
+</CATS>
