@@ -476,3 +476,127 @@ TEST_CASE("operator == & != ")
 	REQUIRE(m1 != m2);
 
 }
+
+
+//EXCEPTIONS FOR VECTOR
+
+TEST_CASE("size of vec < 0")
+{
+  mat_vec::Vector v(2, 4);
+  REQUIRE_THROWS(v = Vector(-3, 1.0));
+}
+
+TEST_CASE("Array index out of bounds")
+{
+  mat_vec::Vector v1(2, 3.0);
+  REQUIRE_THROWS(v1[0] = v1[6]);
+  REQUIRE_THROWS(v1[3] = 1.3);
+  const mat_vec::Vector v2(2, 4.6);
+  REQUIRE_THROWS(v2[3] == 1.3);
+}
+
+TEST_CASE("operator v1 +,-,^,* v2  Different sizes of arrays")
+{
+  mat_vec::Vector v1(2, 5.7), v2(8, 6.2);
+  REQUIRE_THROWS(v1 + v2);
+  REQUIRE_THROWS(v1 += v2);
+
+  REQUIRE_THROWS(v1 - v2);
+  REQUIRE_THROWS(v1 -= v2);
+
+  REQUIRE_THROWS(v1 ^ v2);
+  REQUIRE_THROWS(v1 ^= v2);
+
+  REQUIRE_THROWS(v1 * v2);
+}
+
+TEST_CASE("Division by zero")
+{
+  mat_vec::Vector v(3, 4.7);
+  REQUIRE_THROWS(v / 0);
+  REQUIRE_THROWS(v /= 0);
+}
+
+TEST_CASE("vec * matr Different sizes of arrays")
+{
+  mat_vec::Matrix m(2, 4, 9.3);
+  mat_vec::Vector v(6, 0.2);
+  REQUIRE_THROWS(v * m);
+  REQUIRE_THROWS(v *= m);
+}
+
+//EXCEPTIONS FOR MATRIX
+
+TEST_CASE("size of eye matr < 0")
+{
+  REQUIRE_THROWS(mat_vec::Matrix::eye(-10));
+}
+
+TEST_CASE("size of matr < 0")
+{
+  mat_vec::Matrix m(1, 2);
+  REQUIRE_THROWS(m = mat_vec::Matrix(-10, 2));
+  REQUIRE_THROWS(m = mat_vec::Matrix(10, -2));
+}
+
+TEST_CASE("reshape size < 0")
+{
+
+  mat_vec::Matrix m(1, 2);
+  REQUIRE_THROWS(m.reshape(-1, 9));
+}
+
+TEST_CASE("index out of bounds")
+{
+  mat_vec::Matrix m(2, 3, 4.0);
+  REQUIRE_THROWS(m.get(0, 10) == 1);
+  REQUIRE_THROWS(m.get(10, 0) == 1);
+
+  REQUIRE_THROWS(m.set(0, 10, 4));
+  REQUIRE_THROWS(m.set(10, 0, 7));
+}
+
+TEST_CASE("operator v1 +,-,^,* v2  Different sizes of matr")
+{
+  mat_vec::Matrix m1(2, 3, 5.7), m2(8, 5, 6.2);
+  REQUIRE_THROWS(m1 + m2);
+  REQUIRE_THROWS(m1 += m2);
+
+  REQUIRE_THROWS(m1 - m2);
+  REQUIRE_THROWS(m1 -= m2);
+
+  REQUIRE_THROWS(m1 * m2);
+  REQUIRE_THROWS(m1 *= m2);
+}
+
+TEST_CASE("Division by zero in matr")
+{
+  mat_vec::Matrix m(3, 5, 4.7);
+  REQUIRE_THROWS(m / 0);
+  REQUIRE_THROWS(m /= 0);
+}
+
+TEST_CASE("This matr is not square. Only square matrix has det")
+{
+  mat_vec::Matrix m(2, 3);
+  REQUIRE_THROWS(m.det());
+}
+
+TEST_CASE("This matr is not square. Only square matrix can be inv")
+{
+  mat_vec::Matrix m(2, 3);
+  REQUIRE_THROWS(m.inv());
+}
+
+TEST_CASE("This matr has det == 0. Only matrix that has det != 0 can be inv")
+{
+  mat_vec::Matrix m(2, 2, 0);
+  REQUIRE_THROWS(m.inv());
+}
+
+TEST_CASE("matr * vec. Different sizes")
+{
+  mat_vec::Matrix m(2, 4, 8.6);
+  mat_vec::Vector v(1, 0.1);
+  REQUIRE_THROWS(m * v);
+}

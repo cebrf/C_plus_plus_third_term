@@ -10,7 +10,7 @@ namespace mat_vec {
 	class Vector {
 	public:
 		// Конструирует вектор размера size со значениями value
-		explicit Vector(size_t size, double value = 0);
+		explicit Vector(int32_t size, double value = 0);
 
 		// Конструктор копирования
 		Vector(const Vector& src);
@@ -22,11 +22,11 @@ namespace mat_vec {
 		~Vector();
 
 		// Возвращает размер вектора
-		size_t size() const;
+		int32_t size() const;
 
 		// Доступ к n-му элементу вектора
-		double operator[](size_t n) const;
-		double& operator[](size_t n);
+		double operator[](int32_t n) const;
+		double& operator[](int32_t n);
 
 		// L2 норма вектора
 		double norm() const;
@@ -71,6 +71,6 @@ namespace mat_vec {
 
 	private:
 		double* m_data;
-		size_t m_size;
+		int32_t m_size;
 };
 } // namespace mat_vec

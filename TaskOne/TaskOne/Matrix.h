@@ -8,13 +8,13 @@ namespace mat_vec {
 	class Matrix {
 	public:
 		// Конструирует матрицу с размерами size x size, заполненную value
-		/*explicit Matrix(size_t size, double value = 0);*/
+		/*explicit Matrix(int32_t size, double value = 0);*/
 
 		// Возвращает единичную матрицу
-		static Matrix eye(size_t size);
+		static Matrix eye(int32_t size);
 
 		// Возвращает матрицу с размерами rows x cols, заполненную value
-		Matrix(size_t rows, size_t cols, double value = 0);
+		Matrix(int32_t rows, int32_t cols, double value = 0);
 
 		// Конструктор копирования
 		Matrix(const Matrix& src);
@@ -31,15 +31,15 @@ namespace mat_vec {
 		// [1 2 3] -> [1 2]
 		// [4 5 6] -> [3 4]
 		//            [5 6]
-		void reshape(size_t rows, size_t cols);
+		void reshape(int32_t rows, int32_t cols);
 
 		// Возвращает пару {rows, cols} -- количество строк и столбцов матрицы
-		std::pair<size_t, size_t> shape() const;
+		std::pair<int32_t, int32_t> shape() const;
 
 		// Возвращает элемент на позиции [row, col]
-		double get(size_t row, size_t col) const;
+		double get(int32_t row, int32_t col) const;
 
-		void set(size_t row, size_t col, double val);
+		void set(int32_t row, int32_t col, double val);
 
 		// Поэлементное сложение
 		Matrix operator+(const Matrix& rhs) const;
@@ -82,8 +82,8 @@ namespace mat_vec {
 
 	private:
 		double** m_data;
-		rsize_t m_rows;
-		rsize_t m_cols;
+		int32_t m_rows;
+		int32_t m_cols;
 
 		double deter(double** matr, int n);
 		double** cofactor(int i_, int j_, double** matr, int n);
