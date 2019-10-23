@@ -630,3 +630,40 @@ TEST_CASE("copy constractor")
     REQUIRE(std::abs(sp.get(0, 0) - sp2.get(0, 0)) < eps);
     REQUIRE(std::abs(sp.get(0, 1) - sp2.get(0, 1)) < eps);
 }
+
+TEST_CASE("shape ")
+{
+    mat_vec::SpareMatrix sp(1, 2);
+    REQUIRE(sp.shape().first == 1);
+    REQUIRE(sp.shape().second == 2);
+}
+
+TEST_CASE(" * double k")
+{
+    mat_vec::SpareMatrix sp1(4, 5);
+    double k = 2;
+
+    sp1.set(2, 4, 6);
+    sp1.set(0, 0, 3);
+    mat_vec::SpareMatrix sp2 = sp1 * k;
+    sp1 *= k;
+
+    REQUIRE(std::abs(sp1.get(2, 4) - 12) < eps);
+    REQUIRE(std::abs(sp2.get(0, 0) - 6) < eps);
+}
+
+TEST_CASE(" / double k")
+{
+    mat_vec::SpareMatrix sp1(4, 5);
+    double k = 3;
+
+    sp1.set(2, 4, 18);
+    sp1.set(0, 0, 27.3);
+    mat_vec::SpareMatrix sp2 = sp1 / k;
+    sp1 /= k;
+
+    REQUIRE(std::abs(sp1.get(2, 4) - 6) < eps);
+    REQUIRE(std::abs(sp2.get(0, 0) - 9.1) < eps);
+    //REQUIRE_THROWS(sp2 = sp1 / 0);
+    REQUIRE_THROWS(sp2 /= 0);
+}

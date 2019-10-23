@@ -93,17 +93,79 @@ namespace mat_vec
         }
 
         val_ind* buf = new val_ind[size_of_row[row] + 1];
-        std::copy(m_data[row], m_data[row] + size_of_row[std::max(0, insert - 1)], buf);
+        std::copy(m_data[row], m_data[row] + std::max(0, insert - 1), buf);
         buf[insert].ind = col;
         buf[insert].val = val;
         if (size_of_row[row] > insert)
-            std::copy(m_data[row] + insert, m_data[row] + size_of_row[row] + 1, buf + insert + 1);
+            std::copy(m_data[row] + insert, m_data[row] + size_of_row[row], buf + insert + 1);
 
         delete[] m_data[row];
         m_data[row] = new val_ind[size_of_row[row] + 1];
         std::copy(buf, buf + size_of_row[row] + 1, m_data[row]);
-        
+
         delete[] buf;
         size_of_row[row]++;
     }
+
+    std::pair<int32_t, int32_t> mat_vec::SpareMatrix::shape() const
+    {
+        return { this->m_rows, this->m_cols };
+    }
+
+    mat_vec::SpareMatrix mat_vec::SpareMatrix::operator*(double k) const
+    {
+        SpareMatrix new_sp = *this;
+        for (int i = 0; i < this->m_rows; i++)
+        {
+            for (int j = 0; j < size_of_row[i]; j++)
+            {
+                new_sp.m_data[i][j].val *= k;
+            }
+        }
+        return new_sp;
+    }
+
+    mat_vec::SpareMatrix& mat_vec::SpareMatrix::operator*=(double k)
+    {
+        for (int i = 0; i < this->m_rows; i++)
+        {
+            for (int j = 0; j < size_of_row[i]; j++)
+            {
+                this->m_data[i][j].val *= k;
+            }
+        }
+        return *this;
+    }
+
+    mat_vec::SpareMatrix mat_vec::SpareMatrix::operator/(double k) const
+    {
+        if (k == 0)
+            throw std::runtime_error("Division by zero");
+
+        SpareMatrix new_sp = *this;
+        for (int i = 0; i < this->m_rows; i++)
+        {
+            for (int j = 0; j < size_of_row[i]; j++)
+            {
+                new_sp.m_data[i][j].val /= k;
+            }
+        }
+        return new_sp;
+    }
+
+    mat_vec::SpareMatrix& mat_vec::SpareMatrix::operator/=(double k)
+    {
+        if (k == 0)
+            throw std::runtime_error("Division by zero");
+
+        for (int i = 0; i < this->m_rows; i++)
+        {
+            for (int j = 0; j < size_of_row[i]; j++)
+            {
+                this->m_data[i][j].val /= k;
+            }
+        }
+        return *this;
+    }
+
 }
