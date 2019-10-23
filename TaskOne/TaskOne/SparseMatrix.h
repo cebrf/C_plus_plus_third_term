@@ -8,8 +8,14 @@ namespace mat_vec
   {
   public:
     SpareMatrix(int32_t rows, int32_t cols);
+
+    // Конструктор копирования
+    SpareMatrix(const SpareMatrix& src);
+
     ~SpareMatrix();
+    
     double get(int32_t row, int32_t col) const;
+    
     void set(int32_t row, int32_t col, double val);
 
   private:

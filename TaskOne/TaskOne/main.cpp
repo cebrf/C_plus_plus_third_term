@@ -618,3 +618,15 @@ TEST_CASE("get and set")
     sp.set(0, 0, 9.9);
     REQUIRE((sp.get(0, 0) - 9.9) < eps);
 }
+
+TEST_CASE("copy constractor")
+{
+    mat_vec::SpareMatrix sp(1, 2);
+
+    sp.set(0, 1, 6.0);
+    sp.set(0, 0, 7.2);
+    
+    mat_vec::SpareMatrix sp2 = sp;
+    REQUIRE(std::abs(sp.get(0, 0) - sp2.get(0, 0)) < eps);
+    REQUIRE(std::abs(sp.get(0, 1) - sp2.get(0, 1)) < eps);
+}

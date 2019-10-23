@@ -22,6 +22,20 @@ namespace mat_vec
             this->m_data[i] = new val_ind[cols];
         }
     }
+
+    mat_vec::SpareMatrix::SpareMatrix(const mat_vec::SpareMatrix& src) : 
+        m_data(new val_ind* [src.m_rows]),
+        size_of_row(new int[src.m_rows]),
+        m_rows(src.m_rows), 
+        m_cols(src.m_cols)
+    {
+        std::copy(src.size_of_row, src.size_of_row + src.m_rows, this->size_of_row);
+        for (int i = 0; i < src.m_rows; i++)
+        {
+            this->m_data[i] = new val_ind[src.m_cols];
+            std::copy(src.m_data[i], src.m_data[i] + src.m_cols, this->m_data[i]);
+        }
+    }
     
     mat_vec::SpareMatrix::~SpareMatrix()
     {
