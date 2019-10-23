@@ -47,6 +47,29 @@ namespace mat_vec
         delete[] this->size_of_row;
     }
 
+    mat_vec::SpareMatrix& mat_vec::SpareMatrix::operator=(const SpareMatrix& rhs)
+    {
+        for (int i = 0; i < this->m_rows; i++)
+        {
+            delete[] this->m_data[i];
+        }
+        delete[] this->m_data;
+        delete[] this->size_of_row;
+
+        this->m_rows = rhs.m_rows;
+        this->m_cols = rhs.m_cols;
+        this->m_data = new val_ind* [rhs.m_rows];
+        this->size_of_row = new int[rhs.m_rows];
+        std::copy(rhs.size_of_row, rhs.size_of_row + rhs.m_rows, this->size_of_row);
+        for (int i = 0; i < rhs.m_rows; i++)
+        {
+            this->m_data[i] = new val_ind[rhs.size_of_row[i]];
+            std::copy(rhs.m_data[i], rhs.m_data[i] + rhs.size_of_row[i], this->m_data[i]);
+        }
+
+        return *this;
+    }
+
     double mat_vec::SpareMatrix::get(int32_t row, int32_t col) const
     {
         double out_val = 0.0;

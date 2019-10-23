@@ -659,11 +659,12 @@ TEST_CASE(" / double k")
 
     sp1.set(2, 4, 18);
     sp1.set(0, 0, 27.3);
-    mat_vec::SpareMatrix sp2 = sp1 / k;
+    mat_vec::SpareMatrix sp2(1, 1);
+    sp2 = sp1 / k;
     sp1 /= k;
 
     REQUIRE(std::abs(sp1.get(2, 4) - 6) < eps);
     REQUIRE(std::abs(sp2.get(0, 0) - 9.1) < eps);
-    //REQUIRE_THROWS(sp2 = sp1 / 0);
+    REQUIRE_THROWS(sp2 = sp1 / 0);
     REQUIRE_THROWS(sp2 /= 0);
 }
