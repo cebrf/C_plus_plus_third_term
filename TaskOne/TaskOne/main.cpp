@@ -6,6 +6,7 @@
 #include "Base.h"
 #include "Vector.h"
 #include "Matrix.h"
+#include "SparseMatrix.h"
 
 const double eps = 0.00001;
 
@@ -599,4 +600,21 @@ TEST_CASE("matr * vec. Different sizes")
   mat_vec::Matrix m(2, 4, 8.6);
   mat_vec::Vector v(1, 0.1);
   REQUIRE_THROWS(m * v);
+}
+
+
+
+
+//_______________________________________
+//Sparse matrix tests
+TEST_CASE("get and set")
+{
+    mat_vec::SpareMatrix sp(1, 2);
+    sp.set(0, 1, 6.0);
+    REQUIRE(std::abs(sp.get(0, 1) - 6.0) < eps);
+    sp.set(0, 0, 7.2);
+    REQUIRE(std::abs(sp.get(0, 0) - 7.2) < eps);
+    REQUIRE((sp.get(0, 1) - 6.0) < eps);
+    sp.set(0, 0, 9.9);
+    REQUIRE((sp.get(0, 0) - 9.9) < eps);
 }

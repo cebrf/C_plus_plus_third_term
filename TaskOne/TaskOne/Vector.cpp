@@ -7,6 +7,8 @@
 
 
 
+const double eps = 0.00001;
+
 namespace mat_vec {
 
 	mat_vec::Vector mat_vec::operator*(double k, const mat_vec::Vector& v)
