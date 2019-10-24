@@ -59,9 +59,6 @@ namespace mat_vec
     // Обратная матрица
     SpareMatrix inv();
 
-    // УМножение матрицы на вектор
-    Vector operator*(const Vector& vec) const;
-
     // Поэлементное сравнение
     bool operator==(const SpareMatrix& rhs) const;
     bool operator!=(const SpareMatrix& rhs) const;

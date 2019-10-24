@@ -754,3 +754,23 @@ TEST_CASE("convert_to_matr")
     REQUIRE(std::abs(sp2.get(0, 0) - 1) < eps);
     REQUIRE(std::abs(sp2.get(1, 3) - 9) < eps);
 }
+
+TEST_CASE(" matr * matr")
+{
+    mat_vec::SpareMatrix sp1(2, 3);
+    mat_vec::SpareMatrix sp2(3, 2);
+
+    sp1.set(0, 2, 1);
+    sp2.set(1, 0, 1);
+    sp2.set(2, 1, 1);
+
+    mat_vec::SpareMatrix sp3 = sp1 * sp2;
+    REQUIRE(std::abs(sp3.get(0, 0) - 0) < eps);
+    REQUIRE(std::abs(sp3.get(0, 1) - 1) < eps);
+    REQUIRE(std::abs(sp3.get(1, 1) - 0) < eps);
+
+    sp1 *= sp2;
+    REQUIRE(std::abs(sp3.get(0, 0) - sp1.get(0, 0)) < eps);
+    REQUIRE(std::abs(sp3.get(0, 1) - sp1.get(0, 1)) < eps);
+    REQUIRE(std::abs(sp3.get(1, 1) - sp1.get(1, 1)) < eps);
+}
