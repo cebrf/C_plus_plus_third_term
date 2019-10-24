@@ -33,7 +33,7 @@ namespace mat_vec
         for (int i = 0; i < src.m_rows; i++)
         {
             this->m_data[i] = new val_ind[src.m_cols];
-            std::copy(src.m_data[i], src.m_data[i] + src.m_cols, this->m_data[i]);
+            std::copy(src.m_data[i], src.m_data[i] + src.size_of_row[i], this->m_data[i]);
         }
     }
     
@@ -126,10 +126,6 @@ namespace mat_vec
         m_data[row] = new val_ind[size_of_row[row] + 1];
         std::copy(buf, buf + size_of_row[row] + 1, m_data[row]);
 
-        /*for (int i = 0; i < size_of_row[row] + 1; i++)
-            std::cout << buf[i].ind << " " << buf[i].val << " ";
-        std::cout << '\n';*/
-
         delete[] buf;
         size_of_row[row]++;
     }
@@ -150,6 +146,13 @@ namespace mat_vec
     std::pair<int32_t, int32_t> mat_vec::SpareMatrix::shape() const
     {
         return { this->m_rows, this->m_cols };
+    }
+
+    void mat_vec::SpareMatrix::reshape(int32_t rows, int32_t cols)
+    {
+        mat_vec::Matrix matr = this->convert_to_matr();
+        matr.reshape(rows, cols);
+        *this = matr.convert_to_sparse_matr();
     }
 
     mat_vec::SpareMatrix mat_vec::SpareMatrix::operator*(double k) const
@@ -324,7 +327,7 @@ namespace mat_vec
 
     }
 
-    mat_vec::SpareMatrix mat_vec::SpareMatrix::operator*(const SpareMatrix& rhs) const
+    mat_vec::SpareMatrix mat_vec::SpareMatrix::operator*(SpareMatrix& rhs)
     {
         if (this->m_cols != rhs.m_rows)
             throw std::runtime_error("Array index out of bounds");
@@ -362,7 +365,7 @@ namespace mat_vec
         return new_matr;
     }
 
-    mat_vec::SpareMatrix& mat_vec::SpareMatrix::operator*=(const SpareMatrix& rhs)
+    mat_vec::SpareMatrix& mat_vec::SpareMatrix::operator*=(SpareMatrix& rhs)
     {
         mat_vec::SpareMatrix this_ = *this * rhs;
         *this = this_;
@@ -436,5 +439,18 @@ namespace mat_vec
         }
 
         return !is_equal;
+    }
+
+    double mat_vec::SpareMatrix::det()
+    {
+        mat_vec::Matrix matr = this->convert_to_matr();
+        return matr.det();
+    }
+
+    mat_vec::SpareMatrix mat_vec::SpareMatrix::inv()
+    {
+        mat_vec::Matrix matr = this->convert_to_matr();
+        matr = matr.inv();
+        return matr.convert_to_sparse_matr();
     }
 }

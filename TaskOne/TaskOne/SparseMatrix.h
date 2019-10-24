@@ -36,8 +36,8 @@ namespace mat_vec
     SpareMatrix& operator-=(const SpareMatrix& rhs);
 
     // Матричное умножение
-    SpareMatrix operator*(const SpareMatrix& rhs) const;
-    SpareMatrix& operator*=(const SpareMatrix& rhs);
+    SpareMatrix operator*(SpareMatrix& rhs);
+    SpareMatrix& operator*=(SpareMatrix& rhs);
 
     // Умножение всех элементов матрицы на константу
     SpareMatrix operator*(double k) const;

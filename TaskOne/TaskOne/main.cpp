@@ -481,7 +481,7 @@ TEST_CASE("operator == & != ")
 
 //EXCEPTIONS FOR VECTOR
 
-TEST_CASE("size of vec < 0")
+TEST_CASE("size of vec <= 0")
 {
   mat_vec::Vector v(2, 4);
   REQUIRE_THROWS(v = Vector(-3, 1.0));
@@ -773,6 +773,11 @@ TEST_CASE(" matr * matr")
     REQUIRE(std::abs(sp3.get(0, 0) - sp1.get(0, 0)) < eps);
     REQUIRE(std::abs(sp3.get(0, 1) - sp1.get(0, 1)) < eps);
     REQUIRE(std::abs(sp3.get(1, 1) - sp1.get(1, 1)) < eps);
+
+    mat_vec::SpareMatrix sp4(3, 2);
+    sp4 *= sp1;
+    REQUIRE(std::abs(sp4.get(0, 0) - 0) < eps);
+
 }
 
 TEST_CASE("equals ")
@@ -787,6 +792,97 @@ TEST_CASE("equals ")
     REQUIRE(sp1 != sp2);
 
     sp2 = sp1;
-    REQUIRE(!(sp1 != sp2));
+    
     REQUIRE(sp1 == sp2);
+
+    mat_vec::SpareMatrix sp3 = mat_vec::SpareMatrix(1, 1);
+    REQUIRE(!(sp3 == sp2));
+    REQUIRE(sp3 != sp2);
+}
+
+TEST_CASE("reshape ")
+{
+    mat_vec::SpareMatrix sp(3, 3);
+    sp.set(0, 1, 1);
+    sp.set(0, 2, 2);
+    sp.set(2, 0, 4);
+    sp.set(2, 2, 8);
+    sp.reshape(4, 2);
+    REQUIRE(std::abs(sp.get(0, 1) - 1) < eps);
+    REQUIRE(std::abs(sp.get(1, 0) - 2) < eps);
+    REQUIRE(std::abs(sp.get(3, 0) - 4) < eps);
+    REQUIRE(std::abs(sp.get(3, 1) - 0) < eps);
+}
+
+
+TEST_CASE("deter ")
+{
+    SpareMatrix m1(3, 3);
+    m1.set(0, 0, 3);
+    m1.set(0, 1, 3);
+    m1.set(0, 2, -1);
+
+    m1.set(1, 0, 4);
+    m1.set(1, 1, 1);
+    m1.set(1, 2, 3);
+
+    m1.set(2, 0, 1);
+    m1.set(2, 1, -2);
+    m1.set(2, 2, -2);
+
+    REQUIRE((m1.det() - 54.0) < eps);
+}
+
+TEST_CASE("inver ")
+{
+    SpareMatrix m2(4, 4);
+    m2.set(0, 0, 5);
+    m2.set(0, 1, -2);
+    m2.set(0, 2, 2);
+    m2.set(0, 3, 7);
+
+    m2.set(1, 0, 1);
+    m2.set(1, 1, 0);
+    m2.set(1, 2, 0);
+    m2.set(1, 3, 3);
+
+    m2.set(2, 0, -3);
+    m2.set(2, 1, 1);
+    m2.set(2, 2, 5);
+    m2.set(2, 3, 0);
+
+    m2.set(3, 0, 3);
+    m2.set(3, 1, 1);
+    m2.set(3, 2, -9);
+    m2.set(3, 3, 4);
+
+    SpareMatrix m = m2.inv();
+    REQUIRE((m.get(1, 1) - 74285) < eps);
+}
+/*for (int i = 1; i < 1000; i++)
+{
+    sp.set(1, i, i);
+}*/
+//mat_vec::SpareMatrix sp_ = sp * sp1;
+
+TEST_CASE(" different size ")
+{
+    mat_vec::SpareMatrix sp1(2, 4);
+    mat_vec::SpareMatrix sp2(2, 3);
+    REQUIRE_THROWS(sp1 + sp2);
+    REQUIRE_THROWS(sp1 - sp2);
+    REQUIRE_THROWS(sp1 += sp2);
+    REQUIRE_THROWS(sp1 -= sp2);
+    REQUIRE_THROWS(sp1 * sp2);
+    REQUIRE_THROWS(sp1 *= sp2);
+}
+
+TEST_CASE("TIME TEST")
+{
+    mat_vec::SpareMatrix sp(10000, 10000);
+    for (int i = 1; i < 1000; i++)
+    {
+        sp.set(1, i, i);
+    }
+
 }
