@@ -668,3 +668,58 @@ TEST_CASE(" / double k")
     REQUIRE_THROWS(sp2 = sp1 / 0);
     REQUIRE_THROWS(sp2 /= 0);
 }
+
+TEST_CASE("get, set index out of bounds")
+{
+    mat_vec::SpareMatrix sp(3, 4);
+    REQUIRE_THROWS((sp.get(12, 15) - 0) < eps);
+    REQUIRE_THROWS(sp.set(15, 19, 1));
+}
+
+TEST_CASE("size of matr <= 0")
+{
+    mat_vec::SpareMatrix sp(1, 1);
+    REQUIRE_THROWS(sp = mat_vec::SpareMatrix(0, -1));
+}
+
+TEST_CASE("matr + matr")
+{
+    mat_vec::SpareMatrix sp1(2, 2), sp2(2, 2);
+    sp1.set(0, 0, 1);
+    sp1.set(0, 1, 4.5);
+    sp2.set(1, 1, 1);
+    sp2.set(0, 1, 4.5);
+    mat_vec::SpareMatrix sp3 = sp1 + sp2;
+    REQUIRE(std::abs(sp3.get(0, 0) - 1) < eps);
+    REQUIRE(std::abs(sp3.get(0, 1) - 9) < eps);
+    REQUIRE(std::abs(sp3.get(1, 1) - 1) < eps);
+    REQUIRE(std::abs(sp3.get(1, 0) - 0) < eps);
+
+    sp1 += sp2;
+    REQUIRE(std::abs(sp3.get(0, 0) - sp1.get(0, 0)) < eps);
+    REQUIRE(std::abs(sp3.get(0, 1) - sp1.get(0, 1)) < eps);
+    REQUIRE(std::abs(sp3.get(1, 1) - sp1.get(1, 1)) < eps);
+    REQUIRE(std::abs(sp3.get(1, 0) - sp1.get(1, 0)) < eps);
+
+}
+
+TEST_CASE("matr - matr")
+{
+    mat_vec::SpareMatrix sp1(2, 2), sp2(2, 2);
+    sp1.set(0, 0, 1);
+    sp1.set(0, 1, 9);
+    sp2.set(1, 1, 1);
+    sp2.set(0, 1, 4.5);
+    mat_vec::SpareMatrix sp3 = sp1 - sp2;
+    REQUIRE(std::abs(sp3.get(0, 0) - 1) < eps);
+    REQUIRE(std::abs(sp3.get(0, 1) - 4.5) < eps);
+    REQUIRE(std::abs(sp3.get(1, 1) - (-1)) < eps);
+    REQUIRE(std::abs(sp3.get(1, 0) - 0) < eps);
+
+    sp1 -= sp2;
+    REQUIRE(std::abs(sp3.get(0, 0) - sp1.get(0, 0)) < eps);
+    REQUIRE(std::abs(sp3.get(0, 1) - sp1.get(0, 1)) < eps);
+    REQUIRE(std::abs(sp3.get(1, 1) - sp1.get(1, 1)) < eps);
+    REQUIRE(std::abs(sp3.get(1, 0) - sp1.get(1, 0)) < eps);
+
+}

@@ -116,7 +116,7 @@ namespace mat_vec
         }
 
         val_ind* buf = new val_ind[size_of_row[row] + 1];
-        std::copy(m_data[row], m_data[row] + std::max(0, insert - 1), buf);
+        std::copy(m_data[row], m_data[row] + insert, buf);
         buf[insert].ind = col;
         buf[insert].val = val;
         if (size_of_row[row] > insert)
@@ -125,6 +125,10 @@ namespace mat_vec
         delete[] m_data[row];
         m_data[row] = new val_ind[size_of_row[row] + 1];
         std::copy(buf, buf + size_of_row[row] + 1, m_data[row]);
+
+        /*for (int i = 0; i < size_of_row[row] + 1; i++)
+            std::cout << buf[i].ind << " " << buf[i].val << " ";
+        std::cout << '\n';*/
 
         delete[] buf;
         size_of_row[row]++;
@@ -191,4 +195,119 @@ namespace mat_vec
         return *this;
     }
 
+    mat_vec::SpareMatrix mat_vec::SpareMatrix::operator+(const mat_vec::SpareMatrix& rhs) const
+    {
+        if (this->m_rows != rhs.m_rows || this->m_cols != rhs.m_cols)
+            throw std::runtime_error("Array index out of bounds");
+
+        mat_vec::SpareMatrix new_matr(this->m_rows, this->m_cols);
+        for (int i = 0; i < this->m_rows; i++)
+        {
+            int l = 0, r = 0;
+            while (l < this->size_of_row[i] && r < rhs.size_of_row[i])
+            {
+                if (this->m_data[i][l].ind == rhs.m_data[i][r].ind)
+                {
+                    new_matr.set(i, this->m_data[i][l].ind, this->m_data[i][l].val + rhs.m_data[i][r].val);
+                    l++;
+                    r++;
+                }
+                else if (this->m_data[i][l].ind < rhs.m_data[i][r].ind)
+                {
+                    new_matr.set(i, this->m_data[i][l].ind, this->m_data[i][l].val);
+                    l++;
+                }
+                else
+                {
+                    new_matr.set(i, rhs.m_data[i][r].ind, rhs.m_data[i][r].val);
+                    r++;
+                }
+            }
+            while (l < this->size_of_row[i])
+            {
+                new_matr.set(i, this->m_data[i][l].ind, this->m_data[i][l].val);
+                l++;
+            }
+            while (r < rhs.size_of_row[i])
+            {
+                new_matr.set(i, rhs.m_data[i][r].ind, rhs.m_data[i][r].val);
+                r++;
+            }
+        }
+        return new_matr;
+    }
+
+    mat_vec::SpareMatrix& mat_vec::SpareMatrix::operator+=(const SpareMatrix& rhs)
+    {
+        if (this->m_rows != rhs.m_rows || this->m_cols != rhs.m_cols)
+            throw std::runtime_error("Array index out of bounds");
+        
+        for (int i = 0; i < rhs.m_rows; i++)
+        {
+            for (int j = 0; j < rhs.size_of_row[i]; j++)
+            {
+                double x = this->get(i, rhs.m_data[i][j].ind) + rhs.m_data[i][j].val;
+                this->set(i, rhs.m_data[i][j].ind, x);
+            }
+        }
+
+    }
+
+    mat_vec::SpareMatrix mat_vec::SpareMatrix::operator-(const mat_vec::SpareMatrix& rhs) const
+    {
+        if (this->m_rows != rhs.m_rows || this->m_cols != rhs.m_cols)
+            throw std::runtime_error("Array index out of bounds");
+
+        mat_vec::SpareMatrix new_matr(this->m_rows, this->m_cols);
+        for (int i = 0; i < this->m_rows; i++)
+        {
+            int l = 0, r = 0;
+            while (l < this->size_of_row[i] && r < rhs.size_of_row[i])
+            {
+                if (this->m_data[i][l].ind == rhs.m_data[i][r].ind)
+                {
+                    new_matr.set(i, this->m_data[i][l].ind, this->m_data[i][l].val - rhs.m_data[i][r].val);
+                    l++;
+                    r++;
+                }
+                else if (this->m_data[i][l].ind < rhs.m_data[i][r].ind)
+                {
+                    new_matr.set(i, this->m_data[i][l].ind, this->m_data[i][l].val);
+                    l++;
+                }
+                else
+                {
+                    new_matr.set(i, rhs.m_data[i][r].ind, rhs.m_data[i][r].val);
+                    r++;
+                }
+            }
+            while (l < this->size_of_row[i])
+            {
+                new_matr.set(i, this->m_data[i][l].ind, this->m_data[i][l].val);
+                l++;
+            }
+            while (r < rhs.size_of_row[i])
+            {
+                new_matr.set(i, rhs.m_data[i][r].ind, rhs.m_data[i][r].val * (-1));
+                r++;
+            }
+        }
+        return new_matr;
+    }
+
+    mat_vec::SpareMatrix& mat_vec::SpareMatrix::operator-=(const SpareMatrix& rhs)
+    {
+        if (this->m_rows != rhs.m_rows || this->m_cols != rhs.m_cols)
+            throw std::runtime_error("Array index out of bounds");
+
+        for (int i = 0; i < rhs.m_rows; i++)
+        {
+            for (int j = 0; j < rhs.size_of_row[i]; j++)
+            {
+                double x = this->get(i, rhs.m_data[i][j].ind) - rhs.m_data[i][j].val;
+                this->set(i, rhs.m_data[i][j].ind, x);
+            }
+        }
+
+    }
 }
