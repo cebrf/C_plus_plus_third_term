@@ -310,4 +310,25 @@ namespace mat_vec
         }
 
     }
+
+    void mat_vec::SpareMatrix::transpose()
+    {
+        mat_vec::SpareMatrix new_matr(this->m_cols, this->m_rows);
+        for (int i = 0; i < this->m_rows; i++)
+        {
+            for(int j = 0; j < this->size_of_row[i]; j++)
+            {
+                new_matr.set(this->m_data[i][j].ind, i, this->m_data[i][j].val);
+            }
+        }
+
+        *this = new_matr;
+    }
+
+    mat_vec::SpareMatrix mat_vec::SpareMatrix::transposed() const
+    {
+        mat_vec::SpareMatrix new_matr(*this);
+        new_matr.transpose();
+        return new_matr;
+    }
 }

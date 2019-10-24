@@ -47,6 +47,25 @@ namespace mat_vec
     SpareMatrix operator/(double k) const;
     SpareMatrix& operator/=(double k);
 
+    // Возвращает новую матрицу, полученную транспонированием текущей (this)
+    SpareMatrix transposed() const;
+
+    // Транспонирует текущую матрицу
+    void transpose();
+
+    // Определитель
+    double det();
+
+    // Обратная матрица
+    SpareMatrix inv();
+
+    // УМножение матрицы на вектор
+    Vector operator*(const Vector& vec) const;
+
+    // Поэлементное сравнение
+    bool operator==(const SpareMatrix& rhs) const;
+    bool operator!=(const SpareMatrix& rhs) const;
+
   private:
     struct val_ind
     {
