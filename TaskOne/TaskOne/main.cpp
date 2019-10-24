@@ -749,4 +749,8 @@ TEST_CASE("convert_to_matr")
     mat_vec::Matrix matr = sp.convert_to_matr();
     REQUIRE(std::abs(matr.get(0, 0) - 1) < eps);
     REQUIRE(std::abs(matr.get(1, 3) - 9) < eps);
+
+    mat_vec::SpareMatrix sp2 = matr.convert_to_sparse_matr();
+    REQUIRE(std::abs(sp2.get(0, 0) - 1) < eps);
+    REQUIRE(std::abs(sp2.get(1, 3) - 9) < eps);
 }

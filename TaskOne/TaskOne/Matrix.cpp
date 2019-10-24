@@ -4,6 +4,7 @@
 #include "Base.h"
 #include "Matrix.h"
 #include "Vector.h"
+#include "SparseMatrix.h"
 
 
 namespace mat_vec
@@ -106,6 +107,19 @@ namespace mat_vec
 		this->m_rows = rows;
 		this->m_cols = cols;
 	}
+
+    mat_vec::SpareMatrix mat_vec::Matrix::convert_to_sparse_matr() const
+    {
+        mat_vec::SpareMatrix new_sp(m_rows, m_cols);
+        for (int i = 0; i < m_rows; i++)
+        {
+            for (int j = 0; j < m_cols; j++)
+            {
+                new_sp.set(i, j, m_data[i][j]);
+            }
+        }
+        return new_sp;
+    }
 
 	std::pair<int32_t, int32_t> mat_vec::Matrix::shape() const
 	{
