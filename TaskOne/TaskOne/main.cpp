@@ -774,3 +774,19 @@ TEST_CASE(" matr * matr")
     REQUIRE(std::abs(sp3.get(0, 1) - sp1.get(0, 1)) < eps);
     REQUIRE(std::abs(sp3.get(1, 1) - sp1.get(1, 1)) < eps);
 }
+
+TEST_CASE("equals ")
+{
+    mat_vec::SpareMatrix sp1(2, 3);
+    mat_vec::SpareMatrix sp2(2, 3);
+
+    sp1.set(0, 2, 1);
+    sp2.set(1, 0, 1);
+
+    REQUIRE(!(sp1 == sp2));
+    REQUIRE(sp1 != sp2);
+
+    sp2 = sp1;
+    REQUIRE(!(sp1 != sp2));
+    REQUIRE(sp1 == sp2);
+}

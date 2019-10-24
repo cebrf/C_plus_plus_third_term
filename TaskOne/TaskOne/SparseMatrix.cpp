@@ -389,4 +389,52 @@ namespace mat_vec
         new_matr.transpose();
         return new_matr;
     }
+
+    bool mat_vec::SpareMatrix::operator==(const SpareMatrix& rhs) const
+    {
+        if (this->m_cols != rhs.m_cols || this->m_rows != rhs.m_rows)
+            return false;
+
+        bool is_equal = 1;
+        for (int i = 0; i < this->m_rows && is_equal; i++)
+        {
+            if (this->size_of_row[i] == rhs.size_of_row[i])
+            {
+                for (int j = 0; j < this->size_of_row[i] && is_equal; j++)
+                {
+                    if (this->m_data[i][j].ind != rhs.m_data[i][j].ind || this->m_data[i][j].val != rhs.m_data[i][j].val)
+                        is_equal = 0;
+                }
+            }
+            else
+                is_equal = 0;
+
+        }
+
+        return is_equal;
+    }
+
+    bool mat_vec::SpareMatrix::operator!=(const SpareMatrix& rhs) const
+    {
+        if (this->m_cols != rhs.m_cols || this->m_rows != rhs.m_rows)
+            return true;
+
+        bool is_equal = 1;
+        for (int i = 0; i < this->m_rows && is_equal; i++)
+        {
+            if (this->size_of_row[i] == rhs.size_of_row[i])
+            {
+                for (int j = 0; j < this->size_of_row[i] && is_equal; j++)
+                {
+                    if (this->m_data[i][j].ind != rhs.m_data[i][j].ind || this->m_data[i][j].val != rhs.m_data[i][j].val)
+                        is_equal = 0;
+                }
+            }
+            else
+                is_equal = 0;
+
+        }
+
+        return !is_equal;
+    }
 }
