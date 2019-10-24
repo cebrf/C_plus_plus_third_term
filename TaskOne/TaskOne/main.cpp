@@ -739,3 +739,14 @@ TEST_CASE("transpose ")
     REQUIRE(std::abs(sp1.get(0, 1) - sp2.get(0, 1)) < eps);
     REQUIRE(std::abs(sp1.get(1, 0) - sp2.get(1, 0)) < eps);
 }
+
+TEST_CASE("convert_to_matr")
+{
+    mat_vec::SpareMatrix sp(2, 4);
+    sp.set(0, 0, 1);
+    sp.set(1, 3, 9);
+
+    mat_vec::Matrix matr = sp.convert_to_matr();
+    REQUIRE(std::abs(matr.get(0, 0) - 1) < eps);
+    REQUIRE(std::abs(matr.get(1, 3) - 9) < eps);
+}

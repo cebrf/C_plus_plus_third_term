@@ -134,6 +134,19 @@ namespace mat_vec
         size_of_row[row]++;
     }
 
+    mat_vec::Matrix mat_vec::SpareMatrix::convert_to_matr()
+    {
+        mat_vec::Matrix new_matr(this->m_rows, this->m_cols);
+        for (int i = 0; i < this->m_rows; i++)
+        {
+            for (int j = 0; j < this->size_of_row[i]; j++)
+            {
+                new_matr.set(i, this->m_data[i][j].ind, this->m_data[i][j].val);
+            }
+        }
+        return new_matr;
+    }
+
     std::pair<int32_t, int32_t> mat_vec::SpareMatrix::shape() const
     {
         return { this->m_rows, this->m_cols };
