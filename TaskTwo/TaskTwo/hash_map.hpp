@@ -4,6 +4,7 @@
 #include <memory>
 #include <utility>
 #include <type_traits>
+#include <vector>
 
 namespace fefu
 {
@@ -28,9 +29,9 @@ namespace fefu
 
         ~allocator() = default;
 
-        pointer allocate(size_type size)
+        pointer allocate(size_type size = 1)
         {
-            auto p = ::operator new(size);
+            auto p = ::operator new(size * sizeof(value_type));
             return static_cast<pointer>(p);
         }
 
@@ -115,7 +116,10 @@ namespace fefu
          *  @brief  Default constructor creates no elements.
          *  @param n  Minimal initial number of buckets.
          */
-        explicit hash_map(size_type n);
+        explicit hash_map(size_type n) : 
+            m_data(m_alloc.allocate(n)),
+            m_set(n, 0),
+            m_size(n) {}
 
         /**
          *  @brief  Builds an %hash_map from a range.
@@ -689,6 +693,13 @@ namespace fefu
         void reserve(size_type n);
 
         bool operator==(const hash_map& other) const;
-    };
 
+    private:
+        allocator_type m_alloc;
+        hasher m_hash;
+        key_equal m_key_equal;
+        value_type* m_data;
+        std::vector<char> m_set;
+        size_type m_size;
+    };
 } // namespace fefu
