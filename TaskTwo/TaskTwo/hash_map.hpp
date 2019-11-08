@@ -659,9 +659,19 @@ namespace fefu
          *           such a data is present in the %hash_map.
          *  @throw  std::out_of_range  If no such data is present.
          */
-        mapped_type& at(const key_type& k);
+        mapped_type& at(const key_type& k)
+        {
+            const size_type i = m_hash(k) % m_size;
+            if (m_set[i])
+                return m_data[i].second;
+            else
+                throw std::out_of_range("no such key in hash map");
+        }
 
-        const mapped_type& at(const key_type& k) const;
+        const mapped_type& at(const key_type& k) const
+        {
+            return (*this).at(k);
+        }
         //@}
 
         // bucket interface.
