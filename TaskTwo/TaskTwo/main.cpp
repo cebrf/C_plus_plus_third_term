@@ -6,6 +6,8 @@
 #include "catch.hpp"
 #include "hash_map.hpp"
 
+const float Eps = 0.0001;
+
 using namespace std;
 
 TEST_CASE("HELL")
@@ -68,5 +70,18 @@ TEST_CASE("bucket_count")
 {
     fefu::hash_map<int, int> hm(14);
     REQUIRE(hm.bucket_count() == 14);
-    cout << hm.bucket(115);
+    //cout << hm.bucket(115);
+}
+
+TEST_CASE("load_factor")
+{
+    fefu::hash_map<int, int> hm(12);
+    REQUIRE(std::abs(hm.load_factor() - 0) < Eps);
+
+    hm[1] = 1;
+    hm[2] = 1;
+    hm[3] = 1;
+    REQUIRE(hm.size() == 3);
+    REQUIRE(std::abs(hm.load_factor() - 3/12.0) < Eps);
+    REQUIRE(std::abs(hm.max_load_factor() - 3 / 4.0) < Eps);
 }

@@ -120,7 +120,8 @@ namespace fefu
             m_data(m_alloc.allocate(n)),
             m_set(n, 0),
             m_size(0),
-            m_bucket_count(n) {}
+            m_bucket_count(n),
+            m_max_load_factor(0.75) {}
 
         /**
          *  @brief  Builds an %hash_map from a range.
@@ -208,7 +209,10 @@ namespace fefu
         bool empty() const noexcept;
 
         ///  Returns the size of the %hash_map.
-        size_type size() const noexcept;
+        size_type size() const noexcept
+        {
+            return m_size;
+        }
 
         ///  Returns the maximum size of the %hash_map.
         size_type max_size() const noexcept;
@@ -701,11 +705,17 @@ namespace fefu
         // hash policy.
 
         /// Returns the average number of elements per bucket.
-        float load_factor() const noexcept;
+        float load_factor() const noexcept
+        {
+            return static_cast<float>(m_size) / m_bucket_count;
+        }
 
         /// Returns a positive number that the %hash_map tries to keep the
         /// load factor less than or equal to.
-        float max_load_factor() const noexcept;
+        float max_load_factor() const noexcept
+        {
+            return m_max_load_factor;
+        }
 
         /**
          *  @brief  Change the %hash_map maximum load factor.
@@ -741,5 +751,6 @@ namespace fefu
         std::vector<char> m_set;
         size_type m_size; //сайз это кол-во элементов которые щас есть контейнере
         size_type m_bucket_count;  //а бакет каунт это размер массива
+        float m_max_load_factor;
     };
 } // namespace fefu
