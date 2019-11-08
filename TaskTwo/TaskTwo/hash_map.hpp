@@ -683,14 +683,20 @@ namespace fefu
         // bucket interface.
 
         /// Returns the number of buckets of the %hash_map.
-        size_type bucket_count() const noexcept;
+        size_type bucket_count() const noexcept
+        {
+            return m_bucket_count;
+        }
 
         /*
         * @brief  Returns the bucket index of a given element.
         * @param  _K  A key instance.
         * @return  The key bucket index.
         */
-        size_type bucket(const key_type& _K) const;
+        size_type bucket(const key_type& _K) const
+        {
+            return m_hash(_K) % m_bucket_count;
+        }
 
         // hash policy.
 

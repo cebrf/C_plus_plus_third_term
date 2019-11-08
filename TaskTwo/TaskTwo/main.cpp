@@ -63,3 +63,10 @@ TEST_CASE("clear")
     REQUIRE_THROWS(hm.at(1) == 0);
     REQUIRE(hm[1] == 0);
 }
+
+TEST_CASE("bucket_count")
+{
+    fefu::hash_map<int, int> hm(14);
+    REQUIRE(hm.bucket_count() == 14);
+    cout << hm.bucket(115);
+}
