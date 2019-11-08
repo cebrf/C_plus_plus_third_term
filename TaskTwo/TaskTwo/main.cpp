@@ -10,11 +10,9 @@ const float Eps = 0.0001;
 
 using namespace std;
 
-TEST_CASE("HELL")
+TEST_CASE("")
 {
-    string hell = "hell";
-    REQUIRE(hell == "hell");
-    cout << hell << '\n';
+    cout << "suffering & sorrow" << '\n';
 
     fefu::allocator<int> alucard;
     int* e = alucard.allocate();
@@ -84,4 +82,20 @@ TEST_CASE("load_factor")
     REQUIRE(hm.size() == 3);
     REQUIRE(std::abs(hm.load_factor() - 3/12.0) < Eps);
     REQUIRE(std::abs(hm.max_load_factor() - 3 / 4.0) < Eps);
+}
+
+TEST_CASE("copy constructor")
+{
+    fefu::hash_map<int, int> hm(12);
+
+    hm[1] = 1;
+    hm[2] = 2;
+    hm[3] = 3;
+
+    fefu::hash_map<int, int> hme(hm);
+/*    REQUIRE(hm[1] == hme[1]);
+    REQUIRE(hme[1] == 1);
+    REQUIRE(hm[3] == hme[3]);
+    REQUIRE(hme[3] == 3);
+    REQUIRE(hme[0] == 0);*/
 }

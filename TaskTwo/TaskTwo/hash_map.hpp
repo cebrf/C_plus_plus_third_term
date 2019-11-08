@@ -138,7 +138,20 @@ namespace fefu
             size_type n = 0);
 
         /// Copy constructor.
-        hash_map(const hash_map&);
+        hash_map(const hash_map& src) :
+            m_bucket_count(src.m_bucket_count),
+            m_data(m_alloc.allocate(src.m_bucket_count)),
+            m_size(src.m_size),
+            m_set(src.m_bucket_count, 0),
+            m_max_load_factor(src.m_max_load_factor)
+        {
+            //std::copy(src.m_data, src.m_data + src.m_bucket_count, m_data);
+            for (int i = 0; i < src.m_bucket_count; i++)
+            {
+                if (src.m_set[i])
+                    new(m_data + i) value_type{ src.m_data[i].first, src.m_data[i].second };
+            }
+        }
 
         /// Move constructor.
         hash_map(hash_map&&);
@@ -721,7 +734,10 @@ namespace fefu
          *  @brief  Change the %hash_map maximum load factor.
          *  @param  z The new maximum load factor.
          */
-        void max_load_factor(float z);
+        void max_load_factor(float z)
+        {
+            m_max_load_factor = z;
+        }
 
         /**
          *  @brief  May rehash the %hash_map.
