@@ -879,10 +879,15 @@ TEST_CASE(" different size ")
 
 TEST_CASE("TIME TEST")
 {
-    mat_vec::SpareMatrix sp(10000, 10000);
+    mat_vec::SpareMatrix sp(1000000, 1000000);
     for (int i = 1; i < 1000; i++)
     {
         sp.set(1, i, i);
+    }
+
+    for (int i = 1; i < 1000; i++)
+    {
+        std::cout << sp.get(1, i) << '\n';
     }
 
 }

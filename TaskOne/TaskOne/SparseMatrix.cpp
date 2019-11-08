@@ -19,8 +19,9 @@ namespace mat_vec
         for (int i = 0; i < rows; i++)
         {
             size_of_row[i] = 0;
-            this->m_data[i] = new val_ind[cols];
+            this->m_data[i] = new val_ind;
         }
+        //std::pair<int, int>* pair = new std::pair<int, int>[];
     }
 
     mat_vec::SpareMatrix::SpareMatrix(const mat_vec::SpareMatrix& src) : 
