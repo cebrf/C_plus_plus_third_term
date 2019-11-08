@@ -174,6 +174,11 @@ namespace fefu
         hash_map(std::initializer_list<value_type> l,
             size_type n = 0);
 
+        ~hash_map()
+        {
+            m_alloc.deallocate(m_data, m_set.size());
+        }
+
         /// Copy assignment operator.
         hash_map& operator=(const hash_map&);
 
@@ -629,9 +634,21 @@ namespace fefu
          *
          *  Lookup requires constant time.
          */
-        mapped_type& operator[](const key_type& k);
+        mapped_type& operator[](const key_type& k)
+        {
+            const size_type i = m_hash(k) % m_size;
+            if (!m_set[i])
+            {
+                new(m_data + i) value_type{ k, mapped_type{} };
+                m_set[i] = 1;
+            }
+            return m_data[i].second;
+        }
 
-        mapped_type& operator[](key_type&& k);
+        mapped_type& operator[](key_type&& k)
+        {
+            return (*this)[k];
+        }
         //@}
 
         //@{
