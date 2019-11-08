@@ -52,3 +52,14 @@ TEST_CASE("at")
     hmI[hmC.at('a')] = -4;
     REQUIRE(hmI[hmC.at('a')] == -4);
 }
+
+TEST_CASE("clear")
+{
+    fefu::hash_map<int, int> hm(14);
+    hm[1] = 15;
+    REQUIRE(hm[1] == 15);
+
+    hm.clear();
+    REQUIRE_THROWS(hm.at(1) == 0);
+    REQUIRE(hm[1] == 0);
+}

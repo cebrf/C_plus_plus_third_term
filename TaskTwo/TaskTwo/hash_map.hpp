@@ -119,7 +119,8 @@ namespace fefu
         explicit hash_map(size_type n) : 
             m_data(m_alloc.allocate(n)),
             m_set(n, 0),
-            m_size(n) {}
+            m_size(0),
+            m_bucket_count(n) {}
 
         /**
          *  @brief  Builds an %hash_map from a range.
@@ -554,7 +555,11 @@ namespace fefu
          *  elements themselves are pointers, the pointed-to memory is not touched
          *  in any way.  Managing the pointer is the user's responsibility.
          */
-        void clear() noexcept;
+        void clear() noexcept
+        {
+            m_set.assign(m_bucket_count, 0);
+            m_size = 0;
+        }
 
         /**
          *  @brief  Swaps data with another %hash_map.
@@ -636,11 +641,12 @@ namespace fefu
          */
         mapped_type& operator[](const key_type& k)
         {
-            const size_type i = m_hash(k) % m_size;
+            const size_type i = m_hash(k) % m_bucket_count;
             if (!m_set[i])
             {
                 new(m_data + i) value_type{ k, mapped_type{} };
                 m_set[i] = 1;
+                m_size++;
             }
             return m_data[i].second;
         }
@@ -661,7 +667,7 @@ namespace fefu
          */
         mapped_type& at(const key_type& k)
         {
-            const size_type i = m_hash(k) % m_size;
+            const size_type i = m_hash(k) % m_bucket_count;
             if (m_set[i])
                 return m_data[i].second;
             else
@@ -727,6 +733,7 @@ namespace fefu
         key_equal m_key_equal;
         value_type* m_data;
         std::vector<char> m_set;
-        size_type m_size;
+        size_type m_size; //сайз это кол-во элементов которые щас есть контейнере
+        size_type m_bucket_count;  //а бакет каунт это размер массива
     };
 } // namespace fefu
