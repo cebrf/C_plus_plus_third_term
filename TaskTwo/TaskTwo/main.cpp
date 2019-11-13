@@ -126,3 +126,16 @@ TEST_CASE("rehash")
     REQUIRE(hm[0] == 0);
     REQUIRE(hm.bucket_count() == 19);
 }
+
+TEST_CASE("insert")
+{
+    fefu::hash_map<int, int> hm(12);
+
+    hm.insert({ 15, 1 });
+    REQUIRE(hm[15] == 1);
+
+    vector<pair<int, int>> a = { { 1, 2 }, {3, 4} };
+    hm.insert(a.begin(), a.end());
+    REQUIRE(hm[1] == 2);
+    REQUIRE(hm[2] == 4);
+}

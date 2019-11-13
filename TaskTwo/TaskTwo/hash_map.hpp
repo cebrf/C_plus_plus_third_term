@@ -439,9 +439,26 @@ namespace fefu
         *
         *  Insertion requires amortized constant time.
         */
-        std::pair<iterator, bool> insert(const value_type& x);
+        std::pair<iterator, bool> insert(const value_type& x)
+        {
+            size_type i = m_hash(x.first) % m_bucket_count;
+            while (m_data[i].first != x.first && m_set[i] == 1)
+            {
+                i = (i + 1) % m_bucket_count; //TODO изменить пробирование
+            }
+            new(m_data + i) value_type{ x.first, x.second };
+            m_set[i] = 1;
+            m_size++;
 
-        std::pair<iterator, bool> insert(value_type&& x);
+            iterator iter;
+            iter.p = &m_data[i];
+            return { iter, true };
+        }
+
+        std::pair<iterator, bool> insert(value_type&& x)
+        {
+            return this->insert(x);
+        }
 
         //@}
 
@@ -483,7 +500,13 @@ namespace fefu
          *  Complexity similar to that of the range constructor.
          */
         template<typename _InputIterator>
-        void insert(_InputIterator first, _InputIterator last);
+        void insert(_InputIterator first, _InputIterator last)
+        {
+            for (auto iter = first; iter != last; iter++)
+            {
+                this->insert(*iter);
+            }
+        }
 
         /**
          *  @brief Attempts to insert a list of elements into the %hash_map.
@@ -492,7 +515,10 @@ namespace fefu
          *
          *  Complexity similar to that of the range constructor.
          */
-        void insert(std::initializer_list<value_type> l);
+        void insert(std::initializer_list<value_type> l)
+        {
+            this->insert(l.begin(), l.end());
+        }
 
 
         /**
@@ -515,12 +541,12 @@ namespace fefu
          *
          *  Insertion requires amortized constant time.
          */
-        template <typename _Obj>
-        std::pair<iterator, bool> insert_or_assign(const key_type& k, _Obj&& obj);
+        /*template <typename _Obj>
+        std::pair<iterator, bool> insert_or_assign(const key_type& k, _Obj&& obj);*/
 
-        // move-capable overload
+        /*// move-capable overload
         template <typename _Obj>
-        std::pair<iterator, bool> insert_or_assign(key_type&& k, _Obj&& obj);
+        std::pair<iterator, bool> insert_or_assign(key_type&& k, _Obj&& obj);*/
 
         /**
          *  @brief Attempts to insert a std::pair into the %hash_map.
@@ -548,13 +574,13 @@ namespace fefu
          *
          *  Insertion requires amortized constant time.
          */
-        template <typename _Obj>
+        /*template <typename _Obj>
         iterator insert_or_assign(const_iterator hint, const key_type& k,
-            _Obj&& obj);
+            _Obj&& obj);*/
 
-        // move-capable overload
+        /*// move-capable overload
         template <typename _Obj>
-        iterator insert_or_assign(const_iterator hint, key_type&& k, _Obj&& obj);
+        iterator insert_or_assign(const_iterator hint, key_type&& k, _Obj&& obj);*/
 
         //@{
         /**
@@ -623,6 +649,7 @@ namespace fefu
             }*/
             m_set.assign(m_bucket_count, 0);
             m_size = 0;
+            //если не затирать удаленные элементы, это утечка памяти? или, так как это не указатели, то все норм?
         }
 
         /**
@@ -635,13 +662,13 @@ namespace fefu
          *  Note that the global std::swap() function is specialized such that
          *  std::swap(m1,m2) will feed to this function.
          */
-        void swap(hash_map& x);
+        /*void swap(hash_map& x);
 
         template<typename _H2, typename _P2>
         void merge(hash_map<K, T, _H2, _P2, Alloc>& source);
 
         template<typename _H2, typename _P2>
-        void merge(hash_map<K, T, _H2, _P2, Alloc>&& source);
+        void merge(hash_map<K, T, _H2, _P2, Alloc>&& source);*/
 
         // observers.
 
@@ -654,7 +681,10 @@ namespace fefu
 
         ///  Returns the key comparison object with which the %hash_map was
         ///  constructed.
-        Pred key_eq() const;
+        Pred key_eq() const
+        {
+            return m_hash;
+        }
 
         // lookup.
 
