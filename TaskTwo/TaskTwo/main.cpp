@@ -42,7 +42,7 @@ TEST_CASE("operator[]")
     REQUIRE(hm[1] == "");
 }
 
-TEST_CASE("at")
+/*TEST_CASE("at")
 {
     fefu::hash_map<int, int> hmI(14);
     fefu::hash_map<char, int> hmC(14);
@@ -52,7 +52,7 @@ TEST_CASE("at")
 
     hmI[hmC.at('a')] = -4;
     REQUIRE(hmI[hmC.at('a')] == -4);
-}
+}*/
 
 TEST_CASE("clear")
 {

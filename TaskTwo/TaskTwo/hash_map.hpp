@@ -83,8 +83,8 @@ namespace fefu
             typename Alloc = allocator<std::pair<const K, T>>>
             friend class hash_map;
 
-        friend bool operator==(const hash_map_iterator<ValueType>&, const hash_map_iterator<ValueType>&);
-        friend bool operator!=(const hash_map_iterator<ValueType>&, const hash_map_iterator<ValueType>&);
+        friend bool operator==(const hash_map_iterator<ValueType>& lhs, const hash_map_iterator<ValueType>& rhs);  //где реализовывать?
+        friend bool operator!=(const hash_map_iterator<ValueType>& lhs, const hash_map_iterator<ValueType>& rhs);
 
     private:
         pointer p;
@@ -161,7 +161,15 @@ namespace fefu
          */
         template<typename InputIterator>
         hash_map(InputIterator first, InputIterator last,
-            size_type n = 0);
+            size_type n = 0) :
+            m_data(m_alloc.allocate(n)),
+            m_set(n, 0),
+            m_size(0),
+            m_bucket_count(n),
+            m_max_load_factor(0.75) 
+        {
+            this->insert(first, last);
+        }
 
         /// Copy constructor.
         hash_map(const hash_map& src) :
@@ -180,20 +188,20 @@ namespace fefu
         }
 
         /// Move constructor.
-        hash_map(hash_map&&);
+        hash_map(hash_map&&);                                                    //TODO
 
         /**
          *  @brief Creates an %hash_map with no elements.
          *  @param a An allocator object.
          */
-        explicit hash_map(const allocator_type& a);
+        explicit hash_map(const allocator_type& a);                             //TODO
 
         /*
         *  @brief Copy constructor with allocator argument.
         * @param  uset  Input %hash_map to copy.
         * @param  a  An allocator object.
         */
-        hash_map(const hash_map& umap,
+        hash_map(const hash_map& umap,                                      //TODO
             const allocator_type& a);
 
         /*
@@ -201,7 +209,7 @@ namespace fefu
         *  @param  uset Input %hash_map to move.
         *  @param  a    An allocator object.
         */
-        hash_map(hash_map&& umap,
+        hash_map(hash_map&& umap,                                           //TODO
             const allocator_type& a);
 
         /**
@@ -212,7 +220,7 @@ namespace fefu
          *  Create an %hash_map consisting of copies of the elements in the
          *  list. This is linear in N (where N is @a l.size()).
          */
-        hash_map(std::initializer_list<value_type> l,
+        hash_map(std::initializer_list<value_type> l,                             //TODO
             size_type n = 0);
 
         ~hash_map()
@@ -221,10 +229,10 @@ namespace fefu
         }
 
         /// Copy assignment operator.
-        hash_map& operator=(const hash_map&);
+        hash_map& operator=(const hash_map&);                                //TODO
 
         /// Move assignment operator.
-        hash_map& operator=(hash_map&&);
+        hash_map& operator=(hash_map&&);                                   //TODO
 
         /**
          *  @brief  %hash_map list assignment operator.
@@ -237,10 +245,13 @@ namespace fefu
          *  that the resulting %hash_map's size is the same as the number
          *  of elements assigned.
          */
-        hash_map& operator=(std::initializer_list<value_type> l);
+        hash_map& operator=(std::initializer_list<value_type> l);                //TODO
 
         ///  Returns the allocator object used by the %hash_map.
-        allocator_type get_allocator() const noexcept;
+        allocator_type get_allocator() const noexcept
+        {
+            return m_alloc;
+        }
 
         // size and capacity:
 
@@ -329,7 +340,7 @@ namespace fefu
         *  Insertion requires amortized constant time.
         */
         template<typename... _Args>
-        std::pair<iterator, bool> emplace(_Args&&... args);
+        std::pair<iterator, bool> emplace(_Args&&... args);                                      //ASK
 
         /**
          *  @brief Attempts to build and insert a std::pair into the
@@ -358,7 +369,7 @@ namespace fefu
         *  Insertion requires amortized constant time.
         */
         template<typename... _Args>
-        iterator emplace_hint(const_iterator pos, _Args&&... args);
+        iterator emplace_hint(const_iterator pos, _Args&&... args);                              //ASK
 
         /**
          *  @brief Attempts to build and insert a std::pair into the
@@ -383,11 +394,11 @@ namespace fefu
          *  Insertion requires amortized constant time.
          */
         template <typename... _Args>
-        std::pair<iterator, bool> try_emplace(const key_type& k, _Args&&... args);
+        std::pair<iterator, bool> try_emplace(const key_type& k, _Args&&... args);                  //ASK
 
         // move-capable overload
         template <typename... _Args>
-        std::pair<iterator, bool> try_emplace(key_type&& k, _Args&&... args);
+        std::pair<iterator, bool> try_emplace(key_type&& k, _Args&&... args);                       //ASK
 
         /**
          *  @brief Attempts to build and insert a std::pair into the
@@ -418,12 +429,12 @@ namespace fefu
          *  Insertion requires amortized constant time.
          */
         template <typename... _Args>
-        iterator try_emplace(const_iterator hint, const key_type& k,
+        iterator try_emplace(const_iterator hint, const key_type& k,                             //ASK
             _Args&&... args);
 
         // move-capable overload
         template <typename... _Args>
-        iterator try_emplace(const_iterator hint, key_type&& k, _Args&&... args);
+        iterator try_emplace(const_iterator hint, key_type&& k, _Args&&... args);                   //ASK
 
         //@{
         /**
@@ -452,6 +463,15 @@ namespace fefu
             new(m_data + i) value_type{ x.first, x.second };
             m_set[i] = 1;
             m_size++;
+
+            // load_factor
+            if (load_factor() >= m_max_load_factor)
+            {
+                this->rehash(2 * m_bucket_count);
+                iterator iter = this->find(x.first);
+                return { iter, true };
+            }
+
 
             iterator iter;
             iter.p = &m_data[i];
@@ -487,9 +507,9 @@ namespace fefu
          *
          *  Insertion requires amortized constant time.
          */
-        /*iterator insert(const_iterator hint, const value_type& x);
+        iterator insert(const_iterator hint, const value_type& x);                  //ASK
 
-        iterator insert(const_iterator hint, value_type&& x);*/
+        iterator insert(const_iterator hint, value_type&& x);                  //ASK about hint
 
         //@}
 
@@ -544,12 +564,12 @@ namespace fefu
          *
          *  Insertion requires amortized constant time.
          */
-        /*template <typename _Obj>
-        std::pair<iterator, bool> insert_or_assign(const key_type& k, _Obj&& obj);*/
-
-        /*// move-capable overload
         template <typename _Obj>
-        std::pair<iterator, bool> insert_or_assign(key_type&& k, _Obj&& obj);*/
+        std::pair<iterator, bool> insert_or_assign(const key_type& k, _Obj&& obj);
+
+        // move-capable overload
+        template <typename _Obj>
+        std::pair<iterator, bool> insert_or_assign(key_type&& k, _Obj&& obj);
 
         /**
          *  @brief Attempts to insert a std::pair into the %hash_map.
@@ -577,13 +597,13 @@ namespace fefu
          *
          *  Insertion requires amortized constant time.
          */
-        /*template <typename _Obj>
-        iterator insert_or_assign(const_iterator hint, const key_type& k,
-            _Obj&& obj);*/
-
-        /*// move-capable overload
         template <typename _Obj>
-        iterator insert_or_assign(const_iterator hint, key_type&& k, _Obj&& obj);*/
+        iterator insert_or_assign(const_iterator hint, const key_type& k,
+            _Obj&& obj);
+
+        // move-capable overload
+        template <typename _Obj>
+        iterator insert_or_assign(const_iterator hint, key_type&& k, _Obj&& obj);
 
         //@{
         /**
@@ -599,10 +619,10 @@ namespace fefu
          *  element is itself a pointer, the pointed-to memory is not touched in
          *  any way.  Managing the pointer is the user's responsibility.
          */
-        iterator erase(const_iterator position);
+        iterator erase(const_iterator position);                        //TODO
 
         // LWG 2059.
-        iterator erase(iterator position);
+        iterator erase(iterator position);                        //TODO
         //@}
 
         /**
@@ -617,7 +637,7 @@ namespace fefu
          *  element is itself a pointer, the pointed-to memory is not touched in
          *  any way.  Managing the pointer is the user's responsibility.
          */
-        size_type erase(const key_type& x);
+        size_type erase(const key_type& x);                        //TODO
 
         /**
          *  @brief Erases a [first,last) range of elements from an
@@ -633,7 +653,7 @@ namespace fefu
          *  the element is itself a pointer, the pointed-to memory is not touched
          *  in any way.  Managing the pointer is the user's responsibility.
          */
-        iterator erase(const_iterator first, const_iterator last);
+        iterator erase(const_iterator first, const_iterator last);                        //TODO
 
         /**
          *  Erases all elements in an %hash_map.
@@ -643,16 +663,8 @@ namespace fefu
          */
         void clear() noexcept
         {
-            /*for (int i = 0; i < m_bucket_count; i++)  // need this ????
-            {
-                if (m_set[i] != 0)
-                {
-                    delete m_data[i];
-                }
-            }*/
             m_set.assign(m_bucket_count, 0);
             m_size = 0;
-            //если не затирать удаленные элементы, это утечка памяти? или, так как это не указатели, то все норм?
         }
 
         /**
@@ -665,13 +677,13 @@ namespace fefu
          *  Note that the global std::swap() function is specialized such that
          *  std::swap(m1,m2) will feed to this function.
          */
-        /*void swap(hash_map& x);
+        void swap(hash_map& x);                                 //ASK
 
         template<typename _H2, typename _P2>
         void merge(hash_map<K, T, _H2, _P2, Alloc>& source);
 
         template<typename _H2, typename _P2>
-        void merge(hash_map<K, T, _H2, _P2, Alloc>&& source);*/
+        void merge(hash_map<K, T, _H2, _P2, Alloc>&& source);
 
         // observers.
 
@@ -771,7 +783,7 @@ namespace fefu
          *
          *  Lookup requires constant time.
          */
-        mapped_type& operator[](const key_type& k)
+        mapped_type& operator[](const key_type& k)                      //TODO
         {
             const size_type i = m_hash(k) % m_bucket_count;
             if (m_set[i] == 0)
@@ -781,6 +793,15 @@ namespace fefu
                 m_size++;
             }
             return m_data[i].second;
+            /*
+                iterator iter = this.find(k);
+                if (iter == this.end())
+                {
+                    this.insert({k, 0});
+                    return 0;
+                }
+                return iter.second;
+            */
         }
 
         mapped_type& operator[](key_type&& k)
@@ -797,13 +818,21 @@ namespace fefu
          *           such a data is present in the %hash_map.
          *  @throw  std::out_of_range  If no such data is present.
          */
-        mapped_type& at(const key_type& k)
+        mapped_type& at(const key_type& k)                                  //TODO
         {
             const size_type i = m_hash(k) % m_bucket_count;
             if (m_set[i])
                 return m_data[i].second;
             else
                 throw std::out_of_range("no such key in hash map");
+
+            /*
+            auto iter = this->find(x);
+            if (iter != this->end())
+                return iter.second;
+            else
+                throw std::out_of_range("no such key in hash map");
+            */
         }
 
         const mapped_type& at(const key_type& k) const
@@ -926,4 +955,15 @@ namespace fefu
         size_type m_bucket_count;  //а бакет каунт это размер массива
         float m_max_load_factor;
     };
+
+    /*template<typename ValueType>
+    bool operator==(const hash_map_iterator<ValueType>& lhs, const hash_map_iterator<ValueType>& rhs)
+    {
+        return *lhs == *rhs;
+    }
+    template<typename ValueType>
+    bool operator!=(const hash_map_iterator<ValueType>& lhs, const hash_map_iterator<ValueType>& rhs) 
+    {
+        return *lhs != *rhs;
+    }*/
 } // namespace fefu
