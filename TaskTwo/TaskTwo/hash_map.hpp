@@ -77,14 +77,16 @@ namespace fefu
             return this;
         }
 
-        friend hash_map_iterator<value_type> begin() noexcept;
-        /*friend iterator hash_map::begin() noexcept;
-        friend const_iterator hash_map::begin() const noexcept;*/
+        template<typename K, typename T,
+            typename Hash = std::hash<K>,
+            typename Pred = std::equal_to<K>,
+            typename Alloc = allocator<std::pair<const K, T>>>
+            friend class hash_map;
 
         friend bool operator==(const hash_map_iterator<ValueType>&, const hash_map_iterator<ValueType>&);
         friend bool operator!=(const hash_map_iterator<ValueType>&, const hash_map_iterator<ValueType>&);
 
-    //private:
+    private:
         pointer p;
     };
 
@@ -291,6 +293,7 @@ namespace fefu
         {
             iterator iter;
             iter.p = m_data + m_bucket_count;
+            return iter;
         }
 
         //@{
@@ -484,9 +487,9 @@ namespace fefu
          *
          *  Insertion requires amortized constant time.
          */
-        iterator insert(const_iterator hint, const value_type& x);
+        /*iterator insert(const_iterator hint, const value_type& x);
 
-        iterator insert(const_iterator hint, value_type&& x);
+        iterator insert(const_iterator hint, value_type&& x);*/
 
         //@}
 
@@ -700,7 +703,24 @@ namespace fefu
          *  pointing to the sought after element.  If unsuccessful it returns the
          *  past-the-end ( @c end() ) iterator.
          */
-        iterator find(const key_type& x);
+        iterator find(const key_type& x)
+        {
+            size_type i = m_hash(x) % m_bucket_count;
+            while (m_data[i].first != x && m_set[i] == 1)
+            {
+                i = (i + 1) % m_bucket_count; //TODO изменить пробирование
+            }
+            if (m_data[i].first == x)
+            {
+                iterator iter;
+                iter.p = &m_data[i];
+                return iter;
+            }
+            else
+            {
+                return this->begin();
+            }
+        }
 
         const_iterator find(const key_type& x) const;
         //@}
@@ -714,14 +734,29 @@ namespace fefu
          *  %hash_map the result will either be 0 (not present) or 1
          *  (present).
          */
-        size_type count(const key_type& x) const;
+        size_type count(const key_type& x) const
+        {
+            auto iter = this->find(x);
+            if (iter == this->end())
+                return 0;
+            else
+                return 1;
+        }
+
 
         /**
          *  @brief  Finds whether an element with the given key exists.
          *  @param  x  Key of elements to be located.
          *  @return  True if there is any element with the specified key.
          */
-        bool contains(const key_type& x) const;
+        bool contains(const key_type& x) const
+        {
+            auto iter = this->find(x);
+            if (iter == this->end())
+                return 0;
+            else
+                return 1;
+        }
 
         //@{
         /**
@@ -739,7 +774,7 @@ namespace fefu
         mapped_type& operator[](const key_type& k)
         {
             const size_type i = m_hash(k) % m_bucket_count;
-            if (!m_set[i])
+            if (m_set[i] == 0)
             {
                 new(m_data + i) value_type{ k, mapped_type{} };
                 m_set[i] = 1;
@@ -860,9 +895,26 @@ namespace fefu
          *
          *  Same as rehash(ceil(n / max_load_factor())).
          */
-        void reserve(size_type n);
+        void reserve(size_type n)
+        {
+            this->rehash(ceil(n / m_max_load_factor));
+        }
 
-        bool operator==(const hash_map& other) const;
+        bool operator==(const hash_map& other) const
+        {
+            bool res = 1;
+            for (int i = 0; i < m_bucket_count && res; i++)
+            {
+                if (m_set[i] == 1)
+                {
+                    if (other.find(m_data[i].first) == other.end())
+                    {
+                        res = 0;
+                    }
+                }
+            }
+            return res;
+        }
 
     private:
         allocator_type m_alloc;

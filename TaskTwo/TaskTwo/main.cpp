@@ -137,5 +137,17 @@ TEST_CASE("insert")
     vector<pair<int, int>> a = { { 1, 2 }, {3, 4} };
     hm.insert(a.begin(), a.end());
     REQUIRE(hm[1] == 2);
-    REQUIRE(hm[2] == 4);
+    REQUIRE(hm[3] == 4);
+}
+
+TEST_CASE("operator ==")
+{
+    fefu::hash_map<int, int> hm(12);
+    hm.insert({ 15, 1 });
+    auto iter = hm.find(14);
+    auto end = hm.end();
+    //REQUIRE(hm.end() == end);
+    //REQUIRE(hm.find(14) == hm.end());
+
+    REQUIRE((*hm.find(15)).second == 1);
 }
