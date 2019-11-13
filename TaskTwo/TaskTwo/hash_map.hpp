@@ -24,6 +24,8 @@ namespace fefu
 
         allocator(const allocator&) noexcept = default;
 
+        
+
         template <class U>
         allocator(const allocator<U>&) noexcept;
 
@@ -50,19 +52,40 @@ namespace fefu
         using reference = ValueType&;
         using pointer = ValueType*;
 
-        hash_map_iterator() noexcept;
-        hash_map_iterator(const hash_map_iterator& other) noexcept;
+        hash_map_iterator() noexcept = default;
+        hash_map_iterator(const hash_map_iterator& other) noexcept : p(other.p) { }
 
-        reference operator*() const;
-        pointer operator->() const;
+        reference operator*() const
+        {
+            return *p;
+        }
+        pointer operator->() const
+        {
+            return p;
+        }
 
         // prefix ++
-        hash_map_iterator& operator++();
+        hash_map_iterator& operator++()
+        {
+            this->p++;
+            return *this;
+        }
         // postfix ++
-        hash_map_iterator operator++(int);
+        hash_map_iterator operator++(int)
+        {
+            this->p++;
+            return this;
+        }
+
+        friend hash_map_iterator<value_type> begin() noexcept;
+        /*friend iterator hash_map::begin() noexcept;
+        friend const_iterator hash_map::begin() const noexcept;*/
 
         friend bool operator==(const hash_map_iterator<ValueType>&, const hash_map_iterator<ValueType>&);
         friend bool operator!=(const hash_map_iterator<ValueType>&, const hash_map_iterator<ValueType>&);
+
+    //private:
+        pointer p;
     };
 
     template<typename ValueType>
@@ -90,11 +113,12 @@ namespace fefu
         friend bool operator==(const hash_map_const_iterator<ValueType>&, const hash_map_const_iterator<ValueType>&);
         friend bool operator!=(const hash_map_const_iterator<ValueType>&, const hash_map_const_iterator<ValueType>&);
     };
+    
     template<typename K, typename T,
         typename Hash = std::hash<K>,
         typename Pred = std::equal_to<K>,
         typename Alloc = allocator<std::pair<const K, T>>>
-        class hash_map
+    class hash_map
     {
     public:
         using key_type = K;
@@ -117,7 +141,7 @@ namespace fefu
          *  @param n  Minimal initial number of buckets.
          */
         explicit hash_map(size_type n) : 
-            m_data(m_alloc.allocate(n)),
+            m_data(m_alloc.allocate(n)),  // m_data // при [] вызывать allocate
             m_set(n, 0),
             m_size(0),
             m_bucket_count(n),
@@ -142,7 +166,7 @@ namespace fefu
             m_bucket_count(src.m_bucket_count),
             m_data(m_alloc.allocate(src.m_bucket_count)),
             m_size(src.m_size),
-            m_set(src.m_bucket_count, 0),
+            m_set(src.m_set),
             m_max_load_factor(src.m_max_load_factor)
         {
             //std::copy(src.m_data, src.m_data + src.m_bucket_count, m_data);
@@ -219,7 +243,10 @@ namespace fefu
         // size and capacity:
 
         ///  Returns true if the %hash_map is empty.
-        bool empty() const noexcept;
+        bool empty() const noexcept
+        {
+            return m_size == 0 ? 1 : 0;
+        }
 
         ///  Returns the size of the %hash_map.
         size_type size() const noexcept
@@ -236,7 +263,16 @@ namespace fefu
          *  Returns a read/write iterator that points to the first element in the
          *  %hash_map.
          */
-        iterator begin() noexcept;
+        iterator begin() noexcept
+        {
+            int i = 0;
+            while (i < m_bucket_count && m_set[i] == 0)
+                i++;
+
+            iterator iter;
+            iter.p = &m_data[i];
+            return iter;
+        }
 
         //@{
         /**
@@ -251,7 +287,11 @@ namespace fefu
          *  Returns a read/write iterator that points one past the last element in
          *  the %hash_map.
          */
-        iterator end() noexcept;
+        iterator end() noexcept
+        {
+            iterator iter;
+            iter.p = m_data + m_bucket_count;
+        }
 
         //@{
         /**
@@ -574,6 +614,13 @@ namespace fefu
          */
         void clear() noexcept
         {
+            /*for (int i = 0; i < m_bucket_count; i++)  // need this ????
+            {
+                if (m_set[i] != 0)
+                {
+                    delete m_data[i];
+                }
+            }*/
             m_set.assign(m_bucket_count, 0);
             m_size = 0;
         }
@@ -600,7 +647,10 @@ namespace fefu
 
         ///  Returns the hash functor object with which the %hash_map was
         ///  constructed.
-        Hash hash_function() const;
+        Hash hash_function() const 
+        {
+            return m_hash;
+        }
 
         ///  Returns the key comparison object with which the %hash_map was
         ///  constructed.
@@ -746,7 +796,32 @@ namespace fefu
          *  Rehash will occur only if the new number of buckets respect the
          *  %hash_map maximum load factor.
          */
-        void rehash(size_type n);
+        void rehash(size_type n)
+        {
+            std::vector<char> _set(n, 0);
+            value_type* _data(m_alloc.allocate(n));
+            for (int i = 0; i < m_bucket_count; i++)
+            {
+                if (m_set[i] == 1)
+                {
+                    int k = m_hash(m_data[i].first) % n;
+                    new(_data + k) value_type{ m_data[i].first, m_data[i].second };
+                    _set[k] = 1;
+                }
+            }
+
+            m_set = _set;
+            m_alloc.deallocate(m_data, m_bucket_count);
+            m_data = m_alloc.allocate(n);
+            //std::copy(_data, _data + n, m_data);  why I can't do it?
+            for (int i = 0; i < n; i++)
+                if (m_set[i] == 1)
+                {
+                    new(m_data + i) value_type{ _data[i].first, _data[i].second };
+                }
+            m_alloc.deallocate(_data, n);
+            m_bucket_count = n;
+        }
 
         /**
          *  @brief  Prepare the %hash_map for a specified number of

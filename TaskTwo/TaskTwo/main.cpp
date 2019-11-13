@@ -5,6 +5,7 @@
 #include <string>
 #include "catch.hpp"
 #include "hash_map.hpp"
+#include <unordered_map>
 
 const float Eps = 0.0001;
 
@@ -93,9 +94,35 @@ TEST_CASE("copy constructor")
     hm[3] = 3;
 
     fefu::hash_map<int, int> hme(hm);
-/*    REQUIRE(hm[1] == hme[1]);
+    REQUIRE(hm[1] == hme[1]);
     REQUIRE(hme[1] == 1);
     REQUIRE(hm[3] == hme[3]);
     REQUIRE(hme[3] == 3);
-    REQUIRE(hme[0] == 0);*/
+    REQUIRE(hme[0] == 0);
+}
+
+TEST_CASE("begin")
+{
+    fefu::hash_map<int, int> hm(12);
+    hm[15] = 1;
+    auto iter = hm.begin();
+    cout << iter->first << " " << iter->second;
+
+    hm.rehash(19);
+}
+
+TEST_CASE("rehash")
+{
+    fefu::hash_map<int, int> hm(12);
+    hm[15] = 1;
+    hm[4] = 12;
+    hm[6] = 0;
+    
+    hm.rehash(19);
+
+    REQUIRE(hm[15] == 1);
+    REQUIRE(hm[4] == 12);
+    REQUIRE(hm[6] == 0);
+    REQUIRE(hm[0] == 0);
+    REQUIRE(hm.bucket_count() == 19);
 }
