@@ -395,13 +395,22 @@ namespace fefu
         // size and capacity:
 
         ///  Returns true if the %hash_map is empty.
-        bool empty() const noexcept;
+        bool empty() const noexcept
+        {
+            return m_size == 0 ? 1 : 0;
+        }
 
         ///  Returns the size of the %hash_map.
-        size_type size() const noexcept;
+        size_type size() const noexcept
+        {
+            return m_size;
+        }
 
         ///  Returns the maximum size of the %hash_map.
-        size_type max_size() const noexcept;
+        size_type max_size() const noexcept
+        {
+            return int32_t;
+        }
 
         // iterators.
 
@@ -409,31 +418,82 @@ namespace fefu
          *  Returns a read/write iterator that points to the first element in the
          *  %hash_map.
          */
-        iterator begin() noexcept;
+        iterator begin() noexcept
+        {
+            int i = 0;
+            while (i < m_bucket_count && m_set[i] == 0)
+                i++;
+
+            iterator iter(&m_data[i], &m_set, i);
+            return iter;
+        }
 
         //@{
         /**
          *  Returns a read-only (constant) iterator that points to the first
          *  element in the %hash_map.
          */
-        const_iterator begin() const noexcept;
+        const_iterator begin() const noexcept
+        {
+            int i = 0;
+            while (i < m_bucket_count && m_set[i] == 0)
+                i++;
 
-        const_iterator cbegin() const noexcept;
+            const_iterator iter(&m_data[i], &m_set, i);
+            return iter;
+        }
+
+        const_iterator cbegin() const noexcept
+        {
+            int i = 0;
+            while (i < m_bucket_count && m_set[i] == 0)
+                i++;
+
+            const_iterator iter(const &m_data[i], &m_set, i);            //ASK is that right
+            return iter;
+        }
 
         /**
          *  Returns a read/write iterator that points one past the last element in
          *  the %hash_map.
          */
-        iterator end() noexcept;
+        iterator end() noexcept
+        {
+            int i = m_bucket_count - 1;
+            while (i >= 0 && m_set[i] == 0)
+                i++;
+            i = i == -1 ? m_bucket_count - 1 : i;
+
+            iterator iter(&m_data[i], &m_set, i);
+            return iter;
+        }
 
         //@{
         /**
          *  Returns a read-only (constant) iterator that points one past the last
          *  element in the %hash_map.
          */
-        const_iterator end() const noexcept;
+        const_iterator end() const noexcept
+        {
+            int i = m_bucket_count - 1;
+            while (i >= 0 && m_set[i] == 0)
+                i++;
+            i = i == -1 ? m_bucket_count - 1 : i;
 
-        const_iterator cend() const noexcept;
+            const_iterator iter(&m_data[i], &m_set, i);
+            return iter;
+        }
+
+        const_iterator cend() const noexcept
+        {
+            int i = m_bucket_count - 1;
+            while (i >= 0 && m_set[i] == 0)
+                i++;
+            i = i == -1 ? m_bucket_count - 1 : i;
+
+            const_iterator iter(const &m_data[i], &m_set, i);            //ASK is that right
+            return iter;
+        }
         //@}
 
         // modifiers.
