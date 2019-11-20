@@ -191,10 +191,8 @@ namespace fefu
         // postfix ++
         hash_map_const_iterator operator++(int num)
         {
-            for (int i = 0; i < num; i++)
-            {
-                (*this)++;
-            }
+            ++(*this);
+            return *this;
         }
 
         template<typename K, typename T,
@@ -903,11 +901,11 @@ namespace fefu
             }*/
 
             size_type i = m_hash(x) % m_bucket_count;
-            while (m_data[i].first != x && m_set[i] == 1)
+            while (m_data[i].first != x && m_set[i] != 0)
             {
                 i = (i + 1) % m_bucket_count;
             }
-            if (m_data[i].first == x)
+            if (m_set[i] != 0 && m_data[i].first == x)
             {
                 iterator iter(&m_data[i], &m_set, i);
                 return iter;
@@ -920,9 +918,24 @@ namespace fefu
 
         const_iterator find(const key_type& x) const
         {
-            iterator iter_ = find(x);
+            /*iterator iter_ = find(x);
             const_iterator iter(iter_);
-            return iter;
+            return iter;*/
+
+            size_type i = m_hash(x) % m_bucket_count;
+            while (m_data[i].first != x && m_set[i] != 0)
+            {
+                i = (i + 1) % m_bucket_count;
+            }
+            if (m_set[i] != 0 && m_data[i].first == x)
+            {
+                const_iterator iter(&m_data[i], &m_set, i);
+                return iter;
+            }
+            else
+            {
+                return cend();
+            }
         }
         //@}
 
