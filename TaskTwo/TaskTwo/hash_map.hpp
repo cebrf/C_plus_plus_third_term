@@ -49,8 +49,11 @@ namespace fefu
         using pointer = ValueType*;
 
         hash_map_iterator() noexcept = default;
-        hash_map_iterator(const hash_map_iterator& other) noexcept : p(other.p) { }
-        hash_map_iterator(const pointer p, const std::vector<char>* m_set_ptr, size_t bucket_ind) :
+        hash_map_iterator(const hash_map_iterator& other) noexcept :
+            p(other.p),
+            m_set_ptr(other.m_set_ptr),
+            bucket_ind(other.bucket_ind) { }
+        hash_map_iterator(pointer p, std::vector<char>* m_set_ptr, size_t bucket_ind) :
             p(p),
             m_set_ptr(m_set_ptr),
             bucket_ind(bucket_ind) { }
@@ -71,23 +74,19 @@ namespace fefu
             {
                 throw std::runtime_error("cannot increment end map iterator");
             }
+            p++;
+            bucket_ind++;
             while (bucket_ind < (*m_set_ptr).size() && (*m_set_ptr)[bucket_ind] == 0)
             {
                 p++;
                 bucket_ind++;
             }
-            if (bucket_ind == (*m_set_ptr).size())
-            {
-                p++;
-            }
         }
         // postfix ++
-        hash_map_iterator operator++(int num)  //how do it faster?
+        hash_map_iterator operator++(int num)
         {
-            for (int i = 0; i < num; i++)
-            {
-                (*this)++;
-            }
+            ++(*this);
+            return *this;
         }
 
         template<typename K, typename T,
@@ -96,25 +95,20 @@ namespace fefu
             typename Alloc = allocator<std::pair<const K, T>>>
             friend class hash_map;
 
-        friend bool operator==(const hash_map_iterator<ValueType>&, const hash_map_iterator<ValueType>&);
-        friend bool operator!=(const hash_map_iterator<ValueType>&, const hash_map_iterator<ValueType>&);
+        friend bool operator==(const hash_map_iterator<ValueType>& lhs, const hash_map_iterator<ValueType>& rhs)
+        {
+            return *lhs == *rhs;
+        }
+        friend bool operator!=(const hash_map_iterator<ValueType>& lhs, const hash_map_iterator<ValueType>& rhs)
+        {
+            return *lhs != *rhs;
+        }
     
     private:
         pointer p;
-        std::vector<char>* m_set_ptr; //либо хранить вектор указателей на элементы. Тогда операция ++ будет быстрее (в случае малого кол-ва эл-ов - намного), но придется хранить намного больше эл-ов. +Проблема как добавить новый элемент?
+        std::vector<char>* m_set_ptr;
         size_t bucket_ind;
     };
-    template<typename ValueType>
-    bool operator==(const hash_map_iterator<ValueType>& lhs, const hash_map_iterator<ValueType>& rhs)
-    {
-        return *lhs == *rhs;
-    }
-    template<typename ValueType>
-    bool operator!=(const hash_map_iterator<ValueType>& lhs, const hash_map_iterator<ValueType>& rhs)
-    {
-        return *lhs != *rhs;
-    }
-
     template<typename ValueType>
     class hash_map_const_iterator {
         // Shouldn't give non const references on value
@@ -174,25 +168,20 @@ namespace fefu
             typename Alloc = allocator<std::pair<const K, T>>>
             friend class hash_map;
 
-        friend bool operator==(const hash_map_const_iterator<ValueType>&, const hash_map_const_iterator<ValueType>&);
-        friend bool operator!=(const hash_map_const_iterator<ValueType>&, const hash_map_const_iterator<ValueType>&);
+        friend bool operator==(const hash_map_const_iterator<ValueType>& lhs, const hash_map_const_iterator<ValueType>& rhs)
+        {
+            return *lhs == *rhs;
+        }
+        friend bool operator!=(const hash_map_const_iterator<ValueType>& lhs, const hash_map_const_iterator<ValueType>& rhs)
+        {
+            return *lhs == *rhs;
+        }
     
     private:
         pointer p;
         std::vector<char>* m_set_ptr;
         size_t bucket_ind;
     };
-    template<typename ValueType>
-    bool operator==(const hash_map_const_iterator<ValueType>& lhs, const hash_map_const_iterator<ValueType>& rhs)
-    {
-        return *lhs == *rhs;
-    }
-    template<typename ValueType>
-    bool operator!=(const hash_map_const_iterator<ValueType>& lhs, const hash_map_const_iterator<ValueType>& rhs)
-    {
-        return *lhs == *rhs;
-    }
-
 
     template<typename K, typename T,
         typename Hash = std::hash<K>,
@@ -296,7 +285,7 @@ namespace fefu
         hash_map(const hash_map& umap, const allocator_type& a) :
             m_alloc(a),
             m_data(m_alloc.allocate(umap.m_bucket_count)),
-            m_set(umap.m_bucket_count, 0),
+            m_set(umap.m_set),
             m_size(umap.m_size),
             m_bucket_count(umap.m_bucket_count),
             m_key_eq(umap.m_key_eq),
@@ -337,10 +326,10 @@ namespace fefu
          *  list. This is linear in N (where N is @a l.size()).
          */
         hash_map(std::initializer_list<value_type> l, size_type n = 0) :
-            m_data(m_alloc.allocate(n)),
-            m_set(n, 0),
+            m_data(m_alloc.allocate(std::max(n, l.size()))),
+            m_set(std::max(n, l.size()), 0),
             m_size(0),
-            m_bucket_count(n)
+            m_bucket_count(std::max(n, l.size()))
         {
             insert(l);
         }
@@ -358,8 +347,7 @@ namespace fefu
         hash_map& operator=(hash_map&& other)
         {
             m_alloc = std::move(other.m_alloc);
-            delete[] m_data;
-            m_data = std::move(other.m_data);
+            m_data = std::exchange(other.m_data, nullptr);
             m_set = std::move(other.m_set);
             m_size = std::move(other.m_size);
             m_bucket_count = std::move(other.m_bucket_count);
@@ -609,7 +597,7 @@ namespace fefu
         {
             for (auto iter = first; iter != last; iter++)
             {
-                this->insert(*iter);
+                this->insert({ iter->first, iter->second });
             }
         }
 
@@ -920,7 +908,8 @@ namespace fefu
             auto iter = find(k);
             if (iter == end())
             {
-                iter = insert({ k, mapped_type{} });
+                 auto res = insert({ k, mapped_type{} });
+                 iter = res.first;
             }
             return iter->second;
         }
@@ -1022,12 +1011,9 @@ namespace fefu
         void rehash(size_type n)
         {
             hash_map tmp(n);
-            for (int i = 0; i < m_bucket_count; i++)
+            for (iterator iter = begin(); iter != end(); iter++)
             {
-                if (m_set[i] == 1)
-                {
-                    tmp.insert(m_set[i]);
-                }
+                tmp.insert(*iter);
             }
             std::swap(*this, tmp);
         }
