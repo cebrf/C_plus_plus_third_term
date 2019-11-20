@@ -8,6 +8,7 @@
 
 namespace fefu
 {
+    const size_t MinBuckCount = 6;
 
     template<typename T>
     class allocator {
@@ -95,13 +96,38 @@ namespace fefu
             typename Alloc = allocator<std::pair<const K, T>>>
             friend class hash_map;
 
+        template<typename ValueType>
+        friend class hash_map_const_iterator;
+
         friend bool operator==(const hash_map_iterator<ValueType>& lhs, const hash_map_iterator<ValueType>& rhs)
         {
-            return *lhs == *rhs;
+            if (lhs.p == rhs.p)
+            {
+                return true;
+            }
+            if (lhs.bucket_ind != (*lhs.m_set_ptr).size() && rhs.bucket_ind != (*rhs.m_set_ptr).size())
+            {
+                return *lhs == *rhs;
+            }
+            else
+            {
+                return false;
+            }
         }
         friend bool operator!=(const hash_map_iterator<ValueType>& lhs, const hash_map_iterator<ValueType>& rhs)
         {
-            return *lhs != *rhs;
+            if (lhs.p == rhs.p)
+            {
+                return false;
+            }
+            if (lhs.bucket_ind != (*lhs.m_set_ptr).size() && rhs.bucket_ind != (*rhs.m_set_ptr).size())
+            {
+                return *lhs != *rhs;
+            }
+            else
+            {
+                return true;
+            }
         }
     
     private:
@@ -120,9 +146,15 @@ namespace fefu
         using pointer = const ValueType*;
 
         hash_map_const_iterator() noexcept = default;
-        hash_map_const_iterator(const hash_map_const_iterator& other) noexcept : p(other.p) { }
-        hash_map_const_iterator(const hash_map_iterator<ValueType>& other) noexcept : p(other.p) { }
-        hash_map_const_iterator(const pointer p, const std::vector<char>* m_set_ptr, size_t bucket_ind) :
+        hash_map_const_iterator(const hash_map_const_iterator& other) noexcept :
+            p(other.p),
+            m_set_ptr(other.m_set_ptr),
+            bucket_ind(other.bucket_ind) { }
+        hash_map_const_iterator(const hash_map_iterator<ValueType>& other) noexcept :
+            p(other.p),
+            m_set_ptr(other.m_set_ptr),
+            bucket_ind(other.bucket_ind) { }
+        hash_map_const_iterator(pointer p, const std::vector<char>* m_set_ptr, size_t bucket_ind) :
             p(p),
             m_set_ptr(m_set_ptr),
             bucket_ind(bucket_ind) { }
@@ -143,6 +175,9 @@ namespace fefu
             {
                 throw std::runtime_error("cannot increment end map iterator");
             }
+
+            p++;
+            bucket_ind++;
             while (bucket_ind < (*m_set_ptr).size() && (*m_set_ptr)[bucket_ind] == 0)
             {
                 p++;
@@ -170,16 +205,38 @@ namespace fefu
 
         friend bool operator==(const hash_map_const_iterator<ValueType>& lhs, const hash_map_const_iterator<ValueType>& rhs)
         {
-            return *lhs == *rhs;
+            if (lhs.p == rhs.p)
+            {
+                return true;
+            }
+            if (lhs.bucket_ind != (*lhs.m_set_ptr).size() && rhs.bucket_ind != (*rhs.m_set_ptr).size())
+            {
+                return *lhs == *rhs;
+            }
+            else
+            {
+                return false;
+            }
         }
         friend bool operator!=(const hash_map_const_iterator<ValueType>& lhs, const hash_map_const_iterator<ValueType>& rhs)
         {
-            return *lhs == *rhs;
+            if (lhs.p == rhs.p)
+            {
+                return false;
+            }
+            if (lhs.bucket_ind != (*lhs.m_set_ptr).size() && rhs.bucket_ind != (*rhs.m_set_ptr).size())
+            {
+                return *lhs != *rhs;
+            }
+            else
+            {
+                return true;
+            }
         }
     
     private:
         pointer p;
-        std::vector<char>* m_set_ptr;
+        const std::vector<char>* m_set_ptr;
         size_t bucket_ind;
     };
 
@@ -203,7 +260,12 @@ namespace fefu
         using size_type = std::size_t;
 
         /// Default constructor.
-        hash_map() = default;
+        //hash_map() = default;
+        hash_map() :
+            m_data(m_alloc.allocate(MinBuckCount)),
+            m_set(MinBuckCount, 0),
+            m_size(0),
+            m_bucket_count(MinBuckCount) { }
 
         /**
          *  @brief  Default constructor creates no elements.
@@ -272,10 +334,10 @@ namespace fefu
          */
         explicit hash_map(const allocator_type& a) :
             m_alloc(a),
-            m_data(m_alloc.allocate(4)),
-            m_set(4, 0),
+            m_data(m_alloc.allocate(MinBuckCount)),
+            m_set(MinBuckCount, 0),
             m_size(0),
-            m_bucket_count(4) { }
+            m_bucket_count(MinBuckCount) { }
 
         /*
         *  @brief Copy constructor with allocator argument.
@@ -398,7 +460,7 @@ namespace fefu
         ///  Returns the maximum size of the %hash_map.
         size_type max_size() const noexcept
         {
-            return int32_t;
+            return INT32_MAX;
         }
 
         // iterators.
@@ -835,6 +897,11 @@ namespace fefu
          */
         iterator find(const key_type& x)
         {
+            /*if (m_bucket_count == 0)
+            {
+                return end();
+            }*/
+
             size_type i = m_hash(x) % m_bucket_count;
             while (m_data[i].first != x && m_set[i] == 1)
             {

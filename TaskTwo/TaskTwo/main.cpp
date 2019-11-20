@@ -156,3 +156,56 @@ TEST_CASE("size")
     REQUIRE(hm.size() == 3);
     REQUIRE(hm.max_size() == INT32_MAX);
 }
+
+
+// iterators
+TEST_CASE("begin")
+{
+    fefu::hash_map<int, string> hm;
+    hm[6] = "las";
+    hm[90] = "fir";
+    
+    auto fir = hm.begin();
+    auto cfir = hm.cbegin();
+
+    bool res = (fir == cfir);
+    REQUIRE(res);
+
+    
+    REQUIRE(fir->first == 90);
+    REQUIRE(fir->second == "fir");
+    pair<const int, string> e = { 90, "fir" };
+    res = (*fir == e);
+    REQUIRE(res);
+
+
+    const fefu::hash_map<int, string> hm1(hm);
+    auto const_fir = hm1.begin();
+    res = (cfir == const_fir);
+    REQUIRE(res);
+
+    fir++;
+    REQUIRE(fir->first == 6);
+    REQUIRE(fir->second == "las");
+}
+
+TEST_CASE("end")
+{
+    fefu::hash_map<int, char> hm;
+    REQUIRE(hm.begin() == hm.end());
+    hm[8] = -4;
+    REQUIRE(hm.begin() != hm.end());
+
+    bool res = (hm.end() == hm.cend());
+    REQUIRE(res);
+
+    auto e = hm.end();
+    REQUIRE_THROWS(e++);
+
+    auto clas = hm.cend();
+
+    const fefu::hash_map<int, char> hm1(hm);
+    auto const_las = hm1.end();
+    res = (clas == const_las);
+    REQUIRE(res);
+}
