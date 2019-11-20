@@ -1042,14 +1042,14 @@ namespace fefu
         */
         size_type bucket(const key_type& _K) const
         {
-            iterator iter = find(_K);
+            auto iter = find(_K);
             if (iter == end())
             {
                 return -1;
             }
             else
             {
-                return iter->bucket_ind;
+                return iter.bucket_ind;
             }
         }
 

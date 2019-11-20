@@ -313,12 +313,16 @@ TEST_CASE("merge(hash_map<K, T, _H2, _P2, Alloc>&& source)")
 
 TEST_CASE("hash_function() const")
 {
+    fefu::hash_map<int, char> hm({ {1, 'a'}, {6, 'e'}, {82,'f'} });
 
+    auto smth = hm.hash_function();
 }
 
 TEST_CASE("key_eq() const")
 {
-
+    fefu::hash_map<int, char> hm({ {1, 'a'}, {6, 'e'}, {82,'f'} });
+    
+    auto smth = hm.key_eq();
 }
 
 
@@ -378,7 +382,11 @@ TEST_CASE("bucket_count() const noexcept")
 
 TEST_CASE("bucket(const key_type& _K) const")
 {
+    fefu::hash_map<int, char> hm(32);
+    hm[15] = '9';
 
+    size_t i = (hm.hash_function())(15) % hm.bucket_count();
+    REQUIRE(hm.bucket(15) == i);
 }
 
 
