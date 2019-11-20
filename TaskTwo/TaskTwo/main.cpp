@@ -335,32 +335,73 @@ TEST_CASE("key_eq() const")
 
 TEST_CASE("find(const key_type& x)")
 {
+    fefu::hash_map<int, char> hm({ {1, 'a'}, {6, 'e'}, {82,'f'}, {173, 'w'}, {-1035, 'q'}, {90457, 'z'} });
 
+    REQUIRE(hm.find(43) == hm.end());
+
+    auto res = hm.find(90457);
+    REQUIRE(res->first == 90457);
+    REQUIRE(res->second == 'z');
+
+    hm.insert({ 15, 'v' });
+    res = hm.find(15);
+    REQUIRE(res->first == 15);
+    REQUIRE(res->second == 'v');
 }
 
 TEST_CASE("find(const key_type& x) const")
 {
+    const fefu::hash_map<int, char> hm({ {1, 'a'}, {6, 'e'}, {82,'f'}, {173, 'w'}, {-1035, 'q'}, {90457, 'z'} });
 
+    REQUIRE(hm.find(43) == hm.cend());
+
+    auto res = hm.find(90457);
+    REQUIRE(res->first == 90457);
+    REQUIRE(res->second == 'z');
 }
 
 TEST_CASE("count(const key_type& x) const")
 {
+    fefu::hash_map<int, char> hm({ {1, 'a'}, {6, 'e'}, {82,'f'}, {173, 'w'}, {-1035, 'q'}, {90457, 'z'} });
 
+    REQUIRE(hm.count(90457));
+    REQUIRE_FALSE(hm.count(0));
+
+    hm[52] = -27;
+    REQUIRE(hm.count(52));
 }
 
 TEST_CASE("contains(const key_type& x) const")
 {
+    fefu::hash_map<int, char> hm({ {1, 'a'}, {6, 'e'}, {82,'f'}, {173, 'w'}, {-1035, 'q'}, {90457, 'z'} });
 
+    REQUIRE(hm.contains(90457));
+    REQUIRE_FALSE(hm.contains(0));
+
+    hm[52] = -27;
+    REQUIRE(hm.contains(52));
 }
 
 TEST_CASE("operator[]")
 {
+    fefu::hash_map<int, char> hm({ {1, 'a'}, {6, 'e'}, {82,'f'}, {173, 'w'}, {-1035, 'q'}, {90457, 'z'} });
 
+    REQUIRE(hm[1] == 'a');
+    REQUIRE(hm[-1035] == 'q');
+    REQUIRE(hm[0] == static_cast<char>(0));
+    REQUIRE(hm.at(0) == static_cast<char>(0));
+    
+    hm[52] = -27;
+    REQUIRE(hm[52] == -27);
 }
 
 TEST_CASE("at")
 {
+    fefu::hash_map<int, char> hm({ {1, 'a'}, {6, 'e'}, {82,'f'}, {173, 'w'}, {-1035, 'q'}, {90457, 'z'} });
 
+    REQUIRE_FALSE(hm.at(173) == 'f');
+    REQUIRE_THROWS(hm.at(25) == 'e');
+    REQUIRE(hm.at(82) == 'f');
 }
 
 
