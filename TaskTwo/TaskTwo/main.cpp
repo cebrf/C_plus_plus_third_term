@@ -138,3 +138,21 @@ TEST_CASE("opertator =")
         hm1 = e;
     }
 }
+
+
+// size and capacity:
+
+TEST_CASE("empty")
+{
+    fefu::hash_map<int, int> hm;
+    REQUIRE(hm.empty());
+    hm[6] = 15;
+    REQUIRE(!hm.empty());
+}
+
+TEST_CASE("size")
+{
+    fefu::hash_map<int, char> hm({ {1, 'a'}, {6, 'e'}, {82,'f'} });
+    REQUIRE(hm.size() == 3);
+    REQUIRE(hm.max_size() == INT32_MAX);
+}
