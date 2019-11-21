@@ -181,12 +181,16 @@ TEST_CASE("begin")
 
     const fefu::hash_map<int, string> hm1(hm);
     auto const_fir = hm1.begin();
-    res = (cfir == const_fir);
-    REQUIRE(res);
+    REQUIRE(const_fir->first == 90);
+    REQUIRE(const_fir->second == "fir");
 
     fir++;
     REQUIRE(fir->first == 6);
     REQUIRE(fir->second == "las");
+
+    const_fir++;
+    REQUIRE(const_fir->first == 6);
+    REQUIRE(const_fir->second == "las");
 }
 
 TEST_CASE("end")
@@ -202,24 +206,29 @@ TEST_CASE("end")
     auto e = hm.end();
     REQUIRE_THROWS(e++);
 
-    auto clas = hm.cend();
+    
 
     const fefu::hash_map<int, char> hm1(hm);
     auto const_las = hm1.end();
+    auto clas = hm1.cend();
     res = (clas == const_las);
     REQUIRE(res);
+
+    auto clas_ = hm.cend();
+    res = (clas_ == const_las);
+    REQUIRE_FALSE(res);
 }
 
 
 // modifiers.
 TEST_CASE("emplace(_Args&&... args)")
 {
-
 }
 
 TEST_CASE("try_emplace(const key_type& k, _Args&&... args)")
 {
-
+    /*fefu::hash_map<int, char> hm(10);
+    hm.try_emplace(123, 'a');*/
 }
 
 TEST_CASE("try_emplace(key_type&& k, _Args&&... args)")
@@ -294,17 +303,55 @@ TEST_CASE("clear()")
 
 TEST_CASE("swap(hash_map& x)")
 {
+    fefu::hash_map<int, char> hm({ {1, 'a'}, {2, 'b'}, {3,'c'} });
+    fefu::hash_map<int, char> hm1({ {4, 'd'}, {5, 'e'} });
+
+    hm.swap(hm1);
+
+    REQUIRE(hm.size() == 2);
+    REQUIRE(hm1.size() == 3);
+
+    REQUIRE_THROWS(hm.at(1) == 'a');
+    REQUIRE(hm1[1] == 'a');
+    REQUIRE_THROWS(hm1.at(5) == 'e');
+    REQUIRE(hm[5] == 'e');
 
 }
 
 TEST_CASE("merge(hash_map<K, T, _H2, _P2, Alloc>& source)")
 {
+    fefu::hash_map<int, char> hm({ {1, 'a'}, {2, 'b'}, {3,'c'} });
+    fefu::hash_map<int, char> hm1({ {1, 'd'}, {5, 'e'} });
 
+    hm.merge(hm1);
+
+    REQUIRE(hm.size() == 4);
+    REQUIRE(hm1.size() == 1);
+
+    REQUIRE(hm1.at(1) == 'd');
+
+    REQUIRE_THROWS(hm1.at(5) == 'e');
+
+    REQUIRE(hm[5] == 'e');
+    REQUIRE(hm[1] == 'a');
 }
 
 TEST_CASE("merge(hash_map<K, T, _H2, _P2, Alloc>&& source)")
 {
+    fefu::hash_map<int, char> hm({ {1, 'a'}, {2, 'b'}, {3,'c'} });
+    fefu::hash_map<int, char> hm1({ {1, 'd'}, {5, 'e'} });
 
+    hm.merge(std::move(hm1));
+
+    REQUIRE(hm.size() == 4);
+    REQUIRE(hm1.size() == 1);
+
+    REQUIRE(hm1.at(1) == 'd');
+
+    REQUIRE_THROWS(hm1.at(5) == 'e');
+
+    REQUIRE(hm[5] == 'e');
+    REQUIRE(hm[1] == 'a');
 }
 
 
@@ -477,7 +524,8 @@ TEST_CASE("operator==")
     bool res = (hm == hm1);
     REQUIRE(res);
 
-    hm1[1] = 'r';
+    auto smth = hm.insert_or_assign(1, 'r');
+    REQUIRE(hm.at(1) == 'r');
     res = (hm == hm1);
     REQUIRE_FALSE(res);
 
@@ -488,5 +536,5 @@ TEST_CASE("operator==")
 
     fefu::hash_map<int, char> hm2, hm3;
     res = (hm2 == hm3);
-    REQUIRE_FALSE(res);
+    REQUIRE(res);
 }

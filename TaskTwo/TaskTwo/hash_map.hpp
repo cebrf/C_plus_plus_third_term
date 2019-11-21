@@ -105,10 +105,6 @@ namespace fefu
             {
                 return true;
             }
-            if (lhs.bucket_ind != (*lhs.m_set_ptr).size() && rhs.bucket_ind != (*rhs.m_set_ptr).size())
-            {
-                return *lhs == *rhs;
-            }
             else
             {
                 return false;
@@ -116,17 +112,13 @@ namespace fefu
         }
         friend bool operator!=(const hash_map_iterator<ValueType>& lhs, const hash_map_iterator<ValueType>& rhs)
         {
-            if (lhs.p == rhs.p)
+            if (lhs.p != rhs.p)
             {
-                return false;
-            }
-            if (lhs.bucket_ind != (*lhs.m_set_ptr).size() && rhs.bucket_ind != (*rhs.m_set_ptr).size())
-            {
-                return *lhs != *rhs;
+                return true;
             }
             else
             {
-                return true;
+                return false;
             }
         }
     
@@ -183,10 +175,6 @@ namespace fefu
                 p++;
                 bucket_ind++;
             }
-            if (bucket_ind == (*m_set_ptr).size())
-            {
-                p++;
-            }
         }
         // postfix ++
         hash_map_const_iterator operator++(int num)
@@ -207,10 +195,6 @@ namespace fefu
             {
                 return true;
             }
-            if (lhs.bucket_ind != (*lhs.m_set_ptr).size() && rhs.bucket_ind != (*rhs.m_set_ptr).size())
-            {
-                return *lhs == *rhs;
-            }
             else
             {
                 return false;
@@ -218,17 +202,13 @@ namespace fefu
         }
         friend bool operator!=(const hash_map_const_iterator<ValueType>& lhs, const hash_map_const_iterator<ValueType>& rhs)
         {
-            if (lhs.p == rhs.p)
+            if (lhs.p != rhs.p)
             {
-                return false;
-            }
-            if (lhs.bucket_ind != (*lhs.m_set_ptr).size() && rhs.bucket_ind != (*rhs.m_set_ptr).size())
-            {
-                return *lhs != *rhs;
+                return true;
             }
             else
             {
-                return true;
+                return false;
             }
         }
     
@@ -713,7 +693,7 @@ namespace fefu
         template <typename _Obj>
         std::pair<iterator, bool> insert_or_assign(key_type&& k, _Obj&& obj)
         {
-            insert_or_assign(k, std::move(obj));
+            return insert_or_assign(k, std::move(obj));
         }
 
         //@{
@@ -839,7 +819,7 @@ namespace fefu
          */
         void swap(hash_map& x)
         {
-            hash_map tmp = std::move(this);
+            hash_map tmp = std::move(*this);
             *this = std::move(x);
             x = std::move(tmp);
         }
@@ -849,10 +829,10 @@ namespace fefu
         {
             for (iterator iter = source.begin(); iter != source.end(); iter++)
             {
-                if (!this->contains(iter.bucket_ind))
+                if (!this->contains(iter->first))
                 {
-                    this->insert(iter);
-                    source.erase(iter.bucket_ind);
+                    this->insert(*iter);
+                    source.erase(iter->first);
                 }
             }
         }
@@ -905,7 +885,7 @@ namespace fefu
             {
                 i = (i + 1) % m_bucket_count;
             }
-            if (m_set[i] != 0 && m_data[i].first == x)
+            if (m_set[i] == 1 && m_data[i].first == x)
             {
                 iterator iter(&m_data[i], &m_set, i);
                 return iter;
@@ -927,7 +907,7 @@ namespace fefu
             {
                 i = (i + 1) % m_bucket_count;
             }
-            if (m_set[i] != 0 && m_data[i].first == x)
+            if (m_set[i] == 1 && m_data[i].first == x)
             {
                 const_iterator iter(&m_data[i], &m_set, i);
                 return iter;
@@ -1115,7 +1095,8 @@ namespace fefu
             bool check = (this->m_size == other.m_size);
             for (auto iter = begin(); iter != end() && check; iter++)
             {
-                if (!other.contains(iter->first))
+                auto found = other.find(iter->first);
+                if (found == end() || found->second != iter->second)
                     check = 0;
             }
             return check;
