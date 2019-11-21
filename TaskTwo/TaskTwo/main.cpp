@@ -694,3 +694,81 @@ TEST_CASE("operator==")
     res = (hm2 == hm3);
     REQUIRE(res);
 }
+
+
+
+
+
+//_________________________STRESS_TEST________________________________________________________________________________________________________
+#include <stdio.h>
+#include <time.h>
+
+/*clock_t start = clock();
+  getchar(); 
+  clock_t end = clock();
+  double seconds = (double)(end - start) / CLOCKS_PER_SEC;
+  printf("The time: %f seconds\n", seconds);
+ */
+
+TEST_CASE("ST_1")
+{
+    vector<pair<const int, uint32_t>> els;
+    for (int i = 0; i < 1000000; i++)
+        els.push_back({ i, 100 * i });
+
+
+    clock_t insert_start_local_hm = clock();
+    fefu::hash_map<int, uint32_t> hm(els.begin(), els.end(), 8000000);
+    clock_t insert_end_local_hm = clock();
+    cout << "construct with insert local hash map: " << (double)(insert_end_local_hm - insert_start_local_hm) / CLOCKS_PER_SEC << '\n';
+
+
+    clock_t insert_start_base_hm = clock();
+    unordered_map<int, uint32_t> check(els.begin(), els.end(), 8000000);
+    clock_t insert_end_base_hm = clock();
+    cout << "construct with insert base hash map: " << (double)(insert_end_base_hm - insert_start_base_hm) / CLOCKS_PER_SEC << "\n\n";
+
+
+
+
+    clock_t find_start_local_hm = clock();
+    for (int i = 0; i < 1000000; i++)
+    {
+        auto res = hm.find(i);
+        REQUIRE(res->first == i);
+        REQUIRE(res->second == els[i].second);
+    }
+    clock_t find_end_local_hm = clock();
+    cout << "find with find local hash map: " << (double)(find_end_local_hm - find_start_local_hm) / CLOCKS_PER_SEC << '\n';
+
+
+    clock_t find_start_base_hm = clock();
+    for (int i = 0; i < 1000000; i++)
+    {
+        auto res = check.find(i);
+        REQUIRE(res->first == i);
+        REQUIRE(res->second == els[i].second);
+    }
+    clock_t find_end_base_hm = clock();
+    cout << "find with insert base hash map: " << (double)(find_end_base_hm - find_start_base_hm) / CLOCKS_PER_SEC << "\n\n";
+
+
+
+
+
+    clock_t erase_start_local_hm = clock();
+    for (int i = 0; i < 1000000; i++)
+    {
+        auto res = hm.erase(i);
+    }
+    clock_t erase_end_local_hm = clock();
+    cout << "erase with find local hash map: " << (double)(erase_end_local_hm - erase_start_local_hm) / CLOCKS_PER_SEC << '\n';
+
+    clock_t erase_start_base_hm = clock();
+    for (int i = 0; i < 1000000; i++)
+    {
+        auto res = check.erase(i);
+    }
+    clock_t erase_end_base_hm = clock();
+    cout << "erase base hash map: " << (double)(erase_end_base_hm - erase_start_base_hm) / CLOCKS_PER_SEC << "\n\n";
+}

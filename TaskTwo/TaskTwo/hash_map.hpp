@@ -366,11 +366,13 @@ namespace fefu
          *  list. This is linear in N (where N is @a l.size()).
          */
         hash_map(std::initializer_list<value_type> l, size_type n = 0) :
-            m_data(m_alloc.allocate(std::max(n, l.size()))),
-            m_set(std::max(n, l.size()), 0),
+            m_data(m_alloc.allocate(n)),
+            m_set(n, 0),
             m_size(0),
-            m_bucket_count(std::max(n, l.size()))
+            m_bucket_count(n)
         {
+            if (static_cast<size_type>(ceil(n / 0.75)) < l.size())
+                this->reserve(l.size());
             insert(l);
         }
 
@@ -450,6 +452,10 @@ namespace fefu
         iterator begin() noexcept
         {
             int i = 0;
+            if (m_size == 0)
+            {
+                i = m_bucket_count;
+            }
             while (i < m_bucket_count && m_set[i] != 1)
                 i++;
 
@@ -470,6 +476,10 @@ namespace fefu
         const_iterator cbegin() const noexcept
         {
             int i = 0;
+            if (m_size == 0)
+            {
+                i = m_bucket_count;
+            }
             while (i < m_bucket_count && m_set[i] != 1)
                 i++;
 
