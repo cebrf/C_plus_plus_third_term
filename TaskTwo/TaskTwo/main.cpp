@@ -72,7 +72,7 @@ TEST_CASE("copy constructors")
     
     if (1)
     {
-        std::initializer_list<pair<const int, int>> e = { {1, 3}, {92,364}, {-34, 4} };
+        std::initializer_list<pair<const int, int>> e = { {1, 3}, {92,364}, {-34, 4}, {1, 25} };
         fefu::hash_map<int, int> hm1(e, 61);
         REQUIRE(hm1[1] == 3);
         REQUIRE(hm1[92] == 364);
@@ -86,6 +86,13 @@ TEST_CASE("copy constructors")
         REQUIRE(hm1[1] == 3);
         REQUIRE(hm1[92] == 364);
         REQUIRE(hm1[-34] == 4);
+    }
+
+    if (1)
+    {
+        fefu::hash_map<int, int> hm1 = { {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5} };
+        REQUIRE(hm1.size() == 1);
+        REQUIRE(hm1.at(1) == 1);
     }
 }
 
@@ -219,6 +226,53 @@ TEST_CASE("end")
     REQUIRE_FALSE(res);
 }
 
+TEST_CASE("iterator operator++")
+{
+    fefu::hash_map<int, char> hm = { {1, '12'} };
+    auto fir = hm.begin();
+    auto las = hm.end();
+    REQUIRE(fir != las);
+
+    fir++;
+    REQUIRE(fir == las);
+
+    REQUIRE_THROWS(las++);
+
+    auto cfir = hm.cbegin();
+    auto clas = hm.cend();
+    REQUIRE(cfir != clas);
+
+    cfir++;
+    REQUIRE(cfir == clas);
+
+    REQUIRE_THROWS(clas++);
+}
+
+TEST_CASE("iterator operator*")
+{
+    pair<int, char> el = { 1, '12' };
+    fefu::hash_map<int, char> hm = { el };
+    auto fir = hm.begin();
+    REQUIRE((*fir).first == el.first);
+    REQUIRE((*fir).second == el.second);
+
+    auto cfir = hm.cbegin();
+    REQUIRE((*cfir).first == el.first);
+    REQUIRE((*cfir).second == el.second);
+}
+
+TEST_CASE("iterator operator->")
+{
+    pair<int, char> el = { 1, '12' };
+    fefu::hash_map<int, char> hm = { el };
+    auto fir = hm.begin();
+    REQUIRE(fir->first == el.first);
+    REQUIRE(fir->second == el.second);
+
+    auto cfir = hm.cbegin();
+    REQUIRE(cfir->first == el.first);
+    REQUIRE(cfir->second == el.second);
+}
 
 // modifiers.
 TEST_CASE("emplace(_Args&&... args)")
@@ -250,68 +304,135 @@ TEST_CASE("try_emplace(const key_type& k, _Args&&... args)")
     REQUIRE(res.first->first == 124);
     REQUIRE(res.second == true);
 
-    res = hm.try_emplace(123, 157, 's', ":(");
+    int el_ind = 123;
+    res = hm.try_emplace(el_ind, 157, 's', ":(");
     REQUIRE(res.first->first == 123);
     REQUIRE(res.first->second == tu);
     REQUIRE(res.second == false);
 }
 
-TEST_CASE("try_emplace(key_type&& k, _Args&&... args)")
-{
-
-}
-
 TEST_CASE("insert(const value_type& x)")
 {
+    fefu::hash_map<int, char> hm = { {18, 't'}, {38, 'i'}, {28, 'l'}, {-936, 'n'}, {0, 'y'} };
 
-}
+    auto res = hm.insert({ 18, 'a' });
+    REQUIRE(res.first->first == 18);
+    REQUIRE(res.first->second == 't');
+    REQUIRE(res.second == false);
 
 
-TEST_CASE("insert(value_type&& x)")
-{
-
+    pair<int, char> el = { -18, 'a' };
+    res = hm.insert(el);
+    REQUIRE(res.first->first == el.first);
+    REQUIRE(res.first->second == el.second);
+    REQUIRE(res.second == true);
 }
 
 TEST_CASE("insert(_InputIterator first, _InputIterator last)")
 {
+    fefu::hash_map<int, char> hm = { {18, 't'}, {38, 'i'} };
+    vector<pair<int, char>> els = { {18, 'a'}, {38, 'a'}, {28, 'l'}, {-936, 'n'}, {0, 'y'} };
 
+    hm.insert(els.begin(), els.end());
+
+    REQUIRE(hm[18] == 't');
+    REQUIRE(hm[38] == 'i');
+    REQUIRE(hm[28] == 'l');
+    REQUIRE(hm[-936] == 'n');
+    REQUIRE(hm[0] == 'y');
 }
 
 TEST_CASE("insert(std::initializer_list<value_type> l)")
 {
+    fefu::hash_map<int, char> hm = { {18, 't'}, {38, 'i'} };
+    initializer_list<pair<int, char>> els = { {18, 'a'}, {38, 'a'}, {28, 'l'}, {-936, 'n'}, {0, 'y'} };
 
+    hm.insert(els.begin(), els.end());
+
+    REQUIRE(hm[18] == 't');
+    REQUIRE(hm[38] == 'i');
+    REQUIRE(hm[28] == 'l');
+    REQUIRE(hm[-936] == 'n');
+    REQUIRE(hm[0] == 'y');
 }
 
 TEST_CASE("insert_or_assign(const key_type& k, _Obj&& obj)")
 {
+    fefu::hash_map<int, char> hm = { {18, 't'}, {38, 'i'} };
 
-}
+    auto res = hm.insert_or_assign(19, 'e' );
+    REQUIRE(res.first->first == 19);
+    REQUIRE(res.first->second == 'e');
+    REQUIRE(res.second == true);
 
-TEST_CASE("insert_or_assign(key_type&& k, _Obj&& obj)")
-{
-
+    int el_ind = 38;
+    char el_val = 'j';
+    res = hm.insert_or_assign(el_ind, el_val);
+    REQUIRE(res.first->first == el_ind);
+    REQUIRE(res.first->second == el_val);
+    REQUIRE(res.second == true);
 }
 
 
 
 TEST_CASE("erase(const_iterator position)")
 {
+    fefu::hash_map<int, char> hm = { {18, 't'}, {38, 'i'} };
 
+    auto cfir = hm.cbegin();
+    auto res = hm.erase(cfir);
+    REQUIRE(!hm.contains(cfir->first));
+
+    res = hm.erase(hm.cend());
+    REQUIRE(res == hm.cend());
 }
 
 TEST_CASE("erase(iterator position)")
 {
+    fefu::hash_map<int, char> hm = { {18, 't'}, {38, 'i'} };
 
+    auto fir = hm.begin();
+    auto res = hm.erase(fir);
+    REQUIRE(!hm.contains(fir->first));
+    REQUIRE(hm.size() == 1);
+
+    fir = hm.begin();
+    res = hm.erase(fir);
+    REQUIRE(!hm.contains(fir->first));
+    REQUIRE(hm.size() == 0);
+
+    res = hm.erase(hm.end());
+    REQUIRE(res == hm.end());
 }
 
 TEST_CASE("erase(const key_type& x)")
 {
+    fefu::hash_map<int, char> hm = { {18, 't'}, {38, 'i'}, {26, 'f'} };
 
+    const int ind = 26;
+    auto res = hm.erase(ind);
+    REQUIRE(res == 1);
+    REQUIRE(!hm.contains(26));
+
+
+    res = hm.erase(ind);
+    REQUIRE(res == 0);
 }
 
 TEST_CASE("erase(const_iterator first, const_iterator last)")
 {
+    fefu::hash_map<int, char> hm = { {18, 'a'}, {38, 'a'}, {28, 'l'}, {-936, 'n'}, {0, 'y'} };
 
+    auto fir = hm.cbegin();
+    fir++;
+    fir++;
+
+    auto res = hm.erase(hm.cbegin(), fir);
+    REQUIRE(res == hm.begin());
+    REQUIRE(hm.size() == 3);
+
+    res = hm.erase(hm.cbegin(), hm.cend());
+    REQUIRE(hm.size() == 0);
 }
 
 
@@ -500,6 +621,8 @@ TEST_CASE("bucket(const key_type& _K) const")
 
     size_t i = (hm.hash_function())(15) % hm.bucket_count();
     REQUIRE(hm.bucket(15) == i);
+
+    REQUIRE(hm.bucket(115) == -1);
 }
 
 
@@ -522,6 +645,14 @@ TEST_CASE("max_load_factor()")
 {
     fefu::hash_map<int, char> hm(2);
     REQUIRE(std::abs(hm.max_load_factor() - 0.75) < 0.0001);
+}
+
+TEST_CASE("max_load_factor(float z)")
+{
+    fefu::hash_map<int, char> hm(4);
+    hm.insert({ 1, 'a' });
+    hm.insert({ 2, 'b' });
+    hm.max_load_factor(0.5);
 }
 
 TEST_CASE("rehash(size_type n)")

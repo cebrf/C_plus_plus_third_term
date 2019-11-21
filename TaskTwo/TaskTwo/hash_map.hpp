@@ -450,7 +450,7 @@ namespace fefu
         iterator begin() noexcept
         {
             int i = 0;
-            while (i < m_bucket_count && m_set[i] == 0)
+            while (i < m_bucket_count && m_set[i] != 1)
                 i++;
 
             iterator iter(&m_data[i], &m_set, i);
@@ -470,7 +470,7 @@ namespace fefu
         const_iterator cbegin() const noexcept
         {
             int i = 0;
-            while (i < m_bucket_count && m_set[i] == 0)
+            while (i < m_bucket_count && m_set[i] != 1)
                 i++;
 
             const_iterator iter(&m_data[i], &m_set, i);
@@ -557,7 +557,7 @@ namespace fefu
         template <typename... _Args>
         std::pair<iterator, bool> try_emplace(const key_type& k, _Args&&... args)
         {
-            return insert({ std::forward<key_type>(k), mapped_type(std::forward<_Args>(args) ...) });
+            return insert({ k, mapped_type(std::forward<_Args>(args) ...) });
         }
 
         // move-capable overload
@@ -713,12 +713,13 @@ namespace fefu
         iterator erase(const_iterator position)
         {
             size_type i = position.bucket_ind;
-            if (m_set[i] == 1)
+            if (i < m_bucket_count && m_set[i] == 1)
             {
+                //iterator iter = position;
+                iterator iter = find(position->first);
+                iter++;
                 m_set[i] = 2;
                 m_size--;
-                iterator iter = position;
-                iter++;
                 return iter;
             }
             else
@@ -731,12 +732,12 @@ namespace fefu
         iterator erase(iterator position)
         {
             size_type i = position.bucket_ind;
-            if (m_set[i] == 1)
+            if (i < m_bucket_count && m_set[i] == 1)
             {
-                m_set[i] = 2;
-                m_size--;
                 iterator iter = position;
                 iter++;
+                m_set[i] = 2;
+                m_size--;
                 return iter;
             }
             else
@@ -793,6 +794,7 @@ namespace fefu
             {
                 res = erase(iter);
             }
+            return res;
         }
 
         /**
@@ -1057,7 +1059,7 @@ namespace fefu
             m_max_load_factor = z;
             if (load_factor() >= m_max_load_factor)
             {
-                rehash(2 * m_max_load_factor);
+                rehash(ceil(2 * m_max_load_factor));
             }
         }
 
