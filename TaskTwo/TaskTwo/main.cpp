@@ -169,7 +169,7 @@ TEST_CASE("size")
 TEST_CASE("begin")
 {
     fefu::hash_map<int, string> hm;
-    hm[6] = "las";
+    hm[162] = "las";
     hm[90] = "fir";
     
     auto fir = hm.begin();
@@ -192,11 +192,11 @@ TEST_CASE("begin")
     REQUIRE(const_fir->second == "fir");
 
     fir++;
-    REQUIRE(fir->first == 6);
+    REQUIRE(fir->first == 162);
     REQUIRE(fir->second == "las");
 
     const_fir++;
-    REQUIRE(const_fir->first == 6);
+    REQUIRE(const_fir->first == 162);
     REQUIRE(const_fir->second == "las");
 }
 
@@ -228,7 +228,7 @@ TEST_CASE("end")
 
 TEST_CASE("iterator operator++")
 {
-    fefu::hash_map<int, char> hm = { {1, '12'} };
+    fefu::hash_map<int, char> hm = { {1, '2'} };
     auto fir = hm.begin();
     auto las = hm.end();
     REQUIRE(fir != las);
@@ -250,7 +250,7 @@ TEST_CASE("iterator operator++")
 
 TEST_CASE("iterator operator*")
 {
-    pair<int, char> el = { 1, '12' };
+    pair<int, char> el = { 1, '2' };
     fefu::hash_map<int, char> hm = { el };
     auto fir = hm.begin();
     REQUIRE((*fir).first == el.first);
@@ -263,7 +263,7 @@ TEST_CASE("iterator operator*")
 
 TEST_CASE("iterator operator->")
 {
-    pair<int, char> el = { 1, '12' };
+    pair<int, char> el = { 1, '2' };
     fefu::hash_map<int, char> hm = { el };
     auto fir = hm.begin();
     REQUIRE(fir->first == el.first);
@@ -659,7 +659,7 @@ TEST_CASE("rehash(size_type n)")
 {
     fefu::hash_map<int, char> hm({ {1, 'a'}, {6, 'e'}, {82,'f'} });
     hm.rehash(15);
-    REQUIRE(hm.bucket_count() == 15);
+    REQUIRE(hm.bucket_count() == 16);
 
     REQUIRE(hm.at(1) == 'a');
     REQUIRE_THROWS(hm.at(83) == 'e');
@@ -668,8 +668,8 @@ TEST_CASE("rehash(size_type n)")
 TEST_CASE("reserve(size_type n)")
 {
     fefu::hash_map<int, char> hm;
-    hm.reserve(5);
-    REQUIRE(hm.bucket_count() == ceil(5 / hm.max_load_factor()));
+    hm.reserve(7);
+    REQUIRE(hm.bucket_count() == 16);
 }
 
 TEST_CASE("operator==")

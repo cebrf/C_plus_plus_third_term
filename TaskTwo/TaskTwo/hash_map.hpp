@@ -8,7 +8,7 @@
 
 namespace fefu
 {
-    const size_t MinBuckCount = 6;
+    const size_t MinBuckCount = 8;
 
     template<typename T>
     class allocator {
@@ -250,10 +250,10 @@ namespace fefu
          *  @param n  Minimal initial number of buckets.
          */
         explicit hash_map(size_type n) :
-            m_data(m_alloc.allocate(n)),
-            m_set(n, 0),
+            m_data(m_alloc.allocate(round_up(n))),
+            m_set(round_up(n), 0),
             m_size(0),
-            m_bucket_count(n) { }
+            m_bucket_count(round_up(n)) { }
 
         /**
          *  @brief  Builds an %hash_map from a range.
@@ -267,10 +267,10 @@ namespace fefu
          */
         template<typename InputIterator>
         hash_map(InputIterator first, InputIterator last, size_type n = 0) :
-            m_data(m_alloc.allocate(n)),
-            m_set(n, 0),
-            m_size(0),
-            m_bucket_count(n)
+            m_data(m_alloc.allocate(round_up(n))),
+            m_set(round_up(n), 0),
+            m_size(round_up(n)),
+            m_bucket_count(round_up(n))
         {
             insert(first, last);
         }
@@ -283,6 +283,7 @@ namespace fefu
             m_size(other.m_size),
             m_bucket_count(other.m_bucket_count),
             m_hash(other.m_hash),
+            m_hash_(other.m_hash_),
             m_key_eq(other.m_key_eq),
             m_max_load_factor(other.m_max_load_factor)
         {
@@ -303,6 +304,7 @@ namespace fefu
             m_size(std::move(other.m_size)),
             m_bucket_count(std::move(other.m_bucket_count)),
             m_hash(std::move(other.m_hash)),
+            m_hash_(std::move(other.m_hash_)),
             m_key_eq(std::move(other.m_key_eq)),
             m_max_load_factor(std::move(other.m_max_load_factor)) { }
 
@@ -330,6 +332,7 @@ namespace fefu
             m_bucket_count(umap.m_bucket_count),
             m_key_eq(umap.m_key_eq),
             m_hash(umap.m_hash),
+            m_hash_(umap.m_hash_),
             m_max_load_factor(umap.m_max_load_factor)
         {
             for (int i = 0; i < m_bucket_count; i++)
@@ -355,6 +358,7 @@ namespace fefu
             m_bucket_count(std::move(umap.m_bucket_count)),
             m_key_eq(std::move(umap.m_key_eq)),
             m_hash(std::move(umap.m_hash)),
+            m_hash_(std::move(umap.m_hash_)),
             m_max_load_factor(std::move(umap.m_max_load_factor)) { }
 
         /**
@@ -366,12 +370,12 @@ namespace fefu
          *  list. This is linear in N (where N is @a l.size()).
          */
         hash_map(std::initializer_list<value_type> l, size_type n = 0) :
-            m_data(m_alloc.allocate(n)),
-            m_set(n, 0),
+            m_data(m_alloc.allocate(round_up(n))),
+            m_set(round_up(n), 0),
             m_size(0),
-            m_bucket_count(n)
+            m_bucket_count(round_up(n))
         {
-            if (static_cast<size_type>(ceil(n / 0.75)) < l.size())
+            if (static_cast<size_type>(ceil(n / 0.75)) < round_up(l.size()))
                 this->reserve(l.size());
             insert(l);
         }
@@ -394,6 +398,7 @@ namespace fefu
             m_size = std::move(other.m_size);
             m_bucket_count = std::move(other.m_bucket_count);
             m_hash = std::move(other.m_hash);
+            m_hash_ = std::move(other.m_hash_);
             m_key_eq = std::move(other.m_key_eq);
             m_max_load_factor = std::move(other.m_max_load_factor);
             return *this;
@@ -412,7 +417,7 @@ namespace fefu
          */
         hash_map& operator=(std::initializer_list<value_type> l)
         {
-            hash_map tmp(l, l.size());
+            hash_map tmp(l, round_up(l.size()));
             std::swap(*this, tmp);
             return *this;
         }
@@ -599,7 +604,7 @@ namespace fefu
             size_type i = m_hash(x.first) % m_bucket_count;
             while (m_data[i].first != x.first && m_set[i] == 1)
             {
-                i = (i + 1) % m_bucket_count;
+                i = (i + next_buck(x.first)) % m_bucket_count;
             }
             if (m_data[i].first != x.first)
             {
@@ -895,7 +900,7 @@ namespace fefu
             size_type i = m_hash(x) % m_bucket_count;
             while (m_data[i].first != x && m_set[i] != 0)
             {
-                i = (i + 1) % m_bucket_count;
+                i = (i + next_buck(x)) % m_bucket_count;
             }
             if (m_set[i] == 1 && m_data[i].first == x)
             {
@@ -917,7 +922,7 @@ namespace fefu
             size_type i = m_hash(x) % m_bucket_count;
             while (m_data[i].first != x && m_set[i] != 0)
             {
-                i = (i + 1) % m_bucket_count;
+                i = (i + next_buck(x)) % m_bucket_count;
             }
             if (m_set[i] == 1 && m_data[i].first == x)
             {
@@ -1099,6 +1104,7 @@ namespace fefu
          */
         void reserve(size_type n)
         {
+            n = round_up(n);
             rehash(ceil(n / m_max_load_factor));
         }
 
@@ -1116,12 +1122,39 @@ namespace fefu
     private:
         allocator_type m_alloc;
         hasher m_hash;
+        hasher m_hash_;
         key_equal m_key_eq;
         value_type* m_data;
         std::vector<char> m_set;
         size_type m_size;
         size_type m_bucket_count;
         float m_max_load_factor = 0.75;
+
+        auto next_buck(const key_type& x)
+        {
+            //return static_cast<size_type>(1);
+            size_type e = m_hash_(x) % this->m_bucket_count;
+            return e + (e % 2 == 0);
+        }
+        auto next_buck(const key_type& x) const
+        {
+            //return static_cast<size_type>(1);
+            size_type e = m_hash_(x) % this->m_bucket_count;
+            return e + (e % 2 == 0);
+        }
+
+        size_type round_up(size_type n)
+        {
+            n--;
+            n |= n >> 1;
+            n |= n >> 2;
+            n |= n >> 4;
+            n |= n >> 8;
+            n |= n >> 16;
+            n |= n >> 32;
+            n++;
+            return n;
+        }
     };
 
 } // namespace fefu
