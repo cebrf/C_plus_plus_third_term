@@ -223,12 +223,37 @@ TEST_CASE("end")
 // modifiers.
 TEST_CASE("emplace(_Args&&... args)")
 {
+    fefu::hash_map<int, int> hm(10);
+
+    auto res_ = hm.emplace(15, 6);
+    REQUIRE(res_.first->first == 15);
+    REQUIRE(res_.first->second == 6);
+    REQUIRE(res_.second);
+
+    auto res = hm.emplace(15, 8);
+    REQUIRE(res.first->first == 15);
+    REQUIRE(res.first->second != 8);
+    REQUIRE(!res.second);
 }
 
 TEST_CASE("try_emplace(const key_type& k, _Args&&... args)")
 {
-    /*fefu::hash_map<int, char> hm(10);
-    hm.try_emplace(123, 'a');*/
+    fefu::hash_map<int, tuple<int, char, string>> hm(10);
+    tuple<int, char, string> tu = { 119, 'd', "fear" };
+    auto res = hm.try_emplace(123, tu);
+
+
+    REQUIRE(hm.at(123) == tu);
+    REQUIRE(res.first->first == 123);
+
+    res = hm.try_emplace(124, 157, 's', "vf");
+    REQUIRE(res.first->first == 124);
+    REQUIRE(res.second == true);
+
+    res = hm.try_emplace(123, 157, 's', ":(");
+    REQUIRE(res.first->first == 123);
+    REQUIRE(res.first->second == tu);
+    REQUIRE(res.second == false);
 }
 
 TEST_CASE("try_emplace(key_type&& k, _Args&&... args)")

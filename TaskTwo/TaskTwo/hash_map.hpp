@@ -529,7 +529,7 @@ namespace fefu
         template<typename... _Args>
         std::pair<iterator, bool> emplace(_Args&&... args)
         {
-            return insert({ std::piecewise_construct, mapped_type(std::forward<_Args>(args)) });
+            return insert(value_type(std::forward<_Args>(args)...));
         }
 
         /**
@@ -557,14 +557,14 @@ namespace fefu
         template <typename... _Args>
         std::pair<iterator, bool> try_emplace(const key_type& k, _Args&&... args)
         {
-            return insert({ std::move(k), mapped_type(std::forward<_Args>(args)) });
+            return insert({ std::forward<key_type>(k), mapped_type(std::forward<_Args>(args) ...) });
         }
 
         // move-capable overload
         template <typename... _Args>
         std::pair<iterator, bool> try_emplace(key_type&& k, _Args&&... args)
         {
-            return insert({ std::forward<key_type>(k), mapped_type(std::forward<_Args>(args)) });
+            return insert({ std::forward<key_type>(k), mapped_type(std::forward<_Args>(args) ...) });
         }
 
         //@{
