@@ -88,10 +88,10 @@ namespace fefu
             return *this;
         }
 
-        template<typename K, typename T,
-            typename Hash = std::hash<K>,
-            typename Pred = std::equal_to<K>,
-            typename Alloc = allocator<std::pair<const K, T>>>
+        template<typename, typename,
+            typename,
+            typename,
+            typename>
             friend class hash_map;
 
         template<typename ValueType>
@@ -179,10 +179,10 @@ namespace fefu
             return *this;
         }
 
-        template<typename K, typename T,
-            typename Hash = std::hash<K>,
-            typename Pred = std::equal_to<K>,
-            typename Alloc = allocator<std::pair<const K, T>>>
+        template<typename, typename,
+            typename,
+            typename,
+            typename>
             friend class hash_map;
 
         friend bool operator==(const hash_map_const_iterator<ValueType>& lhs, const hash_map_const_iterator<ValueType>& rhs)
@@ -583,7 +583,7 @@ namespace fefu
             {
                 i = (i + next_buck(k)) % m_bucket_count;
             }
-            new (m_data + i) value_type{ std::forward<K>(k), mapped_type(std::forward<_Args>(args) ...) };
+            new (m_data + i) value_type(std::piecewise_construct, std::forward_as_tuple(k), std::forward_as_tuple(std::forward<_Args>(args)...));
             m_set[i] = 1;
             m_size++;
 
@@ -619,15 +619,6 @@ namespace fefu
         template<typename Templ>
         std::pair<iterator, bool> insert(Templ&& x)
         {
-            /*if constexpr (std::is_lvalue_reference_v<Templ>)
-            {
-                std::cout << "L\n";
-            }
-            else
-            {
-                std::cout << "R\n";
-            }*/
-
             iterator iter = find(x.first);
             if (iter != end())
                 return { iter, false };
