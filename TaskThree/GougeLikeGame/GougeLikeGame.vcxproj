@@ -141,13 +141,16 @@
     <ClCompile Include="GameObjects\ICharacter.cpp" />
     <ClCompile Include="GameObjects\IGameObject.cpp" />
     <ClCompile Include="GameObjects\IShootingChatacter.cpp" />
+    <ClCompile Include="GameObjects\Level.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
+    <ClCompile Include="GameSystem.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\ICharacter.h" />
     <ClInclude Include="GameObjects\IGameObject.h" />
     <ClInclude Include="GameObjects\IShootingChatacter.h" />
+    <ClInclude Include="GameObjects\Level.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="pdcurses\curses.h" />

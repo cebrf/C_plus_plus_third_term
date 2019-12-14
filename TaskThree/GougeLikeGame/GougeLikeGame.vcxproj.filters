@@ -39,6 +39,12 @@
     <ClCompile Include="GameObjects\Player.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\Level.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\IGameObject.h">
@@ -58,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="pdcurses\curses.h">
       <Filter>Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Level.h">
+      <Filter>GameObjectsH</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

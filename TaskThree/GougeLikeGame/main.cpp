@@ -15,8 +15,8 @@ int main()
     getch();
     endwin();*/
 
-    GameSystem game;
-    game.Start("123", "123");
+    GameSystem game("123", "123");
+    game.Start();
 
     return 0;
 }

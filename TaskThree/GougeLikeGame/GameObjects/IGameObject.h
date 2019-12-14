@@ -1,4 +1,4 @@
-//#pragma once
+#pragma once
 struct Point
 {
     Point(int x, int y) :
