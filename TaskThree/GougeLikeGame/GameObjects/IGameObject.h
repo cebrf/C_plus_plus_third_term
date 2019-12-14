@@ -11,14 +11,15 @@ struct Point
 class IGameObject
 {
 public:
+    Point GetPos();
+    char GetSym();
+
+protected:
     IGameObject(Point pos, char sym);
     ~IGameObject();
 
-protected:
     void SetPos(Point p);
-    Point GetPos();
     void SetSym(char sym);
-    char GetSym();
 
 private:
     Point pos;
