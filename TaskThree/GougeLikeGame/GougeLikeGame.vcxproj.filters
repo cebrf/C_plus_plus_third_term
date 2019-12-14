@@ -72,4 +72,7 @@
   <ItemGroup>
     <Library Include="pdcurses\pdcurses.lib" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="level1.txt" />
+  </ItemGroup>
 </Project>

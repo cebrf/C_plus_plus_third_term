@@ -15,7 +15,7 @@ int main()
     getch();
     endwin();*/
 
-    GameSystem game("123", "123");
+    GameSystem game("level1.txt", "123");
     game.Start();
 
     return 0;

@@ -2,6 +2,9 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <iostream>
+#include <fstream>
+
 #include "ICharacter.h"
 #include "Player.h"
 #include "../pdcurses/curses.h"

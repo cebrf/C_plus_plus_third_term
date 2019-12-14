@@ -2,16 +2,11 @@
 
 void Level::GetLevelMap(const std::string& fileName, std::vector<std::string>& levelMap)
 {
-    //read from json
-    //work with json file
-    levelMap = {
-        "##########",
-        "#@        ",
-        "#     #   ",
-        "# #      #",
-        "#         ",
-        "##########"
-    };
+    std::ifstream MapFile(fileName);
+    std::string buf;
+    while (std::getline(MapFile, buf)) {
+        levelMap.push_back(buf);
+    }
 
     //каким-то обрзом мы должны показывать только часть карты!
     //следовательно и считывать не всю а только видимую часть
@@ -64,8 +59,8 @@ void Level::CreateWindow(WINDOW*& levelWin)
     initscr();
     curs_set(0);
     noecho();
-    int height = 6 + 2,
-        width = 10 + 2,
+    int height = 12 + 2,
+        width = 30 + 2,
         startX = 10,
         startY = 10;
     levelWin = newwin(height, width, startX, startY);
