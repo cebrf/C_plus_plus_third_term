@@ -6,7 +6,7 @@ class Player :
     public IShootingChatacter
 {
 public:
-    Player();
+    //Player();
     Player(Point pos, char sym, int hp, int damage, int maxHp);
     ~Player();
 

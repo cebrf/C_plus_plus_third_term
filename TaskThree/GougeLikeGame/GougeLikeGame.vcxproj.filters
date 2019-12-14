@@ -13,5 +13,54 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="GameObjects">
+      <UniqueIdentifier>{e4c3a66f-0dd5-480b-84b4-e0a88c8d2d60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjectsH">
+      <UniqueIdentifier>{213c937e-35d2-4729-b823-fe5965851d47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libs">
+      <UniqueIdentifier>{7f132245-8cbd-4b0b-9a9f-f1b96e202a94}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\IGameObject.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\ICharacter.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\IShootingChatacter.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameObjects\IGameObject.h">
+      <Filter>GameObjectsH</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\ICharacter.h">
+      <Filter>GameObjectsH</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\IShootingChatacter.h">
+      <Filter>GameObjectsH</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player.h">
+      <Filter>GameObjectsH</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pdcurses\curses.h">
+      <Filter>Libs</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="pdcurses\pdcurses.lib" />
   </ItemGroup>
 </Project>
