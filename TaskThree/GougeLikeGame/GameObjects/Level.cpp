@@ -28,8 +28,6 @@ void Level::FindGameObjects(const std::vector<std::string>& levelMap,
     const std::map<char, Enemy>& enemiesTypes,
     Player& player)
 {
-    //finding objects and pushing them in vectors
-
     for (int i = 0; i < levelMap.size(); i++)
     {
         for (int j = 0; j < levelMap[i].size(); j++)
@@ -37,15 +35,14 @@ void Level::FindGameObjects(const std::vector<std::string>& levelMap,
             switch (levelMap[i][j])
             {
             case '@':
-                //how to set pos, if method if protected?
                 player.SetPos(Point(i + 1, j + 1));
                 break;
             default:
                 if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
                 {
-                    auto enemy = enemiesTypes.find(levelMap[i][j]);
-                    enemies.insert({ {i, j}, Enemy(Point(i+1, j + 1), 'z', 50, 10, 50) });
-                    //enemies[{i, j}] = new Enemy(Point(i, j), levelMap[i][j], enemy->second.GetHp(), enemy->second.GetDamage(), enemy->second.GetMaxHp());
+                    Enemy enemy = enemiesTypes.find(levelMap[i][j])->second;
+                    enemies.insert({ {i, j}, Enemy(Point(i + 1, j + 1),
+                        levelMap[i][j], enemy.GetHp(), enemy.GetDamage(), enemy.GetMaxHp()) });
                 }
                 break;
             }
