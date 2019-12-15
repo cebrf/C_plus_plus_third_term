@@ -1,11 +1,11 @@
 #include "GameSystem.h"
 
 GameSystem::GameSystem(const std::string& levelFileName, const std::string& EnemiesFileName) :
-    player(Point(-1, -1), '@', 100, 20, 100) //Point pos, char sym, int hp, int damage, int maxHp
+    player(Point(-1, -1), ' ', -1, -1, -1) //Point pos, char sym, int hp, int damage, int maxHp*/
 {
     Level::CreateWindow(levelWin);
     Level::GetLevelMap(levelFileName, levelMap);
-    Level::GetEnemiesTypes(EnemiesFileName, enemiesTypes);
+    Level::GetCharactersTypes(EnemiesFileName, enemiesTypes, player);
     Level::FindGameObjects(levelMap, enemies, enemiesTypes, player);
     Level::PrintLevel(levelWin, levelMap);
 }
@@ -20,7 +20,7 @@ void GameSystem::Start()
             makeMove(direction, &player);
         }
 
-        { // move of enemies
+        if(0){ // move of enemies
             for (auto enemy = enemies.begin(); enemy != enemies.end(); enemy++)
             {
                 char move = getRandomMove();
@@ -40,7 +40,28 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter* chara
     {
         if (levelMap[newPos.x - 1][newPos.y - 1] != ' ' && levelMap[newPos.x - 1][newPos.y - 1] != '.')
         {
-            //Attack(ICharacter fir, ICharacter las)
+            if (enemies.find({ newPos.x,newPos.y }) == enemies.end())
+            {
+                bool killed = Attack(character, &player);
+                if (killed)
+                {
+                    //you are died
+                    wclear(levelWin);
+                    mvwprintw(levelWin, 10, 10, "YOU ARE DEAD!");
+                    wrefresh(levelWin);
+                    int i = 1;
+                }
+            }
+            else
+            {
+                bool killed = Attack(character, &enemies.find({ newPos.x, newPos.y })->second);
+                if (killed)
+                {
+                    enemies.erase({ newPos.x, newPos.y });
+                    levelMap[newPos.x - 1][newPos.y - 1] = ' ';
+                    mvwaddch(levelWin, newPos.x, newPos.y, ' ');
+                }
+            }
         }
         else
         {
@@ -71,4 +92,13 @@ std::pair<int, int> GameSystem::getDirection(char move)
     else if (move == 'd')
         direction.second = 1;
     return direction;
+}
+
+bool GameSystem::Attack(ICharacter* attacker, ICharacter* prey)
+{
+    prey->SetHp(std::max(0, prey->GetHp() - attacker->GetDamage()));
+    if (prey->GetHp() == 0)
+        return 1;
+    else
+        return 0;
 }

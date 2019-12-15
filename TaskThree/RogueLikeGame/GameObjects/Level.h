@@ -18,7 +18,7 @@ class Level
 public:
     static void GetLevelMap(const std::string& fileName, std::vector<std::string>& levelMap);
 
-    static void GetEnemiesTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes);
+    static void GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes, Player& player);
 
     static void FindGameObjects(const std::vector<std::string>& levelMap,
         std::map<std::pair<int, int>, Enemy>& enemies,

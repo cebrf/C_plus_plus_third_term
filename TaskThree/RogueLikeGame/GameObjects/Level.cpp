@@ -9,12 +9,19 @@ void Level::GetLevelMap(const std::string& fileName, std::vector<std::string>& l
     }
 }
 
-void Level::GetEnemiesTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes)
+void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes, Player& player)
 {
     // TODO read info about player from that file
     std::fstream f(EnemiesFileName);
     json j;
     f >> j;
+    
+    std::string sym = j["player"]["sym"];
+    player.SetSym(sym[0]);
+    player.SetHp(j["player"]["hp"]);
+    player.SetDamage(j["player"]["damage"]);
+    player.SetMaxHp(j["player"]["maxHp"]);
+
     for (auto& enemy : j["enemies"].items())
     {
         std::string sym = enemy.value()["sym"];
@@ -41,7 +48,7 @@ void Level::FindGameObjects(const std::vector<std::string>& levelMap,
                 if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
                 {
                     Enemy enemy = enemiesTypes.find(levelMap[i][j])->second;
-                    enemies.insert({ {i, j}, Enemy(Point(i + 1, j + 1),
+                    enemies.insert({ {i + 1, j + 1}, Enemy(Point(i + 1, j + 1),
                         levelMap[i][j], enemy.GetHp(), enemy.GetDamage(), enemy.GetMaxHp()) });
                 }
                 break;

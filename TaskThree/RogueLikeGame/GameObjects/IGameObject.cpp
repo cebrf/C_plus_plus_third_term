@@ -7,8 +7,8 @@ IGameObject::~IGameObject() = default;
 
 void IGameObject::SetPos(Point p)
 {
-    pos.x = p.x;
-    pos.y = p.y;
+    this->pos.x = p.x;
+    this->pos.y = p.y;
 }
 
 Point IGameObject::GetPos()
@@ -18,7 +18,7 @@ Point IGameObject::GetPos()
 
 void IGameObject::SetSym(char sym)
 {
-    sym = sym;
+    this->sym = sym;
 }
 
 char IGameObject::GetSym()

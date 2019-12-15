@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <algorithm>
 #include "pdcurses/curses.h"
 
 #include "GameObjects/ICharacter.h"
@@ -19,11 +20,14 @@ protected:
     void makeMove(const std::pair<int, int> direction, ICharacter* character);
     char getRandomMove();
     std::pair<int, int> getDirection(char move);
+    bool Attack(ICharacter* attacker, ICharacter* prey);
 
 private:
     std::vector<std::string> levelMap;
     std::map<std::pair<int, int>, Enemy> enemies;
     std::map<char, Enemy> enemiesTypes;
+    //map with items
+    //map with arrows
     Player player;
     WINDOW* levelWin;
 };

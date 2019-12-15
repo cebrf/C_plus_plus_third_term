@@ -13,13 +13,13 @@ class IGameObject
 public:
     Point GetPos();
     char GetSym();
-    void SetPos(Point p); // TODO move to protexted
+
+    void SetPos(Point p); // TODO move to protexted?
+    void SetSym(char sym);
 
 protected:
     IGameObject(Point pos, char sym);
     ~IGameObject();
-
-    void SetSym(char sym);
 
 private:
     Point pos;
