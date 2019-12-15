@@ -81,4 +81,7 @@
   <ItemGroup>
     <Text Include="level1.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="enemiesLevel1.json" />
+  </ItemGroup>
 </Project>

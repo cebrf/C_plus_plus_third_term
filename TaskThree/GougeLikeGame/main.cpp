@@ -15,7 +15,7 @@ int main()
     getch();
     endwin();*/
 
-    GameSystem game("level1.txt", "123");
+    GameSystem game("level1.txt", "enemiesLevel1.json");
     game.Start();
 
     return 0;

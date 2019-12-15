@@ -7,15 +7,20 @@ void Level::GetLevelMap(const std::string& fileName, std::vector<std::string>& l
     while (std::getline(MapFile, buf)) {
         levelMap.push_back(buf);
     }
-
-    //каким-то обрзом мы должны показывать только часть карты!
-    //следовательно и считывать не всю а только видимую часть
 }
 
 void Level::GetEnemiesTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes)
 {
-    //(Point pos, char sym, int hp, int damage, int maxHp)
-    enemiesTypes.emplace('z', Enemy(Point(-1, -1), 'z', 50, 10, 50));  //don't need default constructor
+    // TODO read info about player from that file
+    std::fstream f(EnemiesFileName);
+    json j;
+    f >> j;
+    for (auto& enemy : j["enemies"].items())
+    {
+        std::string sym = enemy.value()["sym"];
+        enemiesTypes.emplace(sym[0],
+            Enemy(Point(-1, -1), sym[0], enemy.value()["hp"], enemy.value()["damage"], enemy.value()["maxHp"]));
+    }
 }
 
 void Level::FindGameObjects(const std::vector<std::string>& levelMap,

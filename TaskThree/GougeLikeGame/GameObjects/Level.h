@@ -9,6 +9,9 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "../pdcurses/curses.h"
+#include "../nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 class Level
 {
