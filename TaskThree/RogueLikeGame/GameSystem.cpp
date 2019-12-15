@@ -23,7 +23,7 @@ void GameSystem::Start()
         { // move of enemies
             for (auto enemy = enemies.begin(); enemy != enemies.end(); enemy++)
             {
-                char move = 's'; //random
+                char move = getRandomMove();
                 std::pair<int, int> direction = getDirection(move);
                 makeMove(direction, &(enemy->second));
             }
@@ -38,7 +38,7 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter* chara
         && newPos.y - 1 < levelMap[0].size()
         && levelMap[newPos.x - 1][newPos.y - 1] != '#')
     {
-        if (levelMap[newPos.x - 1][newPos.y - 1] != ' ')
+        if (levelMap[newPos.x - 1][newPos.y - 1] != ' ' && levelMap[newPos.x - 1][newPos.y - 1] != '.')
         {
             //Attack(ICharacter fir, ICharacter las)
         }
@@ -51,6 +51,12 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter* chara
             levelMap[character->GetPos().x - 1][character->GetPos().y - 1] = character->GetSym();
         }
     }
+}
+
+char GameSystem::getRandomMove()
+{
+    std::vector<char> v = { 'w', 'a', 's', 'd' };
+    return v[rand() % 4];
 }
 
 std::pair<int, int> GameSystem::getDirection(char move)

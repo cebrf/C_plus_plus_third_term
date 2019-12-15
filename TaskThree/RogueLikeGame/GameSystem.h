@@ -17,7 +17,7 @@ public:
 
 protected:
     void makeMove(const std::pair<int, int> direction, ICharacter* character);
-
+    char getRandomMove();
     std::pair<int, int> getDirection(char move);
 
 private:
