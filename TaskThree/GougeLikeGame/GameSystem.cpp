@@ -12,41 +12,57 @@ GameSystem::GameSystem(const std::string& levelFileName, const std::string& Enem
 
 void GameSystem::Start()
 {
-    while (1)
+    while (true)
     {
-        char move = wgetch(levelWin);
-        int directionX = 0,
-            directionY = 0;
-        if (move == 'w' || move == 'a' || move == 's' || move == 'd')
-        {
-            switch (move)
+        { // move of player
+            char move = wgetch(levelWin);
+            std::pair<int, int> direction = getDirection(move);
+            makeMove(direction, &player);
+        }
+
+        { // move of enemies
+            for (auto enemy = enemies.begin(); enemy != enemies.end(); enemy++)
             {
-            case 'w':
-                directionX = -1;
-                break;
-            case 's':
-                directionX = 1;
-                break;
-            case 'a':
-                directionY = -1;
-                break;
-            case 'd':
-                directionY = 1;
-                break;
+                char move = 's'; //random
+                std::pair<int, int> direction = getDirection(move);
+                makeMove(direction, &(enemy->second));
             }
-            makeMove(directionX, directionY);
         }
     }
 }
 
-void GameSystem::makeMove(int directionX, int directionY)
+void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter* character)
 {
-    Point newPos(player.GetPos().x + directionX, player.GetPos().y + directionY);
-    if (newPos.x - 1 < levelMap.size() && newPos.y - 1 < levelMap[0].size() && levelMap[newPos.x - 1][newPos.y - 1] != '#')
+    Point newPos(character->GetPos().x + direction.first, character->GetPos().y + direction.second);
+    if (newPos.x - 1 < levelMap.size()
+        && newPos.y - 1 < levelMap[0].size()
+        && levelMap[newPos.x - 1][newPos.y - 1] != '#')
     {
-        mvwaddch(levelWin, player.GetPos().x, player.GetPos().y, '.');
-        player.SetPos(newPos);
-        mvwaddch(levelWin, player.GetPos().x, player.GetPos().y, '@');
+        if (levelMap[newPos.x - 1][newPos.y - 1] != ' ')
+        {
+            //Attack(ICharacter fir, ICharacter las)
+        }
+        else
+        {
+            mvwaddch(levelWin, character->GetPos().x, character->GetPos().y, '.');
+            levelMap[character->GetPos().x - 1][character->GetPos().y - 1] = ' ';
+            character->SetPos(newPos);
+            mvwaddch(levelWin, character->GetPos().x, character->GetPos().y, character->GetSym());
+            levelMap[character->GetPos().x - 1][character->GetPos().y - 1] = character->GetSym();
+        }
     }
 }
 
+std::pair<int, int> GameSystem::getDirection(char move)
+{
+    std::pair<int, int> direction = { 0, 0 };
+    if (move == 'w')
+        direction.first = -1;
+    else if (move == 's')
+        direction.first = 1;
+    else if (move == 'a')
+        direction.second = -1;
+    else if (move == 'd')
+        direction.second = 1;
+    return direction;
+}

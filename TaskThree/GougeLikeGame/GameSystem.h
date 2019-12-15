@@ -16,12 +16,14 @@ public:
     void Start();
 
 protected:
-    void makeMove(int directionX, int directionY);
+    void makeMove(const std::pair<int, int> direction, ICharacter* character);
+
+    std::pair<int, int> getDirection(char move);
 
 private:
     std::vector<std::string> levelMap;
-    std::map<std::pair<int, int>, ICharacter*> enemies;
-    std::map<char, ICharacter*> enemiesTypes;
+    std::map<std::pair<int, int>, Enemy> enemies;
+    std::map<char, Enemy> enemiesTypes;
     Player player;
     WINDOW* levelWin;
 };

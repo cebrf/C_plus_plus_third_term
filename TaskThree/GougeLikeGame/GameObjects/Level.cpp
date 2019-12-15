@@ -12,14 +12,15 @@ void Level::GetLevelMap(const std::string& fileName, std::vector<std::string>& l
     //следовательно и считывать не всю а только видимую часть
 }
 
-void Level::GetEnemiesTypes(const std::string& EnemiesFileName, std::map<char, ICharacter*> enemiesTypes)
+void Level::GetEnemiesTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes)
 {
-    ///
+    //(Point pos, char sym, int hp, int damage, int maxHp)
+    enemiesTypes.emplace('z', Enemy(Point(-1, -1), 'z', 50, 10, 50));  //don't need default constructor
 }
 
 void Level::FindGameObjects(const std::vector<std::string>& levelMap,
-    std::map<std::pair<int, int>, ICharacter*>& enemies,
-    const std::map<char, ICharacter*>& enemiesTypes,
+    std::map<std::pair<int, int>, Enemy>& enemies,
+    const std::map<char, Enemy>& enemiesTypes,
     Player& player)
 {
     //finding objects and pushing them in vectors
@@ -35,6 +36,12 @@ void Level::FindGameObjects(const std::vector<std::string>& levelMap,
                 player.SetPos(Point(i + 1, j + 1));
                 break;
             default:
+                if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
+                {
+                    auto enemy = enemiesTypes.find(levelMap[i][j]);
+                    enemies.insert({ {i, j}, Enemy(Point(i+1, j + 1), 'z', 50, 10, 50) });
+                    //enemies[{i, j}] = new Enemy(Point(i, j), levelMap[i][j], enemy->second.GetHp(), enemy->second.GetDamage(), enemy->second.GetMaxHp());
+                }
                 break;
             }
         }

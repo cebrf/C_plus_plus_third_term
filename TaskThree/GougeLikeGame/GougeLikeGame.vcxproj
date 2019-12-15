@@ -138,6 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObjects\Enemy.cpp" />
     <ClCompile Include="GameObjects\ICharacter.cpp" />
     <ClCompile Include="GameObjects\IGameObject.cpp" />
     <ClCompile Include="GameObjects\IShootingChatacter.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObjects\Enemy.h" />
     <ClInclude Include="GameObjects\ICharacter.h" />
     <ClInclude Include="GameObjects\IGameObject.h" />
     <ClInclude Include="GameObjects\IShootingChatacter.h" />
