@@ -69,13 +69,13 @@ void Level::PrintLevel(WINDOW*& win, const std::vector<std::string>& levelMap)
     wrefresh(win);
 }
 
-void Level::CreateWindow(WINDOW*& levelWin)
+void Level::CreateWindow(WINDOW*& levelWin, size_t widthOfMap, size_t heightOfMap)
 {
     initscr();
     curs_set(0);
     noecho();
-    int height = 12 + 2,
-        width = 30 + 2,
+    int height = heightOfMap + 2,
+        width = widthOfMap + 2,
         startX = 10,
         startY = 10;
     levelWin = newwin(height, width, startX, startY);

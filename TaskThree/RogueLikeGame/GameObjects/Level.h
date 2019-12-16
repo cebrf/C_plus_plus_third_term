@@ -28,6 +28,6 @@ public:
 
     static void PrintLevel(WINDOW *& win, const std::vector<std::string>& levelMap);
 
-    static void CreateWindow(WINDOW*& win);
+    static void CreateWindow(WINDOW*& win, size_t widthOfMap, size_t heightOfMap);
 };
 

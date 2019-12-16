@@ -3,10 +3,10 @@
 GameSystem::GameSystem(const std::string& levelFileName, const std::string& EnemiesFileName) :
     player(Point(-1, -1), ' ', -1, -1, -1) //Point pos, char sym, int hp, int damage, int maxHp*/
 {
-    Level::CreateWindow(levelWin);
     Level::GetLevelMap(levelFileName, levelMap);
     Level::GetCharactersTypes(EnemiesFileName, enemiesTypes, player);
     Level::FindGameObjects(levelMap, enemies, enemiesTypes, player);
+    Level::CreateWindow(levelWin, levelMap[0].size(), levelMap.size());
     Level::PrintLevel(levelWin, levelMap);
 }
 
@@ -58,7 +58,9 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter* chara
             {
                 bool killed = Attack(character, &player);
                 if (killed)
+                {
                     death();
+                }
             }
             else
             {
