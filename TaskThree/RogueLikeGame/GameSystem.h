@@ -17,15 +17,15 @@ public:
     void Start();
 
 protected:
-    void makeMove(const std::pair<int, int> direction, ICharacter* character);
+    void makeMove(const std::pair<int, int> direction, ICharacter& character);
     char getRandomMove();
     std::pair<int, int> getDirection(char move);
-    bool Attack(ICharacter* attacker, ICharacter* prey);
+    bool Attack(ICharacter& attacker, ICharacter& prey);
     void death();
 
 private:
     std::vector<std::string> levelMap;
-    std::vector<Enemy> enemies;
+    std::vector<std::shared_ptr<ICharacter>> enemies;
     std::map<char, Enemy> enemiesTypes;
     //map with items
     //map with arrows

@@ -22,7 +22,7 @@ public:
     static void GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes, Player& player);
 
     static void FindGameObjects(const std::vector<std::string>& levelMap,
-        std::vector<Enemy>& enemies,
+        std::vector<std::shared_ptr<ICharacter>>& enemies,
         const std::map<char, Enemy>& enemiesTypes,
         Player& player);
 

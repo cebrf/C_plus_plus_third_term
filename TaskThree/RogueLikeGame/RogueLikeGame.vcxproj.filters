@@ -48,6 +48,9 @@
     <ClCompile Include="GameObjects\Enemy.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\IGameObject.h">
@@ -73,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="GameObjects\Enemy.h">
       <Filter>GameObjectsH</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

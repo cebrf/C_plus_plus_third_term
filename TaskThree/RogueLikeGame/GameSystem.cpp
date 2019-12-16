@@ -17,22 +17,22 @@ void GameSystem::Start()
         { // move of player
             char move = wgetch(levelWin);
             std::pair<int, int> direction = getDirection(move);
-            makeMove(direction, &player);
+            makeMove(direction, player);
         }
 
         { // move of enemies
             for (auto enemy = enemies.begin(); enemy != enemies.end(); enemy++)
             {
-                if (enemy->GetHp() > 0)
+                if ((*enemy)->GetHp() > 0)
                 {
                     char move = getRandomMove();
                     std::pair<int, int> direction = getDirection(move);
-                    makeMove(direction, &(*enemy));
+                    makeMove(direction, *(*enemy));
                 }
             }
             for (int i = 0; i < enemies.size();)
             {
-                if (enemies[i].GetHp() <= 0)
+                if (enemies[i]->GetHp() <= 0)
                 {
                     enemies.erase(next(enemies.begin(), i));
                 }
@@ -45,9 +45,9 @@ void GameSystem::Start()
     }
 }
 
-void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter* character)
+void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter& character)
 {
-    Point newPos(character->GetPos().x + direction.first, character->GetPos().y + direction.second);
+    Point newPos(character.GetPos().x + direction.first, character.GetPos().y + direction.second);
     if (newPos.x - 1 < levelMap.size()
         && newPos.y - 1 < levelMap[0].size()
         && levelMap[newPos.x - 1][newPos.y - 1] != '#')
@@ -56,7 +56,7 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter* chara
         {
             if (levelMap[newPos.x - 1][newPos.y - 1] == player.GetSym())
             {
-                bool killed = Attack(character, &player);
+                bool killed = Attack(character, player);
                 if (killed)
                 {
                     death();
@@ -67,10 +67,10 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter* chara
                 int i = 0;
                 for (; i < enemies.size(); i++)
                 {
-                    if (enemies[i].GetPos().x == newPos.x && enemies[i].GetPos().y == newPos.y)
+                    if (enemies[i]->GetPos().x == newPos.x && enemies[i]->GetPos().y == newPos.y)
                         break;
                 }
-                bool killed = Attack(character, &enemies[i]);
+                bool killed = Attack(character, *enemies[i]);
                 if (killed)
                 {
                     levelMap[newPos.x - 1][newPos.y - 1] = ' ';
@@ -80,11 +80,11 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter* chara
         }
         else
         {
-            mvwaddch(levelWin, character->GetPos().x, character->GetPos().y, '.');
-            levelMap[character->GetPos().x - 1][character->GetPos().y - 1] = ' ';
-            character->SetPos(newPos);
-            mvwaddch(levelWin, character->GetPos().x, character->GetPos().y, character->GetSym());
-            levelMap[character->GetPos().x - 1][character->GetPos().y - 1] = character->GetSym();
+            mvwaddch(levelWin, character.GetPos().x, character.GetPos().y, '.');
+            levelMap[character.GetPos().x - 1][character.GetPos().y - 1] = ' ';
+            character.SetPos(newPos);
+            mvwaddch(levelWin, character.GetPos().x, character.GetPos().y, character.GetSym());
+            levelMap[character.GetPos().x - 1][character.GetPos().y - 1] = character.GetSym();
         }
     }
 }
@@ -109,10 +109,10 @@ std::pair<int, int> GameSystem::getDirection(char move)
     return direction;
 }
 
-bool GameSystem::Attack(ICharacter* attacker, ICharacter* prey)
+bool GameSystem::Attack(ICharacter& attacker, ICharacter& prey)
 {
-    prey->SetHp(std::max(0, prey->GetHp() - attacker->GetDamage()));
-    if (prey->GetHp() == 0)
+    prey.SetHp(std::max(0, prey.GetHp() - attacker.GetDamage()));
+    if (prey.GetHp() == 0)
         return 1;
     else
         return 0;

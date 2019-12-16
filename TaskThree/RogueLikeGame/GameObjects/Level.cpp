@@ -30,7 +30,7 @@ void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char
 }
 
 void Level::FindGameObjects(const std::vector<std::string>& levelMap,
-    std::vector<Enemy>& enemies,
+    std::vector<std::shared_ptr<ICharacter>>& enemies,
     const std::map<char, Enemy>& enemiesTypes,
     Player& player)
 {
@@ -47,8 +47,8 @@ void Level::FindGameObjects(const std::vector<std::string>& levelMap,
                 if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
                 {
                     Enemy enemy = enemiesTypes.find(levelMap[i][j])->second;
-                    enemies.push_back(Enemy(Point(i + 1, j + 1),
-                        levelMap[i][j], enemy.GetHp(), enemy.GetDamage(), enemy.GetMaxHp()));
+                    enemies.push_back(std::shared_ptr<ICharacter>(new Enemy(Point(i + 1, j + 1),
+                        levelMap[i][j], enemy.GetHp(), enemy.GetDamage(), enemy.GetMaxHp())));
                 }
                 break;
             }
