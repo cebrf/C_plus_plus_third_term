@@ -14,7 +14,7 @@ public:
     Point GetPos();
     char GetSym();
 
-    void SetPos(Point p); // TODO move to protexted?
+    void SetPos(Point p);
     void SetSym(char sym);
 
 protected:

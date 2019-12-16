@@ -11,7 +11,6 @@ void Level::GetLevelMap(const std::string& fileName, std::vector<std::string>& l
 
 void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes, Player& player)
 {
-    // TODO read info about player from that file
     std::fstream f(EnemiesFileName);
     json j;
     f >> j;
@@ -31,7 +30,7 @@ void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char
 }
 
 void Level::FindGameObjects(const std::vector<std::string>& levelMap,
-    std::map<std::pair<int, int>, Enemy>& enemies,
+    std::vector<Enemy>& enemies,
     const std::map<char, Enemy>& enemiesTypes,
     Player& player)
 {
@@ -48,8 +47,8 @@ void Level::FindGameObjects(const std::vector<std::string>& levelMap,
                 if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
                 {
                     Enemy enemy = enemiesTypes.find(levelMap[i][j])->second;
-                    enemies.insert({ {i + 1, j + 1}, Enemy(Point(i + 1, j + 1),
-                        levelMap[i][j], enemy.GetHp(), enemy.GetDamage(), enemy.GetMaxHp()) });
+                    enemies.push_back(Enemy(Point(i + 1, j + 1),
+                        levelMap[i][j], enemy.GetHp(), enemy.GetDamage(), enemy.GetMaxHp()));
                 }
                 break;
             }

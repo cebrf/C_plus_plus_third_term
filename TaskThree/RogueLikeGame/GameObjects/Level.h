@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 #include <iostream>
 #include <fstream>
 
@@ -21,7 +22,7 @@ public:
     static void GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes, Player& player);
 
     static void FindGameObjects(const std::vector<std::string>& levelMap,
-        std::map<std::pair<int, int>, Enemy>& enemies,
+        std::vector<Enemy>& enemies,
         const std::map<char, Enemy>& enemiesTypes,
         Player& player);
 

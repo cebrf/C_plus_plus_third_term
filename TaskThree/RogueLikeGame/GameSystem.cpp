@@ -20,12 +20,26 @@ void GameSystem::Start()
             makeMove(direction, &player);
         }
 
-        if(0){ // move of enemies
+        { // move of enemies
             for (auto enemy = enemies.begin(); enemy != enemies.end(); enemy++)
             {
-                char move = getRandomMove();
-                std::pair<int, int> direction = getDirection(move);
-                makeMove(direction, &(enemy->second));
+                if (enemy->GetHp() > 0)
+                {
+                    char move = getRandomMove();
+                    std::pair<int, int> direction = getDirection(move);
+                    makeMove(direction, &(*enemy));
+                }
+            }
+            for (int i = 0; i < enemies.size();)
+            {
+                if (enemies[i].GetHp() <= 0)
+                {
+                    enemies.erase(next(enemies.begin(), i));
+                }
+                else 
+                {
+                    i++;
+                }
             }
         }
     }
@@ -40,24 +54,23 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter* chara
     {
         if (levelMap[newPos.x - 1][newPos.y - 1] != ' ' && levelMap[newPos.x - 1][newPos.y - 1] != '.')
         {
-            if (enemies.find({ newPos.x,newPos.y }) == enemies.end())
+            if (levelMap[newPos.x - 1][newPos.y - 1] == player.GetSym())
             {
                 bool killed = Attack(character, &player);
                 if (killed)
-                {
-                    //you are died
-                    wclear(levelWin);
-                    mvwprintw(levelWin, 10, 10, "YOU ARE DEAD!");
-                    wrefresh(levelWin);
-                    int i = 1;
-                }
+                    death();
             }
             else
             {
-                bool killed = Attack(character, &enemies.find({ newPos.x, newPos.y })->second);
+                int i = 0;
+                for (; i < enemies.size(); i++)
+                {
+                    if (enemies[i].GetPos().x == newPos.x && enemies[i].GetPos().y == newPos.y)
+                        break;
+                }
+                bool killed = Attack(character, &enemies[i]);
                 if (killed)
                 {
-                    enemies.erase({ newPos.x, newPos.y });
                     levelMap[newPos.x - 1][newPos.y - 1] = ' ';
                     mvwaddch(levelWin, newPos.x, newPos.y, ' ');
                 }
@@ -101,4 +114,11 @@ bool GameSystem::Attack(ICharacter* attacker, ICharacter* prey)
         return 1;
     else
         return 0;
+}
+
+void GameSystem::death()
+{
+    wclear(levelWin);
+    mvwprintw(levelWin, 10, 10, "YOU ARE DEAD!");
+    wrefresh(levelWin);
 }

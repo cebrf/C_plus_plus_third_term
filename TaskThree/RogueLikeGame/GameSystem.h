@@ -21,10 +21,11 @@ protected:
     char getRandomMove();
     std::pair<int, int> getDirection(char move);
     bool Attack(ICharacter* attacker, ICharacter* prey);
+    void death();
 
 private:
     std::vector<std::string> levelMap;
-    std::map<std::pair<int, int>, Enemy> enemies;
+    std::vector<Enemy> enemies;
     std::map<char, Enemy> enemiesTypes;
     //map with items
     //map with arrows
