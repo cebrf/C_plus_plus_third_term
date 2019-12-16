@@ -1,7 +1,7 @@
 #include "GameSystem.h"
 
 GameSystem::GameSystem(const std::string& levelFileName, const std::string& EnemiesFileName) :
-    player(Point(-1, -1), ' ', -1, -1, -1) //Point pos, char sym, int hp, int damage, int maxHp*/
+    player(Point(-1, -1), ' ', -1, -1, -1, -1)
 {
     Level::GetLevelMap(levelFileName, levelMap);
     Level::GetCharactersTypes(EnemiesFileName, enemiesTypes, player);
@@ -16,8 +16,15 @@ void GameSystem::Start()
     {
         { // move of player
             char move = wgetch(levelWin);
-            std::pair<int, int> direction = getDirection(move);
-            makeMove(direction, player);
+            if (move == 'j' || move == 'l' || move == 'i' || move == 'k')
+            {
+                shoot(move);
+            }
+            else
+            {
+                std::pair<int, int> direction = getDirection(move);
+                makeMove(direction, player);
+            }
         }
 
         { // move of enemies
@@ -42,6 +49,26 @@ void GameSystem::Start()
                 }
             }
         }
+
+        { //move of arrows
+            for (int i = 0; i < bullets.size(); i++)
+            {
+                mvwaddch(levelWin, bullets[i].GetPos().x, bullets[i].GetPos().y, ' ');
+                levelMap[bullets[i].GetPos().x - 1][bullets[i].GetPos().y - 1] = ' ';
+                
+                Point newPos = Point(bullets[i].GetPos().x + bullets[i].GetDirection().x, bullets[i].GetPos().y + bullets[i].GetDirection().y);
+                if (levelMap[newPos.x - 1][newPos.y - 1] != ' ')
+                {
+                    // wall or character -> if wall erase. If character setDamage and erase
+                }
+                else
+                {
+                    bullets[i].SetPos(newPos);
+                    mvwaddch(levelWin, bullets[i].GetPos().x, bullets[i].GetPos().y, bullets[i].GetSym());
+                    levelMap[bullets[i].GetPos().x - 1][bullets[i].GetPos().y - 1] = bullets[i].GetSym();
+                }
+            }
+        }
     }
 }
 
@@ -54,7 +81,11 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter& chara
     {
         if (levelMap[newPos.x - 1][newPos.y - 1] != ' ' && levelMap[newPos.x - 1][newPos.y - 1] != '.')
         {
-            if (levelMap[newPos.x - 1][newPos.y - 1] == player.GetSym())
+            if (levelMap[newPos.x - 1][newPos.y - 1] == '|' || levelMap[newPos.x - 1][newPos.y - 1] == '^' || levelMap[newPos.x - 1][newPos.y - 1] == '>' || levelMap[newPos.x - 1][newPos.y - 1] == '<')
+            {
+                //you catch arrow
+            }
+            else if (levelMap[newPos.x - 1][newPos.y - 1] == player.GetSym())
             {
                 bool killed = Attack(character, player);
                 if (killed)
@@ -123,4 +154,22 @@ void GameSystem::death()
     wclear(levelWin);
     mvwprintw(levelWin, 10, 10, "YOU ARE DEAD!");
     wrefresh(levelWin);
+}
+
+void GameSystem::shoot(char move)
+{
+    Point direction(0, 0);
+    if (move == 'i')
+        direction.x = -1;
+    else if (move == 'k')
+        direction.x = 1;
+    else if (move == 'j')
+            direction.y = -1;
+        else if (move == 'l')
+            direction.y = 1;
+
+
+    bullets.push_back(Bullet(Point(player.GetPos().x + direction.x, player.GetPos().y + direction.y), direction));
+    mvwaddch(levelWin, bullets.rbegin()->GetPos().x, bullets.rbegin()->GetPos().y, bullets.rbegin()->GetSym());
+    levelMap[bullets.rbegin()->GetPos().x - 1][bullets.rbegin()->GetPos().y - 1] = bullets.rbegin()->GetSym();
 }

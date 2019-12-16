@@ -48,8 +48,8 @@
     <ClCompile Include="GameObjects\Enemy.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="GameObjects\Bullet.cpp">
+      <Filter>GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,8 +77,8 @@
     <ClInclude Include="GameObjects\Enemy.h">
       <Filter>GameObjectsH</Filter>
     </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameObjects\Bullet.h">
+      <Filter>GameObjectsH</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

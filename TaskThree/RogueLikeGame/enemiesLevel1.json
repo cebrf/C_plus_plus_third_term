@@ -3,7 +3,8 @@
     "sym": "@",
     "hp": 50,
     "damage": 20,
-    "maxHp": 50
+    "maxHp": 50,
+    "shootingDamage" :  10
   },
   "enemies": [
     {

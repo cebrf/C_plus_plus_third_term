@@ -1,7 +1,6 @@
 #include "Player.h"
 
-Player::Player(Point pos, char sym, int hp, int damage, int maxHp) :
-    IShootingChatacter(pos, sym, hp, damage, maxHp) { };
+Player::Player(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage) :
+    IShootingChatacter(pos, sym, hp, damage, maxHp, shootingDamage){ };
 
 Player::~Player() = default;
-

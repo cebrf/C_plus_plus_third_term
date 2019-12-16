@@ -8,6 +8,7 @@
 #include "GameObjects/ICharacter.h"
 #include "GameObjects/Player.h"
 #include "GameObjects/Level.h"
+#include "GameObjects/Bullet.h"
 
 class GameSystem
 {
@@ -22,13 +23,14 @@ protected:
     std::pair<int, int> getDirection(char move);
     bool Attack(ICharacter& attacker, ICharacter& prey);
     void death();
+    void shoot(char move);
 
 private:
     std::vector<std::string> levelMap;
     std::vector<std::shared_ptr<ICharacter>> enemies;
     std::map<char, Enemy> enemiesTypes;
     //map with items
-    //map with arrows
+    std::vector<Bullet> bullets;
     Player player;
     WINDOW* levelWin;
 };

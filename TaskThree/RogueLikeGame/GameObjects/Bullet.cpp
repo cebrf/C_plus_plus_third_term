@@ -10,7 +10,7 @@ Bullet::Bullet(Point pos, Point direction) :
         this->SetSym('>');
     else if (direction.x == -1)
         this->SetSym('^');
-    else if (direction.y == 1)
+    else if (direction.y == -1)
         this->SetSym('<');
 }
 

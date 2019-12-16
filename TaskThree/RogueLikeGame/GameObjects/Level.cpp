@@ -20,6 +20,7 @@ void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char
     player.SetHp(j["player"]["hp"]);
     player.SetDamage(j["player"]["damage"]);
     player.SetMaxHp(j["player"]["maxHp"]);
+    player.SetShootingDamage(j["player"]["shootingDamage"]);
 
     for (auto& enemy : j["enemies"].items())
     {

@@ -5,13 +5,15 @@ class IShootingChatacter :
     public ICharacter
 {
 public:
+    void SetShootingDamage(int shootingDamage);
+    int GetShootingDamage();
     
 protected:
-    IShootingChatacter(Point pos, char sym, int hp, int damage, int maxHp);
+    IShootingChatacter(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage);
     ~IShootingChatacter();
 
-    //shoot
-    //Get/SetShootingDamage
+    //bool/void shoot(direction)
+
 private:
-    //ShootingDamage
+    int shootingDamage;
 };
