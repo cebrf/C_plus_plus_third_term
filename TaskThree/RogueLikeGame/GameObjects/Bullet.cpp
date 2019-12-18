@@ -25,3 +25,15 @@ Point Bullet::GetDirection()
 {
     return direction;
 }
+
+char Bullet::GetMove(WINDOW* win)
+{
+    if (direction.x == 1)
+        return 's';
+    if (direction.y == 1)
+        return 'd';
+    if (direction.x == -1)
+        return 'w';
+    if (direction.y == -1)
+        return 'a';
+}

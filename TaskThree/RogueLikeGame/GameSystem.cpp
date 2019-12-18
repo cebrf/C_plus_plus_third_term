@@ -15,7 +15,8 @@ void GameSystem::Start()
     while (true)
     {
         { // move of player
-            char move = wgetch(levelWin);
+            
+            char move = player.GetMove(levelWin);
             if (move == 'j' || move == 'l' || move == 'i' || move == 'k')
             {
                 shoot(move);
@@ -33,7 +34,7 @@ void GameSystem::Start()
             {
                 if ((*enemy)->GetHp() > 0)
                 {
-                    char move = getRandomMove();
+                    char move = (*enemy)->GetMove(levelWin);
                     std::pair<int, int> direction = getDirection(move);
                     makeMove(direction, *(*enemy));
                 }
@@ -120,12 +121,6 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter& chara
             levelMap[character.GetPos().x - 1][character.GetPos().y - 1] = character.GetSym();
         }
     }
-}
-
-char GameSystem::getRandomMove()
-{
-    std::vector<char> v = { 'w', 'a', 's', 'd' };
-    return v[rand() % 4];
 }
 
 std::pair<int, int> GameSystem::getDirection(char move)

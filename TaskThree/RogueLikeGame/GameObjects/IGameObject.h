@@ -1,4 +1,6 @@
 #pragma once
+#include "../pdcurses/curses.h"
+
 struct Point
 {
     Point(int x, int y) :
@@ -16,6 +18,8 @@ public:
 
     void SetPos(Point p);
     void SetSym(char sym);
+
+    virtual char GetMove(WINDOW *win) = 0;
 
 protected:
     IGameObject(Point pos, char sym);
