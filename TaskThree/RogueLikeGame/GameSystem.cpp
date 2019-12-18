@@ -1,12 +1,12 @@
 #include "GameSystem.h"
 
-GameSystem::GameSystem(const std::string& levelFileName, const std::string& EnemiesFileName)
+GameSystem::GameSystem(const std::string& levelFileName, const std::string& EnemiesFileName) :
+    level(levelFileName)
 {
-    Level::GetLevelMap(levelFileName, levelMap);
-    Level::GetCharactersTypes(EnemiesFileName, enemiesTypes, player);
-    Level::FindGameObjects(levelMap, enemies, enemiesTypes, player);
-    Level::CreateWindow(levelWin, levelMap[0].size(), levelMap.size());
-    Level::PrintLevel(levelWin, levelMap);
+    level.GetCharactersTypes(EnemiesFileName, enemiesTypes, player);
+    level.FindGameObjects(enemies, enemiesTypes, player);
+    level.CreateWindow(levelWin, level.GetWidth(), level.GetHeight());
+    level.PrintLevel(levelWin);
 }
 
 void GameSystem::Start()
@@ -33,8 +33,11 @@ void GameSystem::Start()
             {
                 if ((*enemy)->GetHp() > 0)
                 {
+                    //
                     char move = (*enemy)->GetMove(levelWin);
                     std::pair<int, int> direction = getDirection(move);
+                    //
+
                     makeMove(direction, *(*enemy));
                 }
             }
@@ -55,18 +58,18 @@ void GameSystem::Start()
             for (int i = 0; i < bullets.size(); i++)
             {
                 mvwaddch(levelWin, bullets[i].GetPos().x, bullets[i].GetPos().y, ' ');
-                levelMap[bullets[i].GetPos().x - 1][bullets[i].GetPos().y - 1] = ' ';
+                level.SetObj(bullets[i].GetPos(), ' ');
                 
                 Point newPos = Point(bullets[i].GetPos().x + bullets[i].GetDirection().x, bullets[i].GetPos().y + bullets[i].GetDirection().y);
-                if (levelMap[newPos.x - 1][newPos.y - 1] != ' ')
+                if (level.GetObj(newPos) != ' ')
                 {
-                    // wall or character -> if wall erase. If character setDamage and erase
+                    // wall or character -> if wall, erase. If character, setDamage and erase
                 }
                 else
                 {
                     bullets[i].SetPos(newPos);
                     mvwaddch(levelWin, bullets[i].GetPos().x, bullets[i].GetPos().y, bullets[i].GetSym());
-                    levelMap[bullets[i].GetPos().x - 1][bullets[i].GetPos().y - 1] = bullets[i].GetSym();
+                    level.SetObj(bullets[i].GetPos(), bullets[i].GetSym());
                 }
             }
         }
@@ -77,48 +80,55 @@ void GameSystem::Start()
 void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter& character)
 {
     Point newPos(character.GetPos().x + direction.first, character.GetPos().y + direction.second);
-    if (newPos.x - 1 < levelMap.size()
-        && newPos.y - 1 < levelMap[0].size()
-        && levelMap[newPos.x - 1][newPos.y - 1] != '#')
+
+    auto e = level.GetObj(newPos);
+
+    if (newPos.x - 1 >= level.GetHeight() || newPos.y >= level.GetWidth() || level.GetObj(newPos) == '#')
+        return;
+
+    // character.Collede();
+
+
+
+
+
+    if (level.GetObj(newPos) != ' ' && level.GetObj(newPos) != ' ')
     {
-        if (levelMap[newPos.x - 1][newPos.y - 1] != ' ' && levelMap[newPos.x - 1][newPos.y - 1] != ' ')
+        if (level.GetObj(newPos) == '|' || level.GetObj(newPos) == '^' || level.GetObj(newPos) == '>' || level.GetObj(newPos) == '<')
         {
-            if (levelMap[newPos.x - 1][newPos.y - 1] == '|' || levelMap[newPos.x - 1][newPos.y - 1] == '^' || levelMap[newPos.x - 1][newPos.y - 1] == '>' || levelMap[newPos.x - 1][newPos.y - 1] == '<')
+            //you catch arrow
+        }
+        else if (level.GetObj(newPos) == player.GetSym())
+        {
+            bool killed = Attack(character, player);
+            if (killed)
             {
-                //you catch arrow
-            }
-            else if (levelMap[newPos.x - 1][newPos.y - 1] == player.GetSym())
-            {
-                bool killed = Attack(character, player);
-                if (killed)
-                {
-                    death();
-                }
-            }
-            else
-            {
-                int i = 0;
-                for (; i < enemies.size(); i++)
-                {
-                    if (enemies[i]->GetPos().x == newPos.x && enemies[i]->GetPos().y == newPos.y)
-                        break;
-                }
-                bool killed = Attack(character, *enemies[i]);
-                if (killed)
-                {
-                    levelMap[newPos.x - 1][newPos.y - 1] = ' ';
-                    mvwaddch(levelWin, newPos.x, newPos.y, ' ');
-                }
+                death();
             }
         }
         else
         {
-            mvwaddch(levelWin, character.GetPos().x, character.GetPos().y, ' ');
-            levelMap[character.GetPos().x - 1][character.GetPos().y - 1] = ' ';
-            character.SetPos(newPos);
-            mvwaddch(levelWin, character.GetPos().x, character.GetPos().y, character.GetSym());
-            levelMap[character.GetPos().x - 1][character.GetPos().y - 1] = character.GetSym();
+            int i = 0;
+            for (; i < enemies.size(); i++)
+            {
+                if (enemies[i]->GetPos().x == newPos.x && enemies[i]->GetPos().y == newPos.y)
+                    break;
+            }
+            bool killed = Attack(character, *enemies[i]);
+            if (killed)
+            {
+                level.SetObj(newPos, ' ');
+                mvwaddch(levelWin, newPos.x, newPos.y, ' ');
+            }
         }
+    }
+    else
+    {
+        mvwaddch(levelWin, character.GetPos().x, character.GetPos().y, ' ');
+        level.SetObj(character.GetPos(), ' ');
+        character.SetPos(newPos);
+        mvwaddch(levelWin, character.GetPos().x, character.GetPos().y, character.GetSym());
+        level.SetObj(character.GetPos(), character.GetSym());
     }
 }
 
@@ -167,5 +177,5 @@ void GameSystem::shoot(char move)
 
     bullets.push_back(Bullet(Point(player.GetPos().x + direction.x, player.GetPos().y + direction.y), direction));
     mvwaddch(levelWin, bullets.rbegin()->GetPos().x, bullets.rbegin()->GetPos().y, bullets.rbegin()->GetSym());
-    levelMap[bullets.rbegin()->GetPos().x - 1][bullets.rbegin()->GetPos().y - 1] = bullets.rbegin()->GetSym();
+    level.SetObj(bullets.rbegin()->GetPos(), bullets.rbegin()->GetSym());
 }

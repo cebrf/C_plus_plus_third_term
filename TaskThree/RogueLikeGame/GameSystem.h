@@ -28,7 +28,8 @@ protected:
     void shoot(char move);
 
 private:
-    std::vector<std::string> levelMap;
+    Level level;
+
     std::vector<std::shared_ptr<ICharacter>> enemies;
     std::map<char, Enemy> enemiesTypes;
     //map with items

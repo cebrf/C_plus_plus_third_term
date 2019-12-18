@@ -17,17 +17,30 @@ using json = nlohmann::json;
 class Level
 {
 public:
-    static void GetLevelMap(const std::string& fileName, std::vector<std::string>& levelMap);
+    Level(const std::string& fileName);
 
-    static void GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes, Player& player);
+    void GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes, Player& player);
 
-    static void FindGameObjects(const std::vector<std::string>& levelMap,
-        std::vector<std::shared_ptr<ICharacter>>& enemies,
+    void FindGameObjects(std::vector<std::shared_ptr<ICharacter>>& enemies,
         const std::map<char, Enemy>& enemiesTypes,
         Player& player);
 
-    static void PrintLevel(WINDOW *& win, const std::vector<std::string>& levelMap);
+    void PrintLevel(WINDOW *& win);
 
-    static void CreateWindow(WINDOW*& win, size_t widthOfMap, size_t heightOfMap);
+    void CreateWindow(WINDOW*& win, size_t widthOfMap, size_t heightOfMap);
+
+    void SetObj(Point pos, char obj);
+
+    char GetObj(Point pos);
+
+    int GetWidth();
+
+    int GetHeight();
+
+protected:
+
+
+private:
+    std::vector<std::string> levelMap;
 };
 

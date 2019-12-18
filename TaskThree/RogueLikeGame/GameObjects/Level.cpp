@@ -1,6 +1,6 @@
 #include "Level.h"
 
-void Level::GetLevelMap(const std::string& fileName, std::vector<std::string>& levelMap)
+Level::Level(const std::string& fileName)
 {
     std::ifstream MapFile(fileName);
     std::string buf;
@@ -30,8 +30,7 @@ void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char
     }
 }
 
-void Level::FindGameObjects(const std::vector<std::string>& levelMap,
-    std::vector<std::shared_ptr<ICharacter>>& enemies,
+void Level::FindGameObjects(std::vector<std::shared_ptr<ICharacter>>& enemies,
     const std::map<char, Enemy>& enemiesTypes,
     Player& player)
 {
@@ -57,7 +56,7 @@ void Level::FindGameObjects(const std::vector<std::string>& levelMap,
     }
 }
 
-void Level::PrintLevel(WINDOW*& win, const std::vector<std::string>& levelMap)
+void Level::PrintLevel(WINDOW*& win)
 {
     for (int i = 0; i < levelMap.size(); i++)
     {
@@ -84,4 +83,25 @@ void Level::CreateWindow(WINDOW*& levelWin, size_t widthOfMap, size_t heightOfMa
     box(levelWin, 0, 0);
     wmove(levelWin, 1, 1);
     wrefresh(levelWin);
+}
+
+
+void Level::SetObj(Point pos, char obj)
+{
+    levelMap[pos.x - 1][pos.y - 1] = obj;
+}
+
+char Level::GetObj(Point pos)
+{
+    return levelMap[pos.x - 1][pos.y - 1];
+}
+
+int Level::GetWidth()
+{
+    return levelMap[0].size();
+}
+
+int Level::GetHeight()
+{
+    return levelMap.size();
 }
