@@ -80,6 +80,7 @@ void Level::CreateWindow(WINDOW*& levelWin, size_t widthOfMap, size_t heightOfMa
         startX = 10,
         startY = 10;
     levelWin = newwin(height, width, startX, startY);
+    nodelay(levelWin, true);
     box(levelWin, 0, 0);
     wmove(levelWin, 1, 1);
     wrefresh(levelWin);

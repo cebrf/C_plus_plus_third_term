@@ -23,7 +23,8 @@ void GameSystem::Start()
             else
             {
                 std::pair<int, int> direction = getDirection(move);
-                makeMove(direction, player);
+                if (direction.first != 0 || direction.second != 0)
+                    makeMove(direction, player);
             }
         }
 
@@ -69,6 +70,7 @@ void GameSystem::Start()
                 }
             }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
@@ -79,7 +81,7 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter& chara
         && newPos.y - 1 < levelMap[0].size()
         && levelMap[newPos.x - 1][newPos.y - 1] != '#')
     {
-        if (levelMap[newPos.x - 1][newPos.y - 1] != ' ' && levelMap[newPos.x - 1][newPos.y - 1] != '.')
+        if (levelMap[newPos.x - 1][newPos.y - 1] != ' ' && levelMap[newPos.x - 1][newPos.y - 1] != ' ')
         {
             if (levelMap[newPos.x - 1][newPos.y - 1] == '|' || levelMap[newPos.x - 1][newPos.y - 1] == '^' || levelMap[newPos.x - 1][newPos.y - 1] == '>' || levelMap[newPos.x - 1][newPos.y - 1] == '<')
             {
@@ -111,7 +113,7 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter& chara
         }
         else
         {
-            mvwaddch(levelWin, character.GetPos().x, character.GetPos().y, '.');
+            mvwaddch(levelWin, character.GetPos().x, character.GetPos().y, ' ');
             levelMap[character.GetPos().x - 1][character.GetPos().y - 1] = ' ';
             character.SetPos(newPos);
             mvwaddch(levelWin, character.GetPos().x, character.GetPos().y, character.GetSym());

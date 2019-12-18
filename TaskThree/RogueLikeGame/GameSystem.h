@@ -10,6 +10,9 @@
 #include "GameObjects/Level.h"
 #include "GameObjects/Bullet.h"
 
+#include <thread>
+#include <chrono>
+
 class GameSystem
 {
 public:
