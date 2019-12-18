@@ -9,7 +9,7 @@ public:
     Enemy(Point pos, char sym, int hp, int damage, int maxHp);
     ~Enemy();
 
-    char GetMove(WINDOW* win) override;
+    char GetMove(WINDOW*& win) override;
 protected:
 
 private:

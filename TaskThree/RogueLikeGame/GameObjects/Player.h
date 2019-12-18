@@ -10,7 +10,7 @@ public:
     Player(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage);
     ~Player();
 
-    char GetMove(WINDOW* win) override;
+    char GetMove(WINDOW*& win) override;
 
 protected:
 

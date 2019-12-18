@@ -10,7 +10,7 @@ public:
     void SetDirection(Point direction);
     Point GetDirection();
 
-    char GetMove(WINDOW* win) override;
+    char GetMove(WINDOW*& win) override;
 protected:
 
 private:

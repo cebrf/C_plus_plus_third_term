@@ -9,8 +9,8 @@ Player::Player(Point pos, char sym, int hp, int damage, int maxHp, int shootingD
 Player::~Player() = default;
 
 
-char Player::GetMove(WINDOW* win)
+char Player::GetMove(WINDOW*& win)
 {
     return wgetch(win);
-    flushinp(); // does it work?
+    //flushinp(); // does it work?
 }

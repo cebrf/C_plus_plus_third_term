@@ -5,7 +5,7 @@ Bullet::Bullet(Point pos, Point direction) :
     IGameObject(pos, ' '), direction(direction) 
 {
     if (direction.x == 1)
-        this->SetSym('|');
+        this->SetSym('v');
     else if (direction.y == 1)
         this->SetSym('>');
     else if (direction.x == -1)
@@ -26,7 +26,7 @@ Point Bullet::GetDirection()
     return direction;
 }
 
-char Bullet::GetMove(WINDOW* win)
+char Bullet::GetMove(WINDOW*& win)
 {
     if (direction.x == 1)
         return 's';

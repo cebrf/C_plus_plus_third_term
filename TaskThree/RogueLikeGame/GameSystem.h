@@ -28,12 +28,12 @@ protected:
     void shoot(char move);
 
 private:
-    Level level;
-
     std::vector<std::shared_ptr<ICharacter>> enemies;
     std::map<char, Enemy> enemiesTypes;
     //map with items
     std::vector<Bullet> bullets;
+    
     Player player;
+    Level level;
     WINDOW* levelWin;
 };

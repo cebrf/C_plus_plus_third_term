@@ -74,21 +74,26 @@ void Level::CreateWindow(WINDOW*& levelWin, size_t widthOfMap, size_t heightOfMa
     initscr();
     curs_set(0);
     noecho();
+
     int height = heightOfMap + 2,
         width = widthOfMap + 2,
         startX = 10,
         startY = 10;
     levelWin = newwin(height, width, startX, startY);
+
     nodelay(levelWin, true);
+    //noqiflush(); //raw();  //cbreak();
+
     box(levelWin, 0, 0);
     wmove(levelWin, 1, 1);
     wrefresh(levelWin);
 }
 
 
-void Level::SetObj(Point pos, char obj)
+void Level::SetObj(WINDOW*& win, Point pos, char obj)
 {
     levelMap[pos.x - 1][pos.y - 1] = obj;
+    mvwaddch(win, pos.x, pos.y, obj);
 }
 
 char Level::GetObj(Point pos)

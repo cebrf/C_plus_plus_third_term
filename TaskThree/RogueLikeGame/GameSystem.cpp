@@ -13,6 +13,7 @@ void GameSystem::Start()
 {
     while (true)
     {
+        for (int e = 0; e < 5; e++)
         { // move of player
             
             char move = player.GetMove(levelWin);
@@ -26,6 +27,7 @@ void GameSystem::Start()
                 if (direction.first != 0 || direction.second != 0)
                     makeMove(direction, player);
             }
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 
         { // move of enemies
@@ -57,8 +59,7 @@ void GameSystem::Start()
         { //move of arrows
             for (int i = 0; i < bullets.size(); i++)
             {
-                mvwaddch(levelWin, bullets[i].GetPos().x, bullets[i].GetPos().y, ' ');
-                level.SetObj(bullets[i].GetPos(), ' ');
+                level.SetObj(levelWin, bullets[i].GetPos(), ' ');
                 
                 Point newPos = Point(bullets[i].GetPos().x + bullets[i].GetDirection().x, bullets[i].GetPos().y + bullets[i].GetDirection().y);
                 if (level.GetObj(newPos) != ' ')
@@ -68,8 +69,7 @@ void GameSystem::Start()
                 else
                 {
                     bullets[i].SetPos(newPos);
-                    mvwaddch(levelWin, bullets[i].GetPos().x, bullets[i].GetPos().y, bullets[i].GetSym());
-                    level.SetObj(bullets[i].GetPos(), bullets[i].GetSym());
+                    level.SetObj(levelWin, bullets[i].GetPos(), bullets[i].GetSym());
                 }
             }
         }
@@ -80,55 +80,43 @@ void GameSystem::Start()
 void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter& character)
 {
     Point newPos(character.GetPos().x + direction.first, character.GetPos().y + direction.second);
-
-    auto e = level.GetObj(newPos);
-
-    if (newPos.x - 1 >= level.GetHeight() || newPos.y >= level.GetWidth() || level.GetObj(newPos) == '#')
+    if (newPos.x <= 0 || newPos.y <= 0 || newPos.x - 1 >= level.GetHeight() || newPos.y >= level.GetWidth() || level.GetObj(newPos) == '#')
         return;
 
     // character.Collede();
-
-
-
-
-
-    if (level.GetObj(newPos) != ' ' && level.GetObj(newPos) != ' ')
+    if (level.GetObj(newPos) == ' ' && level.GetObj(newPos) == ' ')
     {
-        if (level.GetObj(newPos) == '|' || level.GetObj(newPos) == '^' || level.GetObj(newPos) == '>' || level.GetObj(newPos) == '<')
+        level.SetObj(levelWin, character.GetPos(), ' ');
+        character.SetPos(newPos);
+        level.SetObj(levelWin, character.GetPos(), character.GetSym());
+        return;
+    }
+
+    if (level.GetObj(newPos) == 'v' || level.GetObj(newPos) == '^' || level.GetObj(newPos) == '>' || level.GetObj(newPos) == '<')
+    {
+        //you catch arrow. Collide
+    }
+    else if (level.GetObj(newPos) == player.GetSym())
+    {
+        bool killed = Attack(character, player);
+        if (killed)
         {
-            //you catch arrow
-        }
-        else if (level.GetObj(newPos) == player.GetSym())
-        {
-            bool killed = Attack(character, player);
-            if (killed)
-            {
-                death();
-            }
-        }
-        else
-        {
-            int i = 0;
-            for (; i < enemies.size(); i++)
-            {
-                if (enemies[i]->GetPos().x == newPos.x && enemies[i]->GetPos().y == newPos.y)
-                    break;
-            }
-            bool killed = Attack(character, *enemies[i]);
-            if (killed)
-            {
-                level.SetObj(newPos, ' ');
-                mvwaddch(levelWin, newPos.x, newPos.y, ' ');
-            }
+            death();
         }
     }
     else
     {
-        mvwaddch(levelWin, character.GetPos().x, character.GetPos().y, ' ');
-        level.SetObj(character.GetPos(), ' ');
-        character.SetPos(newPos);
-        mvwaddch(levelWin, character.GetPos().x, character.GetPos().y, character.GetSym());
-        level.SetObj(character.GetPos(), character.GetSym());
+        int i = 0;
+        for (; i < enemies.size(); i++)
+        {
+            if (enemies[i]->GetPos().x == newPos.x && enemies[i]->GetPos().y == newPos.y)
+                break;
+        }
+        bool killed = Attack(character, *enemies[i]);
+        if (killed)
+        {
+            level.SetObj(levelWin, newPos, ' ');
+        }
     }
 }
 
@@ -176,6 +164,5 @@ void GameSystem::shoot(char move)
 
 
     bullets.push_back(Bullet(Point(player.GetPos().x + direction.x, player.GetPos().y + direction.y), direction));
-    mvwaddch(levelWin, bullets.rbegin()->GetPos().x, bullets.rbegin()->GetPos().y, bullets.rbegin()->GetSym());
-    level.SetObj(bullets.rbegin()->GetPos(), bullets.rbegin()->GetSym());
+    level.SetObj(levelWin, bullets.rbegin()->GetPos(), bullets.rbegin()->GetSym());
 }

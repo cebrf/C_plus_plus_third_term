@@ -5,7 +5,7 @@ Enemy::Enemy(Point pos, char sym, int hp, int damage, int maxHp) :
 
 Enemy::~Enemy() = default;
 
-char Enemy::GetMove(WINDOW* win)
+char Enemy::GetMove(WINDOW*& win)
 {
     std::vector<char> v = { 'w', 'a', 's', 'd' };
     return v[rand() % 4];
