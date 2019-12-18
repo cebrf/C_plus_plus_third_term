@@ -22,10 +22,10 @@ public:
 
 protected:
     void makeMove(const std::pair<int, int> direction, ICharacter& character);
-    std::pair<int, int> getDirection(char move);
+    std::pair<int, int> getDirection(char move, bool& isShoot);
     bool Attack(ICharacter& attacker, ICharacter& prey);
     void death();
-    void shoot(char move);
+    void shoot(std::pair<int, int> direction);
 
 private:
     std::vector<std::shared_ptr<ICharacter>> enemies;
