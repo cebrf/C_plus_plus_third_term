@@ -1,5 +1,9 @@
 #pragma once
+#include <algorithm>
 #include "IGameObject.h"
+#include "ICharacter.h"
+#include "Enemy.h"
+#include "Player.h"
 
 class Bullet :
     public IGameObject

@@ -20,17 +20,28 @@ bool Player::Collide(IGameObject& other)
     return other.collideWith(*this);
 }
 
-bool Player::collideWith(Player& player)
-{
-    return 0;
-}
-
 bool Player::collideWith(Enemy& enemy)
 {
+    enemy.SetHp(std::max(0, enemy.GetHp() - this->GetDamage()));
+    if (enemy.GetHp() == 0)
+        return 1;
+    else
+        return 0;
+}
+
+bool Player::collideWith(Player& player)
+{
+    // no multiplayer
     return 0;
 }
 
 bool Player::collideWith(Bullet& bullet)
 {
-    return 0;
+    bullet.SetSym(' ');
+
+    this->SetHp(std::max(0, this->GetHp() - 10));
+    if (this->GetHp() == 0)
+        return 1;
+    else
+        return 0;
 }

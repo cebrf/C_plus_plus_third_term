@@ -2,6 +2,9 @@
 #include "../pdcurses/curses.h"
 #include "IShootingChatacter.h"
 
+#include "Bullet.h"
+#include "Enemy.h"
+
 
 class Player :
     public IShootingChatacter
@@ -17,7 +20,6 @@ public:
     bool collideWith(Player&) override;
     bool collideWith(Enemy&) override;
     bool collideWith(Bullet&) override;
-
 protected:
 
 private:

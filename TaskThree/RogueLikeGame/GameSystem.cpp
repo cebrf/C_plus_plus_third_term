@@ -55,70 +55,87 @@ void GameSystem::Start()
         { //move of arrows
             for (int i = 0; i < bullets.size(); i++)
             {
-                level.SetObj(levelWin, bullets[i].GetPos(), ' ');
-                
-                Point newPos = Point(bullets[i].GetPos().x + bullets[i].GetDirection().x, bullets[i].GetPos().y + bullets[i].GetDirection().y);
-                if (level.GetObj(newPos) != ' ')
+                if (bullets[i].GetSym() != ' ')
                 {
-                    // wall or character -> if wall, erase. If character, setDamage and erase
+                    level.SetObj(levelWin, bullets[i].GetPos(), ' ');
+                    bool isWall = makeMove({ bullets[i].GetDirection().x, bullets[i].GetDirection().y }, bullets[i]);
+                    if (isWall)
+                        bullets[i].SetSym(' ');
                 }
+            }
+            for (int i = 0; i < bullets.size();)
+            {
+                if (bullets[i].GetSym() == ' ')
+                    bullets.erase(next(bullets.begin(), i));
                 else
-                {
-                    bullets[i].SetPos(newPos);
-                    level.SetObj(levelWin, bullets[i].GetPos(), bullets[i].GetSym());
-                }
+                    i++;
             }
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
-void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter& character)
+bool GameSystem::makeMove(const std::pair<int, int> direction, IGameObject& character)
 {
     Point newPos(character.GetPos().x + direction.first, character.GetPos().y + direction.second);
     if (newPos.x <= 0 || newPos.y <= 0 || newPos.x - 1 >= level.GetHeight() ||
         newPos.y >= level.GetWidth() || level.GetObj(newPos) == '#')
-        return;
+        return 1;
 
     if (level.GetObj(newPos) == ' ' && level.GetObj(newPos) == ' ')
     {
         level.SetObj(levelWin, character.GetPos(), ' ');
         character.SetPos(newPos);
         level.SetObj(levelWin, character.GetPos(), character.GetSym());
-        return;
+        return 0;
     }
-
-
 
     if (level.GetObj(newPos) == 'v' || level.GetObj(newPos) == '^' || level.GetObj(newPos) == '>' || level.GetObj(newPos) == '<')
     {
-        //you catch arrow. Collide
-    }
-    else if (level.GetObj(newPos) == player.GetSym())
-    {
-        character.Collide(player);
+        int i = 0;
+        for (; i < bullets.size(); i++)
+        {
+            if (bullets[i].GetPos().x == newPos.x && bullets[i].GetPos().y == newPos.y)
+                break;
+        }
+        if (i == bullets.size())
+        {
+            int aaa = 12;
+        }
 
-        bool killed = Attack(character, player); // player.Collide(enemy)
+        level.SetObj(levelWin, bullets[i].GetPos(), ' ');
+        bool killed = bullets[i].Collide(character);
+        if (killed)
+            level.SetObj(levelWin, character.GetPos(), ' ');
+        return 0;
+    }
+
+    if (level.GetObj(newPos) == player.GetSym())
+    {
+        bool killed = player.Collide(character);
         if (killed)
         {
             death();
             // show menu
         }
+        return 0;
     }
-    else
+    
+    
     {
         int i = 0;
         for (; i < enemies.size(); i++)
             if (enemies[i]->GetPos().x == newPos.x && enemies[i]->GetPos().y == newPos.y)
                 break;
 
-        character.Collide(*enemies[i]);
-
-        bool killed = Attack(character, *enemies[i]); // enemy.Collide(enemy)
-        if (killed)
+        if (i == enemies.size())
         {
-            level.SetObj(levelWin, newPos, ' ');
+            int aa = 20;
         }
+        bool killed = enemies[i]->Collide(character);
+        if (killed)
+            level.SetObj(levelWin, newPos, ' ');
+        return 0;
     }
 }
 
@@ -137,15 +154,6 @@ std::pair<int, int> GameSystem::getDirection(char move, bool& isShoot)
     else if (move == 'd' || move == 'l')
         direction.second = 1;
     return direction;
-}
-
-bool GameSystem::Attack(ICharacter& attacker, ICharacter& prey)
-{
-    prey.SetHp(std::max(0, prey.GetHp() - attacker.GetDamage()));
-    if (prey.GetHp() == 0)
-        return 1;
-    else
-        return 0;
 }
 
 void GameSystem::death()

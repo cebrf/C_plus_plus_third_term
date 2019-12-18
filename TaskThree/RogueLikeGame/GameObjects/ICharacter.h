@@ -1,5 +1,6 @@
 #pragma once
 #include "IGameObject.h"
+#include <algorithm>
 
 class ICharacter :
     public IGameObject
@@ -12,8 +13,6 @@ public:
     void SetHp(int hp);
     void SetMaxHp(int maxHp);
     void SetDamage(int damage);
-
-    //virtual bool Attack(ICharacter* other) = 0;
 
 protected:
     ICharacter(Point pos, char sym, int hp, int damage, int maxHp);

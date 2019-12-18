@@ -21,9 +21,8 @@ public:
     void Start();
 
 protected:
-    void makeMove(const std::pair<int, int> direction, ICharacter& character);
+    bool makeMove(const std::pair<int, int> direction, IGameObject& character);
     std::pair<int, int> getDirection(char move, bool& isShoot);
-    bool Attack(ICharacter& attacker, ICharacter& prey);
     void death();
     void shoot(std::pair<int, int> direction);
 

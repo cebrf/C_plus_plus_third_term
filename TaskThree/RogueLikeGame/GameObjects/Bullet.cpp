@@ -43,17 +43,27 @@ bool Bullet::Collide(IGameObject& other)
     return other.collideWith(*this);
 }
 
-bool Bullet::collideWith(Player& player)
-{
-    return 0;
-}
-
 bool Bullet::collideWith(Enemy& enemy)
 {
-    return 0;
+    enemy.SetHp(std::max(0, enemy.GetHp() - /*this->GetDamage()*/ 10));
+    if (enemy.GetHp() == 0)
+        return 1;
+    else
+        return 0;
+}
+
+bool Bullet::collideWith(Player& player)
+{
+    player.SetHp(std::max(0, player.GetHp() - /*this->GetDamage()*/ 10));
+    if (player.GetHp() == 0)
+        return 1;       //TODO end of game
+    else
+        return 0;
 }
 
 bool Bullet::collideWith(Bullet& bullet)
 {
+    bullet.SetSym(' ');
+    this->SetSym(' ');
     return 0;
 }

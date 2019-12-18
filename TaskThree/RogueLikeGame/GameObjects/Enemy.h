@@ -1,5 +1,7 @@
 #pragma once
 #include "ICharacter.h"
+#include "Player.h"
+#include "Bullet.h"
 #include <vector>
 
 class Enemy :
