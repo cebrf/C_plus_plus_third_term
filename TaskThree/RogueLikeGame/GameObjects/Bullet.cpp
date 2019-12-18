@@ -37,3 +37,23 @@ char Bullet::GetMove(WINDOW*& win)
     if (direction.y == -1)
         return 'a';
 }
+
+bool Bullet::Collide(IGameObject& other)
+{
+    return other.collideWith(*this);
+}
+
+bool Bullet::collideWith(Player& player)
+{
+    return 0;
+}
+
+bool Bullet::collideWith(Enemy& enemy)
+{
+    return 0;
+}
+
+bool Bullet::collideWith(Bullet& bullet)
+{
+    return 0;
+}

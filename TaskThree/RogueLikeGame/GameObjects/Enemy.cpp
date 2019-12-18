@@ -10,3 +10,23 @@ char Enemy::GetMove(WINDOW*& win)
     std::vector<char> v = { 'w', 'a', 's', 'd' };
     return v[rand() % 4];
 }
+
+bool Enemy::Collide(IGameObject& other)
+{
+    return other.collideWith(*this);
+}
+
+bool Enemy::collideWith(Player& player)
+{
+    return 0;
+}
+
+bool Enemy::collideWith(Enemy& enemy)
+{
+    return 0;
+}
+
+bool Enemy::collideWith(Bullet& bullet)
+{
+    return 0;
+}

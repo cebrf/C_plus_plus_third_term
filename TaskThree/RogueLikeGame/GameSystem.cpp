@@ -88,13 +88,16 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter& chara
         return;
     }
 
-    // character.Collide();
+
+
     if (level.GetObj(newPos) == 'v' || level.GetObj(newPos) == '^' || level.GetObj(newPos) == '>' || level.GetObj(newPos) == '<')
     {
         //you catch arrow. Collide
     }
     else if (level.GetObj(newPos) == player.GetSym())
     {
+        character.Collide(player);
+
         bool killed = Attack(character, player); // player.Collide(enemy)
         if (killed)
         {
@@ -108,6 +111,8 @@ void GameSystem::makeMove(const std::pair<int, int> direction, ICharacter& chara
         for (; i < enemies.size(); i++)
             if (enemies[i]->GetPos().x == newPos.x && enemies[i]->GetPos().y == newPos.y)
                 break;
+
+        character.Collide(*enemies[i]);
 
         bool killed = Attack(character, *enemies[i]); // enemy.Collide(enemy)
         if (killed)

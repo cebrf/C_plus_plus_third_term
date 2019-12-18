@@ -14,3 +14,23 @@ char Player::GetMove(WINDOW*& win)
     return wgetch(win);
     //flushinp(); // does it work?
 }
+
+bool Player::Collide(IGameObject& other)
+{
+    return other.collideWith(*this);
+}
+
+bool Player::collideWith(Player& player)
+{
+    return 0;
+}
+
+bool Player::collideWith(Enemy& enemy)
+{
+    return 0;
+}
+
+bool Player::collideWith(Bullet& bullet)
+{
+    return 0;
+}
