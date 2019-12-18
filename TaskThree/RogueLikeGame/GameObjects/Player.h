@@ -6,6 +6,7 @@ class Player :
     public IShootingChatacter
 {
 public:
+    Player();
     Player(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage);
     ~Player();
 

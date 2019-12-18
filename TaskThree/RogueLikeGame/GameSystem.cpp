@@ -1,7 +1,6 @@
 #include "GameSystem.h"
 
-GameSystem::GameSystem(const std::string& levelFileName, const std::string& EnemiesFileName) :
-    player(Point(-1, -1), ' ', -1, -1, -1, -1)
+GameSystem::GameSystem(const std::string& levelFileName, const std::string& EnemiesFileName)
 {
     Level::GetLevelMap(levelFileName, levelMap);
     Level::GetCharactersTypes(EnemiesFileName, enemiesTypes, player);
