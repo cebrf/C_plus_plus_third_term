@@ -21,11 +21,9 @@ class Level
 public:
     Level(const std::string& fileName);
 
-    void GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, std::shared_ptr<ICharacter>>& enemiesTypes, Player& player);
+    void GetCharactersTypes(const std::string& EnemiesFileName, Player& player);
 
-    void FindGameObjects(std::vector<std::shared_ptr<ICharacter>>& enemies,
-        const std::map<char, std::shared_ptr<ICharacter>>& enemiesTypes,
-        Player& player, std::vector<FirstAidKit>& firstAidKits);
+    void FindGameObjects(Player& player);
 
     void PrintLevel(WINDOW *& win);
     void CreateWindow(WINDOW*& win, size_t widthOfMap, size_t heightOfMap);
@@ -38,8 +36,11 @@ public:
     int GetWidth();
     int GetHeight();
 
-protected:
 
+    std::vector<std::shared_ptr<ICharacter>> enemies;
+    std::map<char, std::shared_ptr<ICharacter>> enemiesTypes;
+    std::vector<FirstAidKit> firstAidKits;
+    std::vector<Bullet> bullets;
 
 private:
     std::vector<std::string> levelMap;

@@ -22,16 +22,12 @@ public:
     void Start();
 
 protected:
-    bool makeMove(const std::pair<int, int> direction, IGameObject& character);
-    std::pair<int, int> getDirection(char move, bool& isShoot);
-    void death();
-    bool shoot(std::pair<int, int> direction, ICharacter& chatacter);
+    bool makeMove(const std::pair<int, int> direction, IGameObject& character); // move !?somewhere?!
+    std::pair<int, int> getDirection(char move, bool& isShoot); //move to IGameObj
+    void death();  //TODO move to PLayer
+    bool shoot(std::pair<int, int> direction, ICharacter& chatacter);  // move to IShootingCaracter
 
 private:
-    std::vector<std::shared_ptr<ICharacter>> enemies;
-    std::map<char, std::shared_ptr<ICharacter>> enemiesTypes;
-    std::vector<FirstAidKit> firstAidKits;
-    std::vector<Bullet> bullets;
     
     Player player;
     Level level;

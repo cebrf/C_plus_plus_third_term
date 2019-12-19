@@ -9,7 +9,7 @@ Level::Level(const std::string& fileName)
     }
 }
 
-void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, std::shared_ptr<ICharacter>>& enemiesTypes, Player& player)
+void Level::GetCharactersTypes(const std::string& EnemiesFileName, Player& player)
 {
     std::fstream f(EnemiesFileName);
     json j;
@@ -34,9 +34,7 @@ void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char
     }
 }
 
-void Level::FindGameObjects(std::vector<std::shared_ptr<ICharacter>>& enemies,
-    const std::map<char, std::shared_ptr<ICharacter>>& enemiesTypes,
-    Player& player, std::vector<FirstAidKit>& firstAidKits)
+void Level::FindGameObjects(Player& player)
 {
     for (int i = 0; i < levelMap.size(); i++)
     {
