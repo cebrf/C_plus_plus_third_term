@@ -53,3 +53,10 @@ bool Player::collideWith(ShootingEnemy& shootingEnemy)
     else
         return 0;
 }
+
+bool Player::collideWith(FirstAidKit& firstAidKit)
+{
+    firstAidKit.SetSym(' ');
+    this->SetHp(std::min(this->GetMaxHp(), this->GetHp() + firstAidKit.GetHealingForce()));
+    return 0;
+}

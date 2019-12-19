@@ -4,7 +4,7 @@ GameSystem::GameSystem(const std::string& levelFileName, const std::string& Enem
     level(levelFileName)
 {
     level.GetCharactersTypes(EnemiesFileName, enemiesTypes, player);
-    level.FindGameObjects(enemies, enemiesTypes, player);
+    level.FindGameObjects(enemies, enemiesTypes, player, firstAidKits);
     level.CreateWindow(levelWin, level.GetWidth(), level.GetHeight());
     level.PrintLevel(levelWin);
     level.CreateWPlayerStatus(playerStatus);
@@ -103,6 +103,25 @@ bool GameSystem::makeMove(const std::pair<int, int> direction, IGameObject& char
         level.SetObj(levelWin, character.GetPos(), ' ');
         character.SetPos(newPos);
         level.SetObj(levelWin, character.GetPos(), character.GetSym());
+        return 0;
+    }
+
+    if (level.GetObj(newPos) == '+')
+    {
+        int  i = 0;
+        for (; i < firstAidKits.size(); i++)
+        {
+            if (firstAidKits[i].GetPos().x == newPos.x && firstAidKits[i].GetPos().y == newPos.y)
+                break;
+        }
+        if (firstAidKits.size() > i)
+        {
+            character.Collide(firstAidKits[i]);
+
+            level.SetObj(levelWin, character.GetPos(), ' ');
+            character.SetPos(newPos);
+            level.SetObj(levelWin, character.GetPos(), character.GetSym());
+        }
         return 0;
     }
 

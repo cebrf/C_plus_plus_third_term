@@ -36,7 +36,7 @@ void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char
 
 void Level::FindGameObjects(std::vector<std::shared_ptr<ICharacter>>& enemies,
     const std::map<char, std::shared_ptr<ICharacter>>& enemiesTypes,
-    Player& player)
+    Player& player, std::vector<FirstAidKit>& firstAidKits)
 {
     for (int i = 0; i < levelMap.size(); i++)
     {
@@ -47,6 +47,8 @@ void Level::FindGameObjects(std::vector<std::shared_ptr<ICharacter>>& enemies,
             case '@':
                 player.SetPos(Point(i + 1, j + 1));
                 break;
+            case '+':
+                firstAidKits.push_back(FirstAidKit(Point(i + 1, j + 1), '+', 5));
             default:
                 if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
                 {

@@ -84,3 +84,9 @@ bool Bullet::collideWith(ShootingEnemy& shootingEnemy)
     else
         return 0;
 }
+
+bool Bullet::collideWith(FirstAidKit& firstAidKit)
+{
+    this->SetSym(' ');
+    return 0;
+}

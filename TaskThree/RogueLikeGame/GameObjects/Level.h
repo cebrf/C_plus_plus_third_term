@@ -8,6 +8,7 @@
 
 #include "ICharacter.h"
 #include "Player.h"
+#include "FirstAidKit.h"
 #include "ShootingEnemy.h"
 #include "Enemy.h"
 #include "../pdcurses/curses.h"
@@ -24,7 +25,7 @@ public:
 
     void FindGameObjects(std::vector<std::shared_ptr<ICharacter>>& enemies,
         const std::map<char, std::shared_ptr<ICharacter>>& enemiesTypes,
-        Player& player);
+        Player& player, std::vector<FirstAidKit>& firstAidKits);
 
     void PrintLevel(WINDOW *& win);
     void CreateWindow(WINDOW*& win, size_t widthOfMap, size_t heightOfMap);

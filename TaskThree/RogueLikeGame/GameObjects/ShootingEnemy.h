@@ -4,6 +4,7 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Player.h"
+#include "FirstAidKit.h"
 
 class ShootingEnemy :
     public IShootingCharacter
@@ -19,6 +20,7 @@ public:
     bool collideWith(Enemy&) override;
     bool collideWith(Bullet&) override;
     bool collideWith(ShootingEnemy&) override;
+    bool collideWith(FirstAidKit&) override;
 protected:
 
 private:

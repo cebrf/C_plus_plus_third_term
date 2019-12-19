@@ -9,6 +9,7 @@
 #include "GameObjects/Player.h"
 #include "GameObjects/Level.h"
 #include "GameObjects/Bullet.h"
+#include "GameObjects/FirstAidKit.h"
 
 #include <thread>
 #include <chrono>
@@ -29,7 +30,7 @@ protected:
 private:
     std::vector<std::shared_ptr<ICharacter>> enemies;
     std::map<char, std::shared_ptr<ICharacter>> enemiesTypes;
-    //map with items
+    std::vector<FirstAidKit> firstAidKits;
     std::vector<Bullet> bullets;
     
     Player player;

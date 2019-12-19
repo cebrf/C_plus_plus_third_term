@@ -12,14 +12,14 @@
       "hp": 30,
       "damage": 10,
       "maxHp": 30,
-      "shootingDamage":  0
+      "shootingDamage": 0
     },
     {
       "sym": "D",
       "hp": 200,
       "damage": 100,
       "maxHp": 200,
-      "shootingDamage":  0
+      "shootingDamage": 0
     },
     {
       "sym": "Y",
@@ -35,5 +35,9 @@
       "maxHp": 20,
       "shootingDamage": 3
     }
-  ]
+  ],
+  "FirstAidKit": {
+    "sym": "+",
+    "healingForce":  5
+  }
 }
