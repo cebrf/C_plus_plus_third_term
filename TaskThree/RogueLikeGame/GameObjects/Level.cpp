@@ -97,6 +97,19 @@ void Level::CreateWindow(WINDOW*& levelWin, size_t widthOfMap, size_t heightOfMa
     wrefresh(levelWin);
 }
 
+void Level::CreateWPlayerStatus(WINDOW*& win)
+{
+    win = newwin(20, 20, 10, 130);
+    nodelay(win, true);
+    box(win, 0, 0);
+    wrefresh(win);
+}
+
+void Level::PrintPLayerStatus(WINDOW*& win, int hp)
+{
+    mvwprintw(win, 2, 5, "%s%d", "Hp:  ", hp);
+    wrefresh(win);
+}
 
 void Level::SetObj(WINDOW*& win, Point pos, char obj)
 {

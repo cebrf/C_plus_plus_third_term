@@ -33,7 +33,7 @@
       "hp": 20,
       "damage": 5,
       "maxHp": 20,
-      "shootingDamage": 50
+      "shootingDamage": 3
     }
   ]
 }

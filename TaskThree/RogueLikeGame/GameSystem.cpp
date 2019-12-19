@@ -7,6 +7,8 @@ GameSystem::GameSystem(const std::string& levelFileName, const std::string& Enem
     level.FindGameObjects(enemies, enemiesTypes, player);
     level.CreateWindow(levelWin, level.GetWidth(), level.GetHeight());
     level.PrintLevel(levelWin);
+    level.CreateWPlayerStatus(playerStatus);
+    level.PrintPLayerStatus(playerStatus, player.GetHp());
 }
 
 void GameSystem::Start()
@@ -89,6 +91,8 @@ void GameSystem::Start()
 
 bool GameSystem::makeMove(const std::pair<int, int> direction, IGameObject& character)
 {
+    level.PrintPLayerStatus(playerStatus, player.GetHp());
+
     Point newPos(character.GetPos().x + direction.first, character.GetPos().y + direction.second);
     if (newPos.x <= 0 || newPos.y <= 0 || newPos.x - 1 >= level.GetHeight() ||
         newPos.y >= level.GetWidth() || level.GetObj(newPos) == '#')
@@ -110,8 +114,6 @@ bool GameSystem::makeMove(const std::pair<int, int> direction, IGameObject& char
             if (bullets[i].GetPos().x == newPos.x && bullets[i].GetPos().y == newPos.y)
                 break;
         }
-        if (i == bullets.size())
-            int aaa = 12;
 
         level.SetObj(levelWin, bullets[i].GetPos(), ' ');
         bool killed = bullets[i].Collide(character);
@@ -121,6 +123,7 @@ bool GameSystem::makeMove(const std::pair<int, int> direction, IGameObject& char
             if (character.GetSym() == '@')
                 death(); // TODO show menu
         }
+        level.PrintPLayerStatus(playerStatus, player.GetHp());
         return 0;
     }
 
@@ -171,6 +174,7 @@ std::pair<int, int> GameSystem::getDirection(char move, bool& isShoot)
 
 void GameSystem::death()
 {
+    level.PrintPLayerStatus(playerStatus, player.GetHp());
     wclear(levelWin);
     mvwprintw(levelWin, 10, 10, "YOU ARE DEAD!");
     wrefresh(levelWin);

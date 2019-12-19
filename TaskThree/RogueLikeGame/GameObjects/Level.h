@@ -27,15 +27,14 @@ public:
         Player& player);
 
     void PrintLevel(WINDOW *& win);
-
     void CreateWindow(WINDOW*& win, size_t widthOfMap, size_t heightOfMap);
+    void CreateWPlayerStatus(WINDOW*& win);
+    void PrintPLayerStatus(WINDOW*& win, int hp);
 
     void SetObj(WINDOW*& win, Point pos, char obj);
-
     char GetObj(Point pos);
-
+    
     int GetWidth();
-
     int GetHeight();
 
 protected:

@@ -35,4 +35,5 @@ private:
     Player player;
     Level level;
     WINDOW* levelWin;
+    WINDOW* playerStatus;
 };
