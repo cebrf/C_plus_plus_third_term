@@ -2,7 +2,7 @@
 #include "ICharacter.h"
 #include <vector>
 
-class IShootingChatacter :
+class IShootingCharacter :
     public ICharacter
 {
 public:
@@ -10,8 +10,8 @@ public:
     int GetShootingDamage();
 
 protected:
-    IShootingChatacter(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage);
-    ~IShootingChatacter();
+    IShootingCharacter(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage);
+    ~IShootingCharacter();
 
 
 private:

@@ -33,9 +33,6 @@
     <ClCompile Include="GameObjects\ICharacter.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\IShootingChatacter.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="GameObjects\Player.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
@@ -51,15 +48,15 @@
     <ClCompile Include="GameObjects\Bullet.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\IShootingCharacter.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\IGameObject.h">
       <Filter>GameObjectsH</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\ICharacter.h">
-      <Filter>GameObjectsH</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjects\IShootingChatacter.h">
       <Filter>GameObjectsH</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Player.h">
@@ -78,6 +75,9 @@
       <Filter>GameObjectsH</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\Bullet.h">
+      <Filter>GameObjectsH</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\IShootingCharacter.h">
       <Filter>GameObjectsH</Filter>
     </ClInclude>
   </ItemGroup>

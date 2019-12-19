@@ -1,13 +1,13 @@
 #pragma once
 #include "../pdcurses/curses.h"
-#include "IShootingChatacter.h"
+#include "IShootingCharacter.h"
 
 #include "Bullet.h"
 #include "Enemy.h"
 
 
 class Player :
-    public IShootingChatacter
+    public IShootingCharacter
 {
 public:
     Player();

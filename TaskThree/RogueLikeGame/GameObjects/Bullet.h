@@ -9,11 +9,12 @@ class Bullet :
     public IGameObject
 {
 public:
-    Bullet(Point pos, Point direction);
+    Bullet(Point pos, Point direction, int damage);
     ~Bullet();
 
     void SetDirection(Point direction);
     Point GetDirection();
+    int GetDamage();
 
     char GetMove(WINDOW*& win) override;
 
@@ -25,6 +26,6 @@ protected:
 
 private:
     Point direction;
-
+    int damage;
 };
 

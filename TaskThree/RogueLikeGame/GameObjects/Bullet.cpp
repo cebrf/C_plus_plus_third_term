@@ -1,8 +1,8 @@
 #include "Bullet.h"
 
 
-Bullet::Bullet(Point pos, Point direction) :
-    IGameObject(pos, ' '), direction(direction) 
+Bullet::Bullet(Point pos, Point direction, int damage) :
+    IGameObject(pos, ' '), direction(direction), damage(damage)
 {
     if (direction.x == 1)
         this->SetSym('v');
@@ -26,6 +26,11 @@ Point Bullet::GetDirection()
     return direction;
 }
 
+int Bullet::GetDamage()
+{
+    return damage;
+}
+
 char Bullet::GetMove(WINDOW*& win)
 {
     if (direction.x == 1)
@@ -46,7 +51,7 @@ bool Bullet::Collide(IGameObject& other)
 bool Bullet::collideWith(Enemy& enemy)
 {
     this->SetSym(' ');
-    enemy.SetHp(std::max(0, enemy.GetHp() - /*this->GetDamage()*/ 10));
+    enemy.SetHp(std::max(0, enemy.GetHp() - this->GetDamage()));
     if (enemy.GetHp() == 0)
         return 1;
     else
@@ -56,7 +61,7 @@ bool Bullet::collideWith(Enemy& enemy)
 bool Bullet::collideWith(Player& player)
 {
     this->SetSym(' ');
-    player.SetHp(std::max(0, player.GetHp() - /*this->GetDamage()*/ 10));
+    player.SetHp(std::max(0, player.GetHp() - this->GetDamage()));
     if (player.GetHp() == 0)
         return 1;       //TODO end of game
     else

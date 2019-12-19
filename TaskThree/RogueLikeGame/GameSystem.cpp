@@ -172,15 +172,15 @@ void GameSystem::death()
 
 
 
-bool GameSystem::shoot(std::pair<int, int> direction, IShootingChatacter& chatacter)
+bool GameSystem::shoot(std::pair<int, int> direction, IShootingCharacter& character)
 {
-    Point pos(chatacter.GetPos().x + direction.first, chatacter.GetPos().y + direction.second);
+    Point pos(character.GetPos().x + direction.first, character.GetPos().y + direction.second);
     
     if (pos.x <= 0 || pos.y <= 0 || pos.x - 1 >= level.GetHeight() || pos.y >= level.GetWidth())
         return 0;
     if (level.GetObj(pos) == '#')
         return 0;
-    bullets.push_back(Bullet(pos, Point(direction.first, direction.second)));
+    bullets.push_back(Bullet(pos, Point(direction.first, direction.second), character.GetDamage()));
     if (level.GetObj(pos) == ' ')
     {
         level.SetObj(levelWin, bullets.rbegin()->GetPos(), bullets.rbegin()->GetSym());

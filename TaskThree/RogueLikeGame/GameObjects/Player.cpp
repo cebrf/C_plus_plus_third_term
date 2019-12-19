@@ -1,10 +1,10 @@
 #include "Player.h"
 
 Player::Player() :
-    IShootingChatacter(Point(-1, -1), ' ', -1, -1, -1, -1) { };
+    IShootingCharacter(Point(-1, -1), ' ', -1, -1, -1, -1) { };
 
 Player::Player(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage) :
-    IShootingChatacter(pos, sym, hp, damage, maxHp, shootingDamage) { };
+    IShootingCharacter(pos, sym, hp, damage, maxHp, shootingDamage) { };
 
 Player::~Player() = default;
 
@@ -38,7 +38,7 @@ bool Player::collideWith(Player& player)
 bool Player::collideWith(Bullet& bullet)
 {
     bullet.SetSym(' ');
-    this->SetHp(std::max(0, this->GetHp() - 10));
+    this->SetHp(std::max(0, this->GetHp() - bullet.GetDamage()));
     if (this->GetHp() == 0)
         return 1;
     else
