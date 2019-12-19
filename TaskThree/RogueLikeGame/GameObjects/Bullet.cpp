@@ -74,3 +74,13 @@ bool Bullet::collideWith(Bullet& bullet)
     this->SetSym(' ');
     return 0;
 }
+
+bool Bullet::collideWith(ShootingEnemy& shootingEnemy)
+{
+    this->SetSym(' ');
+    shootingEnemy.SetHp(std::max(0, shootingEnemy.GetHp() - this->GetDamage()));
+    if (shootingEnemy.GetHp() == 0)
+        return 1;
+    else
+        return 0;
+}

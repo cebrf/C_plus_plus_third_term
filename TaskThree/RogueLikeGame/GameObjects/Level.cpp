@@ -9,7 +9,7 @@ Level::Level(const std::string& fileName)
     }
 }
 
-void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes, Player& player)
+void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, std::shared_ptr<ICharacter>>& enemiesTypes, Player& player)
 {
     std::fstream f(EnemiesFileName);
     json j;
@@ -25,13 +25,17 @@ void Level::GetCharactersTypes(const std::string& EnemiesFileName, std::map<char
     for (auto& enemy : j["enemies"].items())
     {
         std::string sym = enemy.value()["sym"];
-        enemiesTypes.emplace(sym[0],
-            Enemy(Point(-1, -1), sym[0], enemy.value()["hp"], enemy.value()["damage"], enemy.value()["maxHp"]));
+        if (enemy.value()["shootingDamage"] > 0)
+            enemiesTypes.emplace(sym[0], std::shared_ptr<ICharacter>(new ShootingEnemy(Point(-1, -1), sym[0],
+                enemy.value()["hp"], enemy.value()["damage"], enemy.value()["maxHp"], enemy.value()["shootingDamage"])));
+        else
+            enemiesTypes.emplace(sym[0], std::shared_ptr<ICharacter>(new Enemy(Point(-1, -1), sym[0],
+                enemy.value()["hp"], enemy.value()["damage"], enemy.value()["maxHp"])));
     }
 }
 
 void Level::FindGameObjects(std::vector<std::shared_ptr<ICharacter>>& enemies,
-    const std::map<char, Enemy>& enemiesTypes,
+    const std::map<char, std::shared_ptr<ICharacter>>& enemiesTypes,
     Player& player)
 {
     for (int i = 0; i < levelMap.size(); i++)
@@ -46,9 +50,13 @@ void Level::FindGameObjects(std::vector<std::shared_ptr<ICharacter>>& enemies,
             default:
                 if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
                 {
-                    Enemy enemy = enemiesTypes.find(levelMap[i][j])->second;
-                    enemies.push_back(std::shared_ptr<ICharacter>(new Enemy(Point(i + 1, j + 1),
-                        levelMap[i][j], enemy.GetHp(), enemy.GetDamage(), enemy.GetMaxHp())));
+                    std::shared_ptr<ICharacter> enemy = enemiesTypes.find(levelMap[i][j])->second;
+                    if (enemy->GetShootingDamage() > 0)
+                        enemies.push_back(std::shared_ptr<ICharacter>(new ShootingEnemy(Point(i + 1, j + 1),
+                            levelMap[i][j], enemy->GetHp(), enemy->GetDamage(), enemy->GetMaxHp(), enemy->GetShootingDamage())));
+                    else
+                        enemies.push_back(std::shared_ptr<ICharacter>(new Enemy(Point(i + 1, j + 1),
+                            levelMap[i][j], enemy->GetHp(), enemy->GetDamage(), enemy->GetMaxHp())));
                 }
                 break;
             }

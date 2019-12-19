@@ -1,7 +1,7 @@
 #include "ICharacter.h"
 
-ICharacter::ICharacter(Point pos, char sym, int hp, int damage, int maxHp) :
-    IGameObject(pos, sym), hp(hp), damage(damage), maxHp(maxHp) { };
+ICharacter::ICharacter(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage) :
+    IGameObject(pos, sym), hp(hp), damage(damage), maxHp(maxHp), shootingDamage(shootingDamage) { };
 
 ICharacter::~ICharacter() = default;
 
@@ -33,4 +33,14 @@ void ICharacter::SetMaxHp(int maxHp)
 void ICharacter::SetDamage(int damage)
 {
     this->damage = damage;
+}
+
+void ICharacter::SetShootingDamage(int shootingDamage)
+{
+    this->shootingDamage = shootingDamage;
+}
+
+int ICharacter::GetShootingDamage()
+{
+    return this->shootingDamage;
 }

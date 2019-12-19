@@ -44,7 +44,13 @@ void GameSystem::Start()
                     bool isShoot = 0;
                     std::pair<int, int> direction = getDirection(move, isShoot);
                     if (isShoot)
-                        ;///shoot for shootingEnemy
+                    {
+                        bool needCollide = shoot(direction, *(*enemy));
+                        if (needCollide)
+                        {
+                            makeMove({ 0, 0 }, *bullets.rbegin());
+                        }
+                    }
                     else
                         makeMove(direction, *(*enemy));
                 }
@@ -113,7 +119,7 @@ bool GameSystem::makeMove(const std::pair<int, int> direction, IGameObject& char
         {
             level.SetObj(levelWin, character.GetPos(), ' ');
             if (character.GetSym() == '@')
-                death();
+                death(); // TODO show menu
         }
         return 0;
     }
@@ -172,7 +178,7 @@ void GameSystem::death()
 
 
 
-bool GameSystem::shoot(std::pair<int, int> direction, IShootingCharacter& character)
+bool GameSystem::shoot(std::pair<int, int> direction, ICharacter& character)
 {
     Point pos(character.GetPos().x + direction.first, character.GetPos().y + direction.second);
     
@@ -180,7 +186,7 @@ bool GameSystem::shoot(std::pair<int, int> direction, IShootingCharacter& charac
         return 0;
     if (level.GetObj(pos) == '#')
         return 0;
-    bullets.push_back(Bullet(pos, Point(direction.first, direction.second), character.GetDamage()));
+    bullets.push_back(Bullet(pos, Point(direction.first, direction.second), character.GetShootingDamage()));
     if (level.GetObj(pos) == ' ')
     {
         level.SetObj(levelWin, bullets.rbegin()->GetPos(), bullets.rbegin()->GetSym());

@@ -8,6 +8,7 @@
 
 #include "ICharacter.h"
 #include "Player.h"
+#include "ShootingEnemy.h"
 #include "Enemy.h"
 #include "../pdcurses/curses.h"
 #include "../nlohmann/json.hpp"
@@ -19,10 +20,10 @@ class Level
 public:
     Level(const std::string& fileName);
 
-    void GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, Enemy>& enemiesTypes, Player& player);
+    void GetCharactersTypes(const std::string& EnemiesFileName, std::map<char, std::shared_ptr<ICharacter>>& enemiesTypes, Player& player);
 
     void FindGameObjects(std::vector<std::shared_ptr<ICharacter>>& enemies,
-        const std::map<char, Enemy>& enemiesTypes,
+        const std::map<char, std::shared_ptr<ICharacter>>& enemiesTypes,
         Player& player);
 
     void PrintLevel(WINDOW *& win);

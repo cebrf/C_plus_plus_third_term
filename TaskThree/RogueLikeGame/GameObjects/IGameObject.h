@@ -4,6 +4,7 @@
 class Player;
 class Enemy;
 class Bullet;
+class ShootingEnemy;
 
 struct Point
 {
@@ -29,6 +30,7 @@ public:
     virtual bool collideWith(Player&) = 0;
     virtual bool collideWith(Enemy&) = 0;
     virtual bool collideWith(Bullet&) = 0;
+    virtual bool collideWith(ShootingEnemy&) = 0;
 
 protected:
 

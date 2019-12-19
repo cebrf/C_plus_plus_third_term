@@ -2,6 +2,7 @@
 #include "ICharacter.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "ShootingEnemy.h"
 #include <vector>
 
 class Enemy :
@@ -17,6 +18,7 @@ public:
     bool collideWith(Player&) override;
     bool collideWith(Enemy&) override;
     bool collideWith(Bullet&) override;
+    bool collideWith(ShootingEnemy&) override;
 protected:
 
 private:

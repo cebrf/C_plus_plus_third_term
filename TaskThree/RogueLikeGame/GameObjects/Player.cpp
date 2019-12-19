@@ -44,3 +44,12 @@ bool Player::collideWith(Bullet& bullet)
     else
         return 0;
 }
+
+bool Player::collideWith(ShootingEnemy& shootingEnemy)
+{
+    shootingEnemy.SetHp(std::max(0, shootingEnemy.GetHp() - this->GetDamage()));
+    if (shootingEnemy.GetHp() == 0)
+        return 1;
+    else
+        return 0;
+}

@@ -1,22 +1,23 @@
-#include "Enemy.h"
+#include "ShootingEnemy.h"
 
-Enemy::Enemy(Point pos, char sym, int hp, int damage, int maxHp) :
-    ICharacter(pos, sym, hp, damage, maxHp) { };
+ShootingEnemy::ShootingEnemy(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage) :
+    IShootingCharacter(pos, sym, hp, damage, maxHp, shootingDamage) { };
 
-Enemy::~Enemy() = default;
+ShootingEnemy::~ShootingEnemy() = default;
 
-char Enemy::GetMove(WINDOW*& win)
+
+char ShootingEnemy::GetMove(WINDOW * &win)
 {
-    std::vector<char> v = { 'w', 'a', 's', 'd' };
+    std::vector<char> v = { 'w', 'a', 's', 'd', 'i', 'j', 'k', 'l', 'w', 'a', 's', 'd', 'w', 'a', 's', 'd', 'w', 'a', 's', 'd' };
     return v[rand() % v.size()];
 }
 
-bool Enemy::Collide(IGameObject& other)
+bool ShootingEnemy::Collide(IGameObject & other)
 {
     return other.collideWith(*this);
 }
 
-bool Enemy::collideWith(Enemy& enemy)
+bool ShootingEnemy::collideWith(Enemy & enemy)
 {
     enemy.SetHp(std::max(0, enemy.GetHp() - this->GetDamage()));
     if (enemy.GetHp() == 0)
@@ -25,7 +26,7 @@ bool Enemy::collideWith(Enemy& enemy)
         return 0;
 }
 
-bool Enemy::collideWith(Player& player)
+bool ShootingEnemy::collideWith(Player & player)
 {
     player.SetHp(std::max(0, player.GetHp() - this->GetDamage()));
     if (player.GetHp() == 0)
@@ -34,7 +35,7 @@ bool Enemy::collideWith(Player& player)
         return 0;
 }
 
-bool Enemy::collideWith(Bullet& bullet)
+bool ShootingEnemy::collideWith(Bullet & bullet)
 {
     bullet.SetSym(' ');
     this->SetHp(std::max(0, this->GetHp() - bullet.GetDamage()));
@@ -44,7 +45,7 @@ bool Enemy::collideWith(Bullet& bullet)
         return 0;
 }
 
-bool Enemy::collideWith(ShootingEnemy& shootingEnemy)
+bool ShootingEnemy::collideWith(ShootingEnemy& shootingEnemy)
 {
     shootingEnemy.SetHp(std::max(0, shootingEnemy.GetHp() - this->GetDamage()));
     if (shootingEnemy.GetHp() == 0)

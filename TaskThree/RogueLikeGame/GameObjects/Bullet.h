@@ -4,6 +4,7 @@
 #include "ICharacter.h"
 #include "Enemy.h"
 #include "Player.h"
+#include "ShootingEnemy.h"
 
 class Bullet :
     public IGameObject
@@ -22,6 +23,7 @@ public:
     bool collideWith(Player&) override;
     bool collideWith(Enemy&) override;
     bool collideWith(Bullet&) override;
+    bool collideWith(ShootingEnemy&) override;
 protected:
 
 private:

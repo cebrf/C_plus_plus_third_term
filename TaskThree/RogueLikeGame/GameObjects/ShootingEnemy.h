@@ -1,18 +1,16 @@
 #pragma once
-#include "../pdcurses/curses.h"
 #include "IShootingCharacter.h"
-#include "ShootingEnemy.h"
+
 #include "Bullet.h"
 #include "Enemy.h"
+#include "Player.h"
 
-
-class Player :
+class ShootingEnemy :
     public IShootingCharacter
 {
 public:
-    Player();
-    Player(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage);
-    ~Player();
+    ShootingEnemy(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage);
+    ~ShootingEnemy();
 
     char GetMove(WINDOW*& win) override;
 

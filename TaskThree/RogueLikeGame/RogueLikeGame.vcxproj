@@ -146,6 +146,7 @@
     <ClCompile Include="GameObjects\IShootingCharacter.cpp" />
     <ClCompile Include="GameObjects\Level.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
+    <ClCompile Include="GameObjects\ShootingEnemy.cpp" />
     <ClCompile Include="GameSystem.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="GameObjects\IShootingCharacter.h" />
     <ClInclude Include="GameObjects\Level.h" />
     <ClInclude Include="GameObjects\Player.h" />
+    <ClInclude Include="GameObjects\ShootingEnemy.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="pdcurses\curses.h" />
   </ItemGroup>

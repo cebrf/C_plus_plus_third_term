@@ -24,11 +24,11 @@ protected:
     bool makeMove(const std::pair<int, int> direction, IGameObject& character);
     std::pair<int, int> getDirection(char move, bool& isShoot);
     void death();
-    bool shoot(std::pair<int, int> direction, IShootingCharacter& chatacter);
+    bool shoot(std::pair<int, int> direction, ICharacter& chatacter);
 
 private:
     std::vector<std::shared_ptr<ICharacter>> enemies;
-    std::map<char, Enemy> enemiesTypes;
+    std::map<char, std::shared_ptr<ICharacter>> enemiesTypes;
     //map with items
     std::vector<Bullet> bullets;
     

@@ -51,6 +51,9 @@
     <ClCompile Include="GameObjects\IShootingCharacter.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\ShootingEnemy.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\IGameObject.h">
@@ -78,6 +81,9 @@
       <Filter>GameObjectsH</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\IShootingCharacter.h">
+      <Filter>GameObjectsH</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\ShootingEnemy.h">
       <Filter>GameObjectsH</Filter>
     </ClInclude>
   </ItemGroup>
