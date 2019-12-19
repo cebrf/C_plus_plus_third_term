@@ -37,12 +37,15 @@ public:
     int GetHeight();
 
 
+    //std::map<Point, std::shared_ptr<ICharacter>> enemies;
     std::vector<std::shared_ptr<ICharacter>> enemies;
     std::map<char, std::shared_ptr<ICharacter>> enemiesTypes;
     std::vector<FirstAidKit> firstAidKits;
     std::vector<Bullet> bullets;
 
 private:
+    //std::vector<std::shared_ptr<ICharacter>> enemies_;
+
     std::vector<std::string> levelMap;
 };
 

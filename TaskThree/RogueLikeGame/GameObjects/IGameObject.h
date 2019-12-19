@@ -34,6 +34,8 @@ public:
     virtual bool collideWith(ShootingEnemy&) = 0;
     virtual bool collideWith(FirstAidKit&) = 0;
 
+    Point getDirection(char move, bool& isShoot);
+
 protected:
 
     IGameObject(Point pos, char sym);

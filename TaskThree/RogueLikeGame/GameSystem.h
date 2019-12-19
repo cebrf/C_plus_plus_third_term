@@ -23,9 +23,8 @@ public:
 
 protected:
     bool makeMove(const std::pair<int, int> direction, IGameObject& character); // move !?somewhere?!
-    std::pair<int, int> getDirection(char move, bool& isShoot); //move to IGameObj
     void death();  //TODO move to PLayer
-    bool shoot(std::pair<int, int> direction, ICharacter& chatacter);  // move to IShootingCaracter
+    bool shoot(Point direction, ICharacter& character);  // move to IShootingCaracter
 
 private:
     

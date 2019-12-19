@@ -20,9 +20,9 @@ void GameSystem::Start()
             
             char move = player.GetMove(levelWin);
             bool isShoot = 0;
-            std::pair<int, int> direction = getDirection(move, isShoot);
+            Point direction = player.getDirection(move, isShoot);
 
-            if (direction.first != 0 || direction.second != 0)
+            if (direction.x != 0 || direction.y != 0)
                 if (isShoot)
                 {
                     bool needCollide = shoot(direction, player);
@@ -32,7 +32,7 @@ void GameSystem::Start()
                     }
                 }
                 else
-                    makeMove(direction, player);
+                    makeMove({ direction.x, direction.y }, player);
 
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
@@ -44,7 +44,7 @@ void GameSystem::Start()
                 {
                     char move = (*enemy)->GetMove(levelWin);
                     bool isShoot = 0;
-                    std::pair<int, int> direction = getDirection(move, isShoot);
+                    Point direction = (*enemy)->getDirection(move, isShoot);
                     if (isShoot)
                     {
                         bool needCollide = shoot(direction, *(*enemy));
@@ -54,7 +54,7 @@ void GameSystem::Start()
                         }
                     }
                     else
-                        makeMove(direction, *(*enemy));
+                        makeMove({ direction.x, direction.y }, *(*enemy));
                 }
             }
             for (int i = 0; i < level.enemies.size();)
@@ -174,23 +174,6 @@ bool GameSystem::makeMove(const std::pair<int, int> direction, IGameObject& char
     }
 }
 
-std::pair<int, int> GameSystem::getDirection(char move, bool& isShoot)
-{
-    if (move == 'j' || move == 'l' || move == 'i' || move == 'k')
-        isShoot = 1;
-
-    std::pair<int, int> direction = { 0, 0 };
-    if (move == 'w' || move == 'i')
-        direction.first = -1;
-    else if (move == 's' || move == 'k')
-        direction.first = 1;
-    else if (move == 'a' || move == 'j')
-        direction.second = -1;
-    else if (move == 'd' || move == 'l')
-        direction.second = 1;
-    return direction;
-}
-
 void GameSystem::death()
 {
     level.PrintPLayerStatus(playerStatus, player.GetHp());
@@ -201,15 +184,15 @@ void GameSystem::death()
 
 
 
-bool GameSystem::shoot(std::pair<int, int> direction, ICharacter& character)
+bool GameSystem::shoot(Point direction, ICharacter& character)
 {
-    Point pos(character.GetPos().x + direction.first, character.GetPos().y + direction.second);
+    Point pos(character.GetPos().x + direction.x, character.GetPos().y + direction.y);
     
     if (pos.x <= 0 || pos.y <= 0 || pos.x - 1 >= level.GetHeight() || pos.y >= level.GetWidth())
         return 0;
     if (level.GetObj(pos) == '#')
         return 0;
-    level.bullets.push_back(Bullet(pos, Point(direction.first, direction.second), character.GetShootingDamage()));
+    level.bullets.push_back(Bullet(pos, Point(direction.x, direction.y), character.GetShootingDamage()));
     if (level.GetObj(pos) == ' ')
     {
         level.SetObj(levelWin, level.bullets.rbegin()->GetPos(), level.bullets.rbegin()->GetSym());
