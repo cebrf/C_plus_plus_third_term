@@ -22,7 +22,13 @@ void GameSystem::Start()
 
             if (direction.first != 0 || direction.second != 0)
                 if (isShoot)
-                    shoot(direction);
+                {
+                    bool needCollide = shoot(direction, player);
+                    if (needCollide)
+                    {
+                        makeMove({ 0, 0 }, *bullets.rbegin());
+                    }
+                }
                 else
                     makeMove(direction, player);
 
@@ -99,14 +105,16 @@ bool GameSystem::makeMove(const std::pair<int, int> direction, IGameObject& char
                 break;
         }
         if (i == bullets.size())
-        {
             int aaa = 12;
-        }
 
         level.SetObj(levelWin, bullets[i].GetPos(), ' ');
         bool killed = bullets[i].Collide(character);
         if (killed)
+        {
             level.SetObj(levelWin, character.GetPos(), ' ');
+            if (character.GetSym() == '@')
+                death();
+        }
         return 0;
     }
 
@@ -115,8 +123,7 @@ bool GameSystem::makeMove(const std::pair<int, int> direction, IGameObject& char
         bool killed = player.Collide(character);
         if (killed)
         {
-            death();
-            // show menu
+            death(); // TODO show menu
         }
         return 0;
     }
@@ -163,9 +170,21 @@ void GameSystem::death()
     wrefresh(levelWin);
 }
 
-void GameSystem::shoot(std::pair<int, int> direction)
+
+
+bool GameSystem::shoot(std::pair<int, int> direction, IShootingChatacter& chatacter)
 {
-    bullets.push_back(Bullet(Point(player.GetPos().x + direction.first, player.GetPos().y + direction.second),
-        Point(direction.first, direction.second)));
-    level.SetObj(levelWin, bullets.rbegin()->GetPos(), bullets.rbegin()->GetSym());
+    Point pos(chatacter.GetPos().x + direction.first, chatacter.GetPos().y + direction.second);
+    
+    if (pos.x <= 0 || pos.y <= 0 || pos.x - 1 >= level.GetHeight() || pos.y >= level.GetWidth())
+        return 0;
+    if (level.GetObj(pos) == '#')
+        return 0;
+    bullets.push_back(Bullet(pos, Point(direction.first, direction.second)));
+    if (level.GetObj(pos) == ' ')
+    {
+        level.SetObj(levelWin, bullets.rbegin()->GetPos(), bullets.rbegin()->GetSym());
+        return 0;
+    }
+    return 1; // need collide
 }

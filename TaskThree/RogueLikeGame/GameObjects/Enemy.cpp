@@ -37,7 +37,6 @@ bool Enemy::collideWith(Player& player)
 bool Enemy::collideWith(Bullet& bullet)
 {
     bullet.SetSym(' ');
-
     this->SetHp(std::max(0, this->GetHp() - 10));
     if (this->GetHp() == 0)
         return 1;

@@ -24,7 +24,7 @@ protected:
     bool makeMove(const std::pair<int, int> direction, IGameObject& character);
     std::pair<int, int> getDirection(char move, bool& isShoot);
     void death();
-    void shoot(std::pair<int, int> direction);
+    bool shoot(std::pair<int, int> direction, IShootingChatacter& chatacter);
 
 private:
     std::vector<std::shared_ptr<ICharacter>> enemies;

@@ -45,6 +45,7 @@ bool Bullet::Collide(IGameObject& other)
 
 bool Bullet::collideWith(Enemy& enemy)
 {
+    this->SetSym(' ');
     enemy.SetHp(std::max(0, enemy.GetHp() - /*this->GetDamage()*/ 10));
     if (enemy.GetHp() == 0)
         return 1;
@@ -54,6 +55,7 @@ bool Bullet::collideWith(Enemy& enemy)
 
 bool Bullet::collideWith(Player& player)
 {
+    this->SetSym(' ');
     player.SetHp(std::max(0, player.GetHp() - /*this->GetDamage()*/ 10));
     if (player.GetHp() == 0)
         return 1;       //TODO end of game
