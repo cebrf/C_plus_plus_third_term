@@ -1,5 +1,7 @@
 #pragma once
 #include "IGameObject.h"
+#include <functional>
+#include "../pdcurses/curses.h"
 #include <algorithm>
 
 class ICharacter :
@@ -8,14 +10,16 @@ class ICharacter :
 public:
     int GetHp();
     int GetMaxHp();
-    int GetDamage();
-
+    int GetDamage();            //на чем остановился? Нужно передать лямбду в ф-цию level, которая создает врагов и персонажа. И передавать им там
+                                                                                    // лямбду
     void SetHp(int hp);
     void SetMaxHp(int maxHp);
     void SetDamage(int damage);
 
     void SetShootingDamage(int shootingDamage);
     int GetShootingDamage();
+
+    std::function<bool(Point, ICharacter&)> shoot = [](Point p, ICharacter& c) { return 0; };
 
 protected:
     ICharacter(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage = 0);
@@ -26,4 +30,5 @@ private:
     int maxHp;
     int damage;
     int shootingDamage;
+
 };

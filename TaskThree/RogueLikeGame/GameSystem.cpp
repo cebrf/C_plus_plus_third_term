@@ -13,6 +13,26 @@ GameSystem::GameSystem(const std::string& levelFileName, const std::string& Enem
 
 void GameSystem::Start()
 {
+    shoot = [&](Point direction, ICharacter& character)
+    {
+        Point pos(character.GetPos().x + direction.x, character.GetPos().y + direction.y);
+
+        if (pos.x <= 0 || pos.y <= 0 || pos.x - 1 >= level.GetHeight() || pos.y >= level.GetWidth())
+            return 0;
+        if (level.GetObj(pos) == '#')
+            return 0;
+        level.bullets.push_back(Bullet(pos, Point(direction.x, direction.y), character.GetShootingDamage()));
+        if (level.GetObj(pos) == ' ')
+        {
+            level.SetObj(levelWin, level.bullets.rbegin()->GetPos(), level.bullets.rbegin()->GetSym());
+            return 0;
+        }
+        return 1; // need collide
+    };
+    player.shoot = this->shoot;
+
+
+
     while (true)
     {
         for (int e = 0; e < 5; e++)
@@ -25,7 +45,7 @@ void GameSystem::Start()
             if (direction.x != 0 || direction.y != 0)
                 if (isShoot)
                 {
-                    bool needCollide = shoot(direction, player);
+                    bool needCollide = player.shoot(direction, player);
                     if (needCollide)
                     {
                         makeMove({ 0, 0 }, *level.bullets.rbegin());
@@ -37,7 +57,7 @@ void GameSystem::Start()
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 
-        { // move of enemies
+        /*{ // move of enemies
             for (auto enemy = level.enemies.begin(); enemy != level.enemies.end(); enemy++)
             {
                 if ((*enemy)->GetHp() > 0)
@@ -64,7 +84,7 @@ void GameSystem::Start()
                 else
                     i++;
             }
-        }
+        }*/
 
         { //move of arrows
             for (int i = 0; i < level.bullets.size(); i++)
@@ -180,23 +200,4 @@ void GameSystem::death()
     wclear(levelWin);
     mvwprintw(levelWin, 10, 10, "YOU ARE DEAD!");
     wrefresh(levelWin);
-}
-
-
-
-bool GameSystem::shoot(Point direction, ICharacter& character)
-{
-    Point pos(character.GetPos().x + direction.x, character.GetPos().y + direction.y);
-    
-    if (pos.x <= 0 || pos.y <= 0 || pos.x - 1 >= level.GetHeight() || pos.y >= level.GetWidth())
-        return 0;
-    if (level.GetObj(pos) == '#')
-        return 0;
-    level.bullets.push_back(Bullet(pos, Point(direction.x, direction.y), character.GetShootingDamage()));
-    if (level.GetObj(pos) == ' ')
-    {
-        level.SetObj(levelWin, level.bullets.rbegin()->GetPos(), level.bullets.rbegin()->GetSym());
-        return 0;
-    }
-    return 1; // need collide
 }

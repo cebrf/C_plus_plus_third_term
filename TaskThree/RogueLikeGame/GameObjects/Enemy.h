@@ -4,6 +4,7 @@
 #include "Bullet.h"
 #include "FirstAidKit.h"
 #include "ShootingEnemy.h"
+#include "../pdcurses/curses.h"
 #include <vector>
 
 class Enemy :

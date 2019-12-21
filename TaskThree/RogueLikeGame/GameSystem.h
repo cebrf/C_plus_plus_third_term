@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <functional>
 #include "pdcurses/curses.h"
 
 #include "GameObjects/ICharacter.h"
@@ -18,16 +19,16 @@ class GameSystem
 {
 public:
     GameSystem(const std::string& levelFileName, const std::string& EnemiesFileName);
-
     void Start();
 
 protected:
     bool makeMove(const std::pair<int, int> direction, IGameObject& character); // move !?somewhere?!
     void death();  //TODO move to PLayer
-    bool shoot(Point direction, ICharacter& character);  // move to IShootingCaracter
 
 private:
-    
+    std::function<bool(Point, ICharacter&)> shoot;
+
+
     Player player;
     Level level;
     WINDOW* levelWin;
