@@ -65,37 +65,36 @@ void Player::Update(Level& level)
 {
     char action = this->GetAction(level.levelWin);
     bool isShoot = 0;
-    Point direction = level.player->getDirection(action, isShoot);
-    if (direction.x != 0 || direction.y != 0)
+    Point direction = this->getDirection(action, isShoot);
+
+    if (direction.x == 0 && direction.y == 0)
+        return;
+    Point newPos(this->GetPos().x + direction.x, this->GetPos().y + direction.y);
+    if (newPos.x <= 0 || newPos.y <= 0 || newPos.x - 1 >= level.GetHeight())
+        return;
+    if (newPos.y >= level.GetWidth() || level.GetSym(newPos) == '#')
+        return;
+
+      
+    if (level.GetSym(newPos) == ' ')
     {
         if (isShoot)
         {
-            /*bool needCollide = level.player->shoot(direction, *level.player);
-            if (needCollide)
-            {
-                //makeMove({ 0, 0 }, **level.bulletsContainer.rbegin());
-            }*/
+            std::shared_ptr<Bullet> newBullet = std::shared_ptr<Bullet>(new Bullet(newPos, Point(direction.x, direction.y), this->GetShootingDamage()));
+            level.bulletsContainer.push_back(newBullet);
+            level.bullets.emplace(newPos, newBullet);
+            level.SetObj(newBullet->GetPos(), newBullet->GetSym());
         }
         else
         {
-            Point newPos(this->GetPos().x + direction.x, this->GetPos().y + direction.y);
-
-            if (newPos.x <= 0 || newPos.y <= 0 || newPos.x - 1 >= level.GetHeight())
-                return;
-            if (newPos.y >= level.GetWidth() || level.GetSym(newPos) == '#')
-                return;
-
-            if (level.GetSym(newPos) == ' ' && level.GetSym(newPos) == ' ')
-            {
-                level.SetObj(this->GetPos(), ' ');
-                this->SetPos(newPos);
-                level.SetObj(this->GetPos(), this->GetSym());
-
-                return;
-            }
-
-            std::shared_ptr<IGameObject> obj = level.GetObj(newPos);
-            obj->Collide(*this, level);
+            level.SetObj(this->GetPos(), ' ');
+            this->SetPos(newPos);
+            level.SetObj(this->GetPos(), this->GetSym());
         }
     }
+    else
+    {
+        std::shared_ptr<IGameObject> obj = level.GetObj(newPos);
+        obj->Collide(*this, level);
+    }    
 }

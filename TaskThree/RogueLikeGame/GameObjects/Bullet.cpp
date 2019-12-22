@@ -50,48 +50,56 @@ void Bullet::Collide(IGameObject& other, Level& level)
 
 void Bullet::collideWith(Enemy& enemy, Level& level)
 {
-    this->SetSym(' ');
-    enemy.SetHp(std::max(0, enemy.GetHp() - this->GetDamage()));
-    /*if (enemy.GetHp() == 0)
-        return 1;
-    else
-        return 0;*/
+    enemy.collideWith(*this, level);
 }
 
 void Bullet::collideWith(Player& player, Level& level)
 {
-    this->SetSym(' ');
-    player.SetHp(std::max(0, player.GetHp() - this->GetDamage()));
-    /*if (player.GetHp() == 0)
-        return 1;       //TODO end of game
-    else
-        return 0;*/
+    player.collideWith(*this, level);
 }
 
 void Bullet::collideWith(Bullet& bullet, Level& level)
 {
-    bullet.SetSym(' ');
-    this->SetSym(' ');
-    /*return 0;*/
+    level.SetObj(bullet.GetPos(), ' ');
+    level.bullets.erase(bullet.GetPos());
+    level.SetObj(this->GetPos(), ' ');
+    level.bullets.erase(this->GetPos());
 }
 
 void Bullet::collideWith(ShootingEnemy& shootingEnemy, Level& level)
 {
-    this->SetSym(' ');
-    shootingEnemy.SetHp(std::max(0, shootingEnemy.GetHp() - this->GetDamage()));
-    /*if (shootingEnemy.GetHp() == 0)
-        return 1;
-    else
-        return 0;*/
+    shootingEnemy.collideWith(*this, level);
 }
 
 void Bullet::collideWith(FirstAidKit& firstAidKit, Level& level)
 {
-    this->SetSym(' ');
-    //return 0;
+    level.SetObj(this->GetPos(), ' ');
+    level.bullets.erase(this->GetPos());
 }
 
 void Bullet::Update(Level& level)
 {
+    Point newPos(this->GetPos().x + direction.x, this->GetPos().y + direction.y);
 
+    if (newPos.x <= 0 || newPos.y <= 0 || newPos.x - 1 >= level.GetHeight() ||
+        newPos.y >= level.GetWidth() || level.GetSym(newPos) == '#')
+    {
+        level.SetObj(this->GetPos(), ' ');
+        level.bullets.erase(this->GetPos());
+        return;
+    }
+
+    if (level.GetSym(newPos) == ' ' && level.GetSym(newPos) == ' ')
+    {
+        level.bullets.emplace(newPos, level.bullets.find(this->GetPos())->second);
+        level.SetObj(this->GetPos(), ' ');
+        level.bullets.erase(this->GetPos());
+        this->SetPos(newPos);
+        level.SetObj(this->GetPos(), this->GetSym());
+    }
+    else
+    {
+        std::shared_ptr<IGameObject> obj = level.GetObj(newPos);
+        obj->Collide(*this, level);
+    }
 }

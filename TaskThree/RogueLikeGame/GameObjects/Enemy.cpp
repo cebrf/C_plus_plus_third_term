@@ -63,7 +63,7 @@ void Enemy::Update(Level& level)
 {
     char action = this->GetAction(level.levelWin); 
     bool isShoot = 0;
-    Point direction = level.player->getDirection(action, isShoot);
+    Point direction = this->getDirection(action, isShoot);
     if (direction.x != 0 || direction.y != 0)
     {
         Point newPos(this->GetPos().x + direction.x, this->GetPos().y + direction.y);

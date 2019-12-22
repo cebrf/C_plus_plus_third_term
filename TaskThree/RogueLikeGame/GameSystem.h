@@ -22,11 +22,8 @@ public:
     void Start();
 
 protected:
-    void death();  //TODO move to PLayer
+    void death();
 
 private:
-    std::function<bool(Point, ICharacter&)> shoot;
-    std::function<bool(const std::pair<int, int>, IGameObject&)> makeMove;
-
     Level level;
 };

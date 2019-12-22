@@ -18,9 +18,7 @@ public:
 
     void SetShootingDamage(int shootingDamage);
     int GetShootingDamage();
-
-    std::function<bool(Point, ICharacter&)> shoot = [](Point p, ICharacter& c) { return 0; };
-
+ 
 protected:
     ICharacter(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage = 0);
     ~ICharacter();
