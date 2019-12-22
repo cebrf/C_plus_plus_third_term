@@ -11,13 +11,13 @@ class FirstAidKit :
     public IGameObject
 {
 public:
-    FirstAidKit(Point pos, char sym, int healingForce);
+    FirstAidKit(Point, char, int);
     ~FirstAidKit();
     
-    void SetHealingForce(int healingForce);
+    void SetHealingForce(int);
     int GetHealingForce();
 
-    char GetAction(WINDOW& win) override;
+    char GetAction(WINDOW&) override;
 
     void Collide(IGameObject&, Level&) override;
     void collideWith(Player&, Level&) override;
@@ -26,7 +26,7 @@ public:
     void collideWith(ShootingEnemy&, Level&) override;
     void collideWith(FirstAidKit&, Level&) override;
 
-    void Update(Level& level) override;
+    void Update(Level&) override;
 
 protected:
 

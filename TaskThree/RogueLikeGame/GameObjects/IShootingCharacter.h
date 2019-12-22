@@ -8,7 +8,7 @@ class IShootingCharacter :
 public:
 
 protected:
-    IShootingCharacter(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage);
+    IShootingCharacter(Point, char, int, int, int, int);
     ~IShootingCharacter();
 
 

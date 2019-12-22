@@ -31,28 +31,28 @@ public:
     Point GetPos();
     char GetSym();
 
-    void SetPos(Point p);
-    void SetSym(char sym);
+    void SetPos(Point);
+    void SetSym(char);
 
-    virtual char GetAction(WINDOW& win) = 0;
+    virtual char GetAction(WINDOW&) = 0;
 
-    virtual void Collide(IGameObject&, Level& level) = 0;
-    virtual void collideWith(Player&, Level& level) = 0;
-    virtual void collideWith(Enemy&, Level& level) = 0;
-    virtual void collideWith(Bullet&, Level& level) = 0;
-    virtual void collideWith(ShootingEnemy&, Level& level) = 0;
-    virtual void collideWith(FirstAidKit&, Level& level) = 0;
+    virtual void Collide(IGameObject&, Level&) = 0;
+    virtual void collideWith(Player&, Level&) = 0;
+    virtual void collideWith(Enemy&, Level&) = 0;
+    virtual void collideWith(Bullet&, Level&) = 0;
+    virtual void collideWith(ShootingEnemy&, Level&) = 0;
+    virtual void collideWith(FirstAidKit&, Level&) = 0;
 
-    virtual void Update(Level& level) = 0;
+    virtual void Update(Level&) = 0;
 
-    Point getDirection(char move, bool& isShoot);
+    Point getDirection(char, bool&);
 
     std::function<bool(const std::pair<int, int>, IGameObject&)> makeMove
-        = [](const std::pair<int, int> direction, IGameObject& character) { return 0; };
+        = [](const std::pair<int, int>, IGameObject&) { return 0; };
 
 protected:
 
-    IGameObject(Point pos, char sym);
+    IGameObject(Point, char);
     ~IGameObject();
 
 private:

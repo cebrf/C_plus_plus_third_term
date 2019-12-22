@@ -12,23 +12,23 @@ class Bullet :
     public IGameObject
 {
 public:
-    Bullet(Point pos, Point direction, int damage);
+    Bullet(Point, Point, int);
     ~Bullet();
 
-    void SetDirection(Point direction);
+    void SetDirection(Point);
     Point GetDirection();
     int GetDamage();
 
-    char GetAction(WINDOW& win) override;
+    char GetAction(WINDOW&) override;
 
-    void Collide(IGameObject&, Level& level) override;
-    void collideWith(Player&, Level& level) override;
-    void collideWith(Enemy&, Level& level) override;
-    void collideWith(Bullet&, Level& level) override;
-    void collideWith(ShootingEnemy&, Level& level) override;
-    void collideWith(FirstAidKit&, Level& level) override;
+    void Collide(IGameObject&, Level&) override;
+    void collideWith(Player&, Level&) override;
+    void collideWith(Enemy&, Level&) override;
+    void collideWith(Bullet&, Level&) override;
+    void collideWith(ShootingEnemy&, Level&) override;
+    void collideWith(FirstAidKit&, Level&) override;
 
-    void Update(Level& level) override;
+    void Update(Level&) override;
 
 protected:
 

@@ -12,10 +12,10 @@ class Enemy :
     public ICharacter
 {
 public:
-    Enemy(Point pos, char sym, int hp, int damage, int maxHp);
+    Enemy(Point, char, int, int, int);
     ~Enemy();
 
-    char GetAction(WINDOW& win) override;
+    char GetAction(WINDOW&) override;
 
     void Collide(IGameObject&, Level&) override;
     void collideWith(Player&, Level&) override;
@@ -24,7 +24,7 @@ public:
     void collideWith(ShootingEnemy&, Level&) override;
     void collideWith(FirstAidKit&, Level&) override;
 
-    void Update(Level& level) override;
+    void Update(Level&) override;
 
 protected:
 

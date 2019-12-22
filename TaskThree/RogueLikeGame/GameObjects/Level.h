@@ -19,20 +19,20 @@ using json = nlohmann::json;
 class Level
 {
 public:
-    Level(const std::string& fileName);
+    Level(const std::string&);
 
-    void GetCharactersTypes(const std::string& EnemiesFileName);
+    void GetCharactersTypes(const std::string&);
 
     void FindGameObjects();
 
     void PrintLevel();
-    void CreateWindow(size_t widthOfMap, size_t heightOfMap);
+    void CreateWindow(size_t, size_t);
     void CreateWPlayerStatus();
     void PrintPLayerStatus();
 
-    void SetObj(Point pos, char obj);
-    std::shared_ptr<IGameObject> GetObj(Point pos);
-    char GetSym(Point pos);
+    void SetObj(Point, char);
+    std::shared_ptr<IGameObject> GetObj(Point);
+    char GetSym(Point);
     
     int GetWidth();
     int GetHeight();

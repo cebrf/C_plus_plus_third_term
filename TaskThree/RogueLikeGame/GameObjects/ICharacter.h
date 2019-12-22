@@ -12,15 +12,15 @@ public:
     int GetMaxHp();
     int GetDamage();
 
-    void SetHp(int hp);
-    void SetMaxHp(int maxHp);
-    void SetDamage(int damage);
+    void SetHp(int);
+    void SetMaxHp(int);
+    void SetDamage(int);
 
-    void SetShootingDamage(int shootingDamage);
+    void SetShootingDamage(int);
     int GetShootingDamage();
  
 protected:
-    ICharacter(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage = 0);
+    ICharacter(Point, char, int, int, int, int = 0);
     ~ICharacter();
 
 private:

@@ -18,7 +18,7 @@
 class GameSystem
 {
 public:
-    GameSystem(const std::string& levelFileName, const std::string& EnemiesFileName);
+    GameSystem(const std::string&, const std::string&);
     void Start();
 
 protected:
