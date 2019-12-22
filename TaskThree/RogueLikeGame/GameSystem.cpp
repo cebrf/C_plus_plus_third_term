@@ -16,7 +16,7 @@ void GameSystem::Start()
     while (true)
     {
         if (level.player->GetHp() <= 0)
-            death();
+            return; //death();
 
         for (int e = 0; e < 5; e++)
         {
