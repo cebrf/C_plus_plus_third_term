@@ -27,8 +27,7 @@ void FirstAidKit::Collide(IGameObject& other, Level& level)
 
 void FirstAidKit::collideWith(Player& player, Level& level)
 {
-    this->SetSym(' ');
-    player.SetHp(std::min(player.GetMaxHp(), player.GetHp() + this->GetHealingForce()));
+    return player.collideWith(*this, level);
 }
 
 void FirstAidKit::collideWith(Enemy& enemy, Level& level)

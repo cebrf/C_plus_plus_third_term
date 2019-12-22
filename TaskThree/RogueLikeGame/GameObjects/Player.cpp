@@ -70,11 +70,11 @@ void Player::Update(Level& level)
     {
         if (isShoot)
         {
-            bool needCollide = level.player->shoot(direction, *level.player);
+            /*bool needCollide = level.player->shoot(direction, *level.player);
             if (needCollide)
             {
                 //makeMove({ 0, 0 }, **level.bulletsContainer.rbegin());
-            }
+            }*/
         }
         else
         {
@@ -90,6 +90,7 @@ void Player::Update(Level& level)
                 level.SetObj(this->GetPos(), ' ');
                 this->SetPos(newPos);
                 level.SetObj(this->GetPos(), this->GetSym());
+
                 return;
             }
 

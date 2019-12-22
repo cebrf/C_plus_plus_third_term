@@ -142,6 +142,22 @@ void GameSystem::Start()
             }
         }
 
+        {
+            for (auto enemy = level.enemiesContainer.begin(); enemy != level.enemiesContainer.end(); enemy++)
+            {
+                if (level.enemies.find((*enemy)->GetPos()) != level.enemies.end())
+                {
+                    (*enemy)->Update(level);
+                }
+            }
+
+            level.enemiesContainer.clear();
+            for (auto enemy = level.enemies.begin(); enemy != level.enemies.end(); enemy++)
+            {
+                level.enemiesContainer.push_back(enemy->second);
+            }
+        }
+
         /*{ // move of enemies
             for (auto enemy = level.enemiesContainer.begin(); enemy != level.enemiesContainer.end(); enemy++)
             {
