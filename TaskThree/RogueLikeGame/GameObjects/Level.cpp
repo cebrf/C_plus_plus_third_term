@@ -9,18 +9,19 @@ Level::Level(const std::string& fileName)
     }
 }
 
-void Level::GetCharactersTypes(const std::string& EnemiesFileName, Player& player)
+void Level::GetCharactersTypes(const std::string& EnemiesFileName)
 {
     std::fstream f(EnemiesFileName);
     json j;
     f >> j;
     
     std::string sym = j["player"]["sym"];
-    player.SetSym(sym[0]);
-    player.SetHp(j["player"]["hp"]);
-    player.SetDamage(j["player"]["damage"]);
-    player.SetMaxHp(j["player"]["maxHp"]);
-    player.SetShootingDamage(j["player"]["shootingDamage"]);
+    player = std::shared_ptr<Player>(new Player());
+    player->SetSym(sym[0]);
+    player->SetHp(j["player"]["hp"]);
+    player->SetDamage(j["player"]["damage"]);
+    player->SetMaxHp(j["player"]["maxHp"]);
+    player->SetShootingDamage(j["player"]["shootingDamage"]);
 
     for (auto& enemy : j["enemies"].items())
     {
@@ -34,7 +35,7 @@ void Level::GetCharactersTypes(const std::string& EnemiesFileName, Player& playe
     }
 }
 
-void Level::FindGameObjects(Player& player)
+void Level::FindGameObjects()
 {
     for (int i = 0; i < levelMap.size(); i++)
     {
@@ -43,10 +44,10 @@ void Level::FindGameObjects(Player& player)
             switch (levelMap[i][j])
             {
             case '@':
-                player.SetPos(Point(i + 1, j + 1));
+                player->SetPos(Point(i + 1, j + 1));
                 break;
             case '+':
-                firstAidKits.push_back(FirstAidKit(Point(i + 1, j + 1), '+', 5));
+                firstAidKitsContainer.push_back(std::shared_ptr<FirstAidKit>(new FirstAidKit(Point(i + 1, j + 1), '+', 5)));
             default:
                 if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
                 {
@@ -66,6 +67,10 @@ void Level::FindGameObjects(Player& player)
     for (int i = 0; i < enemiesContainer.size(); i++)
     {
         enemies.emplace(enemiesContainer[i]->GetPos(), enemiesContainer[i]);
+    }
+    for (int i = 0; i < firstAidKitsContainer.size(); i++)
+    {
+        firstAidKits.emplace(firstAidKitsContainer[i]->GetPos(), firstAidKitsContainer[i]);
     }
 }
 
@@ -110,9 +115,9 @@ void Level::CreateWPlayerStatus(WINDOW*& win)
     wrefresh(win);
 }
 
-void Level::PrintPLayerStatus(WINDOW*& win, int hp)
+void Level::PrintPLayerStatus(WINDOW*& win)
 {
-    mvwprintw(win, 2, 5, "%s%d", "Hp:  ", hp);
+    mvwprintw(win, 2, 5, "%s%d", "Hp:  ", player->GetHp());
     wrefresh(win);
 }
 
@@ -122,7 +127,19 @@ void Level::SetObj(WINDOW*& win, Point pos, char obj)
     mvwaddch(win, pos.x, pos.y, obj);
 }
 
-char Level::GetObj(Point pos)
+std::shared_ptr<IGameObject> Level::GetObj(Point pos)
+{
+    if (player->GetPos().x == pos.x && player->GetPos().y == pos.y)
+        return player;
+    if (enemies.find(pos) != enemies.end())
+        return enemies.find(pos)->second;
+    if (firstAidKits.find(pos) != firstAidKits.end())
+        return firstAidKits.find(pos)->second;
+    if (bullets.find(pos) != bullets.end())
+        return bullets.find(pos)->second;
+}
+
+char Level::GetSym(Point pos)
 {
     return levelMap[pos.x - 1][pos.y - 1];
 }

@@ -14,6 +14,13 @@ struct Point
 
     int x;
     int y;
+
+    bool operator <(const Point& rhs) const
+    {
+        if (this->x == rhs.x)
+            return this->y < rhs.y;
+        return this->x < rhs.x;
+    }
 };
 
 class IGameObject

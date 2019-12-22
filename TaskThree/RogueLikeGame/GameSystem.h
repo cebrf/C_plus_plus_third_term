@@ -29,7 +29,6 @@ private:
     std::function<bool(Point, ICharacter&)> shoot;
 
 
-    Player player;
     Level level;
     WINDOW* levelWin;
     WINDOW* playerStatus;
