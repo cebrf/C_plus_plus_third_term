@@ -81,7 +81,14 @@ void Level::PrintLevel()
         wmove(&*levelWin, i + 1, 1);
         for (int j = 0; j < levelMap[i].size(); j++)
         {
-            waddch(&*levelWin, levelMap[i][j]);
+            if (levelMap[i][j] == '+')
+            {
+                wattron(&*levelWin, COLOR_PAIR(3));
+                waddch(&*levelWin, levelMap[i][j]);
+                wattroff(&*levelWin, COLOR_PAIR(3));
+            }
+            else
+                waddch(&*levelWin, levelMap[i][j]);
         }
     }
     wrefresh(&*levelWin);
@@ -92,6 +99,11 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
     initscr();
     curs_set(0);
     noecho();
+
+    start_color();
+    init_pair(1, COLOR_GREEN, COLOR_BLACK);
+    init_pair(2, COLOR_RED, COLOR_BLACK);
+    init_pair(3, COLOR_CYAN, COLOR_BLACK);
 
     int height = heightOfMap + 2,
         width = widthOfMap + 2,

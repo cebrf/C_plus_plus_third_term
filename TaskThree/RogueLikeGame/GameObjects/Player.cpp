@@ -87,9 +87,13 @@ void Player::Update(Level& level)
         }
         else
         {
+            wattron(&*level.levelWin, COLOR_PAIR(1));
+
             level.SetObj(this->GetPos(), ' ');
             this->SetPos(newPos);
             level.SetObj(this->GetPos(), this->GetSym());
+
+            wattroff(&*level.levelWin, COLOR_PAIR(1));
         }
     }
     else

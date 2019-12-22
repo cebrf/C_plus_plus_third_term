@@ -75,12 +75,16 @@ void Enemy::Update(Level& level)
 
         if (level.GetSym(newPos) == ' ' && level.GetSym(newPos) == ' ')
         {
+            wattron(&*level.levelWin, COLOR_PAIR(2));
+
             level.enemies.emplace(newPos, level.enemies.find(this->GetPos())->second);
             level.SetObj(this->GetPos(), ' ');
             level.enemies.erase(this->GetPos());
 
             this->SetPos(newPos);
             level.SetObj(this->GetPos(), this->GetSym());
+
+            wattroff(&*level.levelWin, COLOR_PAIR(2));
             return;
         }
 
