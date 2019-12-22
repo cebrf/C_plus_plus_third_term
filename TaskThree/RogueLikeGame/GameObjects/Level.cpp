@@ -144,7 +144,7 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
     levelWin = std::shared_ptr<WINDOW>(newwin(height, width, startX, startY));
 
     nodelay(&*levelWin, true);
-    //noqiflush(); //raw();  //cbreak();
+    cbreak();
 
     box(&*levelWin, 0, 0);
     wmove(&*levelWin, 1, 1);
