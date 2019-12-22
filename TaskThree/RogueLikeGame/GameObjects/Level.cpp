@@ -52,15 +52,20 @@ void Level::FindGameObjects(Player& player)
                 {
                     std::shared_ptr<ICharacter> enemy = enemiesTypes.find(levelMap[i][j])->second;
                     if (enemy->GetShootingDamage() > 0)
-                        enemies.push_back(std::shared_ptr<ICharacter>(new ShootingEnemy(Point(i + 1, j + 1),
+                        enemiesContainer.push_back(std::shared_ptr<ICharacter>(new ShootingEnemy(Point(i + 1, j + 1),
                             levelMap[i][j], enemy->GetHp(), enemy->GetDamage(), enemy->GetMaxHp(), enemy->GetShootingDamage())));
                     else
-                        enemies.push_back(std::shared_ptr<ICharacter>(new Enemy(Point(i + 1, j + 1),
+                        enemiesContainer.push_back(std::shared_ptr<ICharacter>(new Enemy(Point(i + 1, j + 1),
                             levelMap[i][j], enemy->GetHp(), enemy->GetDamage(), enemy->GetMaxHp())));
                 }
                 break;
             }
         }
+    }
+
+    for (int i = 0; i < enemiesContainer.size(); i++)
+    {
+        enemies.emplace(enemiesContainer[i]->GetPos(), enemiesContainer[i]);
     }
 }
 

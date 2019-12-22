@@ -57,7 +57,7 @@ void GameSystem::Start()
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 
-        /*{ // move of enemies
+        { // move of enemies
             for (auto enemy = level.enemies.begin(); enemy != level.enemies.end(); enemy++)
             {
                 if ((*enemy)->GetHp() > 0)
@@ -67,11 +67,11 @@ void GameSystem::Start()
                     Point direction = (*enemy)->getDirection(move, isShoot);
                     if (isShoot)
                     {
-                        bool needCollide = shoot(direction, *(*enemy));
+                        /*bool needCollide = shoot(direction, *(*enemy));
                         if (needCollide)
                         {
                             makeMove({ 0, 0 }, *level.bullets.rbegin());
-                        }
+                        }*/
                     }
                     else
                         makeMove({ direction.x, direction.y }, *(*enemy));
@@ -84,7 +84,7 @@ void GameSystem::Start()
                 else
                     i++;
             }
-        }*/
+        }
 
         { //move of arrows
             for (int i = 0; i < level.bullets.size(); i++)
