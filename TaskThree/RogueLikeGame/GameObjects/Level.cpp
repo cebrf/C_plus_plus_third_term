@@ -81,14 +81,44 @@ void Level::PrintLevel()
         wmove(&*levelWin, i + 1, 1);
         for (int j = 0; j < levelMap[i].size(); j++)
         {
-            if (levelMap[i][j] == '+')
+            if (std::abs(player->GetPos().x - i - 1) <= 4 && std::abs(player->GetPos().y - j - 1) <= 8)
             {
-                wattron(&*levelWin, COLOR_PAIR(3));
-                waddch(&*levelWin, levelMap[i][j]);
-                wattroff(&*levelWin, COLOR_PAIR(3));
+                switch (levelMap[i][j])
+                {
+                case '+':
+                    wattron(&*levelWin, COLOR_PAIR(3));
+                    waddch(&*levelWin, levelMap[i][j]);
+                    wattroff(&*levelWin, COLOR_PAIR(3));
+                    break;
+                case '#':
+                    wattron(&*levelWin, COLOR_PAIR(5));
+                    waddch(&*levelWin, levelMap[i][j]);
+                    wattroff(&*levelWin, COLOR_PAIR(5));
+                    break;
+                case '@':
+                    wattron(&*levelWin, COLOR_PAIR(1));
+                    waddch(&*levelWin, levelMap[i][j]);
+                    wattroff(&*levelWin, COLOR_PAIR(1));
+                    break;
+                case '<':
+                case '>':
+                case 'v':
+                case '^':
+                    waddch(&*levelWin, levelMap[i][j]);
+                    break;
+                default:
+                    wattron(&*levelWin, COLOR_PAIR(2));
+                    waddch(&*levelWin, levelMap[i][j]);
+                    wattroff(&*levelWin, COLOR_PAIR(2));
+                    break;
+                }
             }
             else
-                waddch(&*levelWin, levelMap[i][j]);
+            {
+                wattron(&*levelWin, COLOR_PAIR(4));
+                waddch(&*levelWin, '?');
+                wattroff(&*levelWin, COLOR_PAIR(4));
+            }
         }
     }
     wrefresh(&*levelWin);
@@ -104,6 +134,8 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
     init_pair(2, COLOR_RED, COLOR_BLACK);
     init_pair(3, COLOR_CYAN, COLOR_BLACK);
+    init_pair(4, COLOR_BLACK, COLOR_WHITE);
+    init_pair(5, COLOR_YELLOW, COLOR_BLACK);
 
     int height = heightOfMap + 2,
         width = widthOfMap + 2,
@@ -136,7 +168,7 @@ void Level::PrintPLayerStatus()
 void Level::SetObj(Point pos, char obj)
 {
     levelMap[pos.x - 1][pos.y - 1] = obj;
-    mvwaddch(&*levelWin, pos.x, pos.y, obj);
+    //mvwaddch(&*levelWin, pos.x, pos.y, obj);
 }
 
 std::shared_ptr<IGameObject> Level::GetObj(Point pos)

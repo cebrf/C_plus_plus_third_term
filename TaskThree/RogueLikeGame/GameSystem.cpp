@@ -15,6 +15,8 @@ void GameSystem::Start()
 {
     while (true)
     {
+        level.PrintLevel();
+
         if (level.player->GetHp() <= 0)
         {
             GameOver = 1;
