@@ -38,7 +38,8 @@ public:
     int GetHeight();
 
     std::vector<std::string> levelMap;
-    WINDOW* levelWin;
+    std::shared_ptr<WINDOW> levelWin;
+    std::shared_ptr<WINDOW> playerStatus;
     
     std::shared_ptr<Player> player;
 
@@ -53,6 +54,5 @@ public:
     std::vector<std::shared_ptr<Bullet>> bulletsContainer;
 
 private:
-    WINDOW* playerStatus;
 };
 

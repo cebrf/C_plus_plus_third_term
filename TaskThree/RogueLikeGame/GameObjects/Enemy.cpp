@@ -5,7 +5,7 @@ Enemy::Enemy(Point pos, char sym, int hp, int damage, int maxHp) :
 
 Enemy::~Enemy() = default;
 
-char Enemy::GetAction(WINDOW*& win)
+char Enemy::GetAction(WINDOW& win)
 {
     std::vector<char> v = { 'w', 'a', 's', 'd' };
     return v[rand() % v.size()];
@@ -61,7 +61,7 @@ void Enemy::collideWith(FirstAidKit& firstAidKit, Level& level)
 
 void Enemy::Update(Level& level)
 {
-    char action = this->GetAction(level.levelWin); 
+    char action = this->GetAction(*level.levelWin); 
     bool isShoot = 0;
     Point direction = this->getDirection(action, isShoot);
     if (direction.x != 0 || direction.y != 0)

@@ -78,13 +78,13 @@ void Level::PrintLevel()
 {
     for (int i = 0; i < levelMap.size(); i++)
     {
-        wmove(levelWin, i + 1, 1);
+        wmove(&*levelWin, i + 1, 1);
         for (int j = 0; j < levelMap[i].size(); j++)
         {
-            waddch(levelWin, levelMap[i][j]);
+            waddch(&*levelWin, levelMap[i][j]);
         }
     }
-    wrefresh(levelWin);
+    wrefresh(&*levelWin);
 }
 
 void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
@@ -97,34 +97,34 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
         width = widthOfMap + 2,
         startX = 10,
         startY = 10;
-    levelWin = newwin(height, width, startX, startY);
+    levelWin = std::shared_ptr<WINDOW>(newwin(height, width, startX, startY));
 
-    nodelay(levelWin, true);
+    nodelay(&*levelWin, true);
     //noqiflush(); //raw();  //cbreak();
 
-    box(levelWin, 0, 0);
-    wmove(levelWin, 1, 1);
-    wrefresh(levelWin);
+    box(&*levelWin, 0, 0);
+    wmove(&*levelWin, 1, 1);
+    wrefresh(&*levelWin);
 }
 
 void Level::CreateWPlayerStatus()
 {
-    playerStatus = newwin(20, 20, 10, 130);
-    nodelay(playerStatus, true);
-    box(playerStatus, 0, 0);
-    wrefresh(playerStatus);
+    playerStatus = std::shared_ptr<WINDOW>(newwin(20, 20, 10, 130));
+    nodelay(&*playerStatus, true);
+    box(&*playerStatus, 0, 0);
+    wrefresh(&*playerStatus);
 }
 
 void Level::PrintPLayerStatus()
 {
-    mvwprintw(playerStatus, 2, 5, "%s%d", "Hp:  ", player->GetHp());
-    wrefresh(playerStatus);
+    mvwprintw(&*playerStatus, 2, 5, "%s%d", "Hp:  ", player->GetHp());
+    wrefresh(&*playerStatus);
 }
 
 void Level::SetObj(Point pos, char obj)
 {
     levelMap[pos.x - 1][pos.y - 1] = obj;
-    mvwaddch(levelWin, pos.x, pos.y, obj);
+    mvwaddch(&*levelWin, pos.x, pos.y, obj);
 }
 
 std::shared_ptr<IGameObject> Level::GetObj(Point pos)

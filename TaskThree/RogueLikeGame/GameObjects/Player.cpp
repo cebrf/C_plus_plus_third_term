@@ -9,9 +9,9 @@ Player::Player(Point pos, char sym, int hp, int damage, int maxHp, int shootingD
 Player::~Player() = default;
 
 
-char Player::GetAction(WINDOW*& win)
+char Player::GetAction(WINDOW& win)
 {
-    return wgetch(win);
+    return wgetch(&win);
     //flushinp(); // does it work?
 }
 
@@ -63,7 +63,7 @@ void Player::collideWith(FirstAidKit& firstAidKit, Level& level)
 
 void Player::Update(Level& level)
 {
-    char action = this->GetAction(level.levelWin);
+    char action = this->GetAction(*level.levelWin);
     bool isShoot = 0;
     Point direction = this->getDirection(action, isShoot);
 

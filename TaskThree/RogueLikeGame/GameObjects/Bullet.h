@@ -19,7 +19,7 @@ public:
     Point GetDirection();
     int GetDamage();
 
-    char GetAction(WINDOW*& win) override;
+    char GetAction(WINDOW& win) override;
 
     void Collide(IGameObject&, Level& level) override;
     void collideWith(Player&, Level& level) override;

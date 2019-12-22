@@ -51,7 +51,7 @@ void GameSystem::Start()
 void GameSystem::death()
 {
     level.PrintPLayerStatus();
-    wclear(level.levelWin);
-    mvwprintw(level.levelWin, 10, 10, "YOU ARE DEAD!");
-    wrefresh(level.levelWin);
+    wclear(&*level.levelWin);
+    mvwprintw(&*level.levelWin, 10, 10, "YOU ARE DEAD!");
+    wrefresh(&*level.levelWin);
 }

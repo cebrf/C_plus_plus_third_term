@@ -31,7 +31,7 @@ int Bullet::GetDamage()
     return damage;
 }
 
-char Bullet::GetAction(WINDOW*& win)
+char Bullet::GetAction(WINDOW& win)
 {
     if (direction.x == 1)
         return 's';

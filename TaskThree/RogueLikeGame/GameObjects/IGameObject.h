@@ -34,7 +34,7 @@ public:
     void SetPos(Point p);
     void SetSym(char sym);
 
-    virtual char GetAction(WINDOW*& win) = 0;
+    virtual char GetAction(WINDOW& win) = 0;
 
     virtual void Collide(IGameObject&, Level& level) = 0;
     virtual void collideWith(Player&, Level& level) = 0;

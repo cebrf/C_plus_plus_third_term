@@ -17,7 +17,7 @@ public:
     void SetHealingForce(int healingForce);
     int GetHealingForce();
 
-    char GetAction(WINDOW*& win) override;
+    char GetAction(WINDOW& win) override;
 
     void Collide(IGameObject&, Level&) override;
     void collideWith(Player&, Level&) override;

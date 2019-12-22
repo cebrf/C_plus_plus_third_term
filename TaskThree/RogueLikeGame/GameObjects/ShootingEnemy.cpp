@@ -6,7 +6,7 @@ ShootingEnemy::ShootingEnemy(Point pos, char sym, int hp, int damage, int maxHp,
 ShootingEnemy::~ShootingEnemy() = default;
 
 
-char ShootingEnemy::GetAction(WINDOW * &win)
+char ShootingEnemy::GetAction(WINDOW&win)
 {
     std::vector<char> v = { 'w', 'a', 's', 'd', 'i', 'j', 'k', 'l', 'w', 'a', 's', 'd', 'w', 'a', 's', 'd', 'w', 'a', 's', 'd' };
     return v[rand() % v.size()];
@@ -62,7 +62,7 @@ void ShootingEnemy::collideWith(FirstAidKit& firstAidKit, Level& level)
 
 void ShootingEnemy::Update(Level& level)
 {
-    char action = this->GetAction(level.levelWin);
+    char action = this->GetAction(*level.levelWin);
     bool isShoot = 0;
     Point direction = this->getDirection(action, isShoot);
     if (direction.x != 0 || direction.y != 0)

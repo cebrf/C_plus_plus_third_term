@@ -5,7 +5,7 @@ FirstAidKit::FirstAidKit(Point pos, char sym, int healingForce) :
 
 FirstAidKit::~FirstAidKit() = default;
 
-char FirstAidKit::GetAction(WINDOW*& win)
+char FirstAidKit::GetAction(WINDOW& win)
 {
     return ' ';
 }

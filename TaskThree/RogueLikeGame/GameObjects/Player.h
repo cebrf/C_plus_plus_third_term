@@ -16,7 +16,7 @@ public:
     Player(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage);
     ~Player();
 
-    char GetAction(WINDOW*& win) override;
+    char GetAction(WINDOW& win) override;
 
     void Collide(IGameObject&, Level&) override;
     void collideWith(Player&, Level&) override;
