@@ -47,7 +47,7 @@ void Level::FindGameObjects()
                 player->SetPos(Point(i + 1, j + 1));
                 break;
             case '+':
-                firstAidKitsContainer.push_back(std::shared_ptr<FirstAidKit>(new FirstAidKit(Point(i + 1, j + 1), '+', 5)));
+                firstAidKits.emplace(Point(i + 1, j + 1), std::shared_ptr<FirstAidKit>(new FirstAidKit(Point(i + 1, j + 1), '+', 5)));
             default:
                 if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
                 {
@@ -68,10 +68,10 @@ void Level::FindGameObjects()
     {
         enemies.emplace(enemiesContainer[i]->GetPos(), enemiesContainer[i]);
     }
-    for (int i = 0; i < firstAidKitsContainer.size(); i++)
+    /*for (int i = 0; i < firstAidKitsContainer.size(); i++)
     {
         firstAidKits.emplace(firstAidKitsContainer[i]->GetPos(), firstAidKitsContainer[i]);
-    }
+    }*/
 }
 
 void Level::PrintLevel()

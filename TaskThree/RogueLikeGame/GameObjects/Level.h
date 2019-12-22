@@ -47,7 +47,7 @@ public:
     std::vector<std::shared_ptr<ICharacter>> enemiesContainer;
 
     std::map<Point, std::shared_ptr<FirstAidKit>> firstAidKits;
-    std::vector<std::shared_ptr<FirstAidKit>> firstAidKitsContainer;
+    //std::vector<std::shared_ptr<FirstAidKit>> firstAidKitsContainer;
 
     std::map<Point, std::shared_ptr<Bullet>> bullets;
     std::vector<std::shared_ptr<Bullet>> bulletsContainer;
