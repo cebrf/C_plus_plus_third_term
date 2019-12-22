@@ -16,7 +16,10 @@ void GameSystem::Start()
     while (true)
     {
         if (level.player->GetHp() <= 0)
-            return; //death();
+        {
+            GameOver = 1;
+            return;
+        }
 
         for (int e = 0; e < 5; e++)
         {
@@ -24,6 +27,8 @@ void GameSystem::Start()
             level.player->Update(level);
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
+
+        if (level.needExit) { return; }
 
         {
             for (auto enemy = level.enemiesContainer.begin(); enemy != level.enemiesContainer.end(); enemy++)

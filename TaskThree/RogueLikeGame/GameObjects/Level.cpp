@@ -165,3 +165,50 @@ int Level::GetHeight()
 {
     return levelMap.size();
 }
+
+void Level::EscMenu()
+{
+    std::shared_ptr<WINDOW> menuWin = std::shared_ptr<WINDOW>(newwin(20, 100, 50, 50));
+    box(&*menuWin, 0, 0);
+    refresh();
+    wrefresh(&*menuWin);
+
+    keypad(&*menuWin, true);
+    std::vector<std::string> choices = { "Continue", "Save", "Load", "Exit" };
+    int choice;
+    int highlight = 0;
+
+    while (1)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (i == highlight)
+                wattron(&*menuWin, A_REVERSE);
+            mvwprintw(&*menuWin, i * 2 + 5, 15, choices[i].c_str());
+            wattroff(&*menuWin, A_REVERSE);
+        }
+        choice = wgetch(&*menuWin);
+        switch (choice)
+        {
+        case KEY_UP:
+            highlight = std::max(0, highlight - 1);
+            break;
+        case KEY_DOWN:
+            highlight = std::min(3, highlight + 1);
+            break;
+        }
+        if (choice == 10)
+            break;
+    }
+    if (highlight == 0)
+    {
+        wclear(&*menuWin);
+        wrefresh(&*menuWin);
+        return;
+    }
+    if (highlight == 3)
+    {
+        needExit = 1;
+        return;
+    }
+}

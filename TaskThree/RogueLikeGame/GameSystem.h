@@ -20,6 +20,7 @@ class GameSystem
 public:
     GameSystem(const std::string&, const std::string&);
     void Start();
+    bool GameOver = 0;
 
 protected:
     void death();

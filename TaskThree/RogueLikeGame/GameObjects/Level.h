@@ -53,6 +53,9 @@ public:
     std::map<Point, std::shared_ptr<Bullet>> bullets;
     std::vector<std::shared_ptr<Bullet>> bulletsContainer;
 
+    void EscMenu();
+    bool needExit = 0;
+
 private:
 };
 

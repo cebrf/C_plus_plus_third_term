@@ -64,6 +64,9 @@ void Player::collideWith(FirstAidKit& firstAidKit, Level& level)
 void Player::Update(Level& level)
 {
     char action = this->GetAction(*level.levelWin);
+    if (action == 27)
+        level.EscMenu();
+
     bool isShoot = 0;
     Point direction = this->getDirection(action, isShoot);
 

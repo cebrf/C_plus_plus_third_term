@@ -18,8 +18,16 @@ void play()
         wrefresh(&*menuWin);
 
         keypad(&*menuWin, true);
-        mvwprintw(&*menuWin, 5, 15, "Game over");
-        vector<string> choices = { "Play again", "Exit" };
+        vector<string> choices;
+        if (game.GameOver)
+        {
+            mvwprintw(&*menuWin, 5, 15, "Game over");
+            choices = { "Play again", "Exit" };
+        }
+        else
+        {
+            choices = { "Play", "Exit" };
+        }
         int choice;
         int highlight = 0;
 
@@ -66,7 +74,6 @@ int main()
     int width, height;  // 80, 200
     getmaxyx(stdscr, height, width);
     std::shared_ptr<WINDOW> menuWin = std::shared_ptr<WINDOW>(newwin(40, 100, height - 60, width - 150));
-    //std::shared_ptr<WINDOW> menuWin = std::shared_ptr<WINDOW>(newwin(40, 80, 10, 35));
     box(&*menuWin, 0, 0);
     refresh();
     wrefresh(&*menuWin);
@@ -81,7 +88,7 @@ int main()
         for (int i = 0; i < 3; i++)
         {
             if (i == highlight)
-                wattron(&*menuWin, A_REVERSE);   // Attribute - reverse colour
+                wattron(&*menuWin, A_REVERSE);
             mvwprintw(&*menuWin, i * 2 + 10, 15, choices[i].c_str());
             wattroff(&*menuWin, A_REVERSE);
         }
