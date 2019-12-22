@@ -86,5 +86,11 @@ void Enemy::Update(Level& level)
 
         std::shared_ptr<IGameObject> obj = level.GetObj(newPos);
         obj->Collide(*this, level);
+
+        if (this->GetHp() <= 0)
+        {
+            level.SetObj(this->GetPos(), ' ');
+            level.enemies.erase(this->GetPos());
+        }
     }
 }
