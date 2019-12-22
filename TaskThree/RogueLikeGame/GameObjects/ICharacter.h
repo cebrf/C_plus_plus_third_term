@@ -10,8 +10,8 @@ class ICharacter :
 public:
     int GetHp();
     int GetMaxHp();
-    int GetDamage();            //на чем остановился? Нужно передать лямбду в ф-цию level, которая создает врагов и персонажа. И передавать им там
-                                                                                    // лямбду
+    int GetDamage();
+
     void SetHp(int hp);
     void SetMaxHp(int maxHp);
     void SetDamage(int damage);

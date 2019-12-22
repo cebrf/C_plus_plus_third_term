@@ -22,14 +22,11 @@ public:
     void Start();
 
 protected:
-    bool makeMove(const std::pair<int, int> direction, IGameObject& character); // move !?somewhere?!
     void death();  //TODO move to PLayer
 
 private:
     std::function<bool(Point, ICharacter&)> shoot;
-
+    std::function<bool(const std::pair<int, int>, IGameObject&)> makeMove;
 
     Level level;
-    WINDOW* levelWin;
-    WINDOW* playerStatus;
 };

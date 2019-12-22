@@ -9,54 +9,92 @@ Player::Player(Point pos, char sym, int hp, int damage, int maxHp, int shootingD
 Player::~Player() = default;
 
 
-char Player::GetMove(WINDOW*& win)
+char Player::GetAction(WINDOW*& win)
 {
     return wgetch(win);
     //flushinp(); // does it work?
 }
 
-bool Player::Collide(IGameObject& other)
+void Player::Collide(IGameObject& other, Level& level)
 {
-    return other.collideWith(*this);
+    other.collideWith(*this, level);
 }
 
-bool Player::collideWith(Enemy& enemy)
+void Player::collideWith(Enemy& enemy, Level& level)
 {
     enemy.SetHp(std::max(0, enemy.GetHp() - this->GetDamage()));
-    if (enemy.GetHp() == 0)
-        return 1;
-    else
-        return 0;
+    if (enemy.GetHp() <= 0)
+    {
+        level.SetObj(enemy.GetPos(), ' ');
+        level.enemies.erase(enemy.GetPos());
+    }
 }
 
-bool Player::collideWith(Player& player)
+void Player::collideWith(Player& player, Level& level)
 {
     // no multiplayer
-    return 0;
 }
 
-bool Player::collideWith(Bullet& bullet)
+void Player::collideWith(Bullet& bullet, Level& level)
 {
-    bullet.SetSym(' ');
     this->SetHp(std::max(0, this->GetHp() - bullet.GetDamage()));
-    if (this->GetHp() == 0)
-        return 1;
-    else
-        return 0;
+
+    level.SetObj(bullet.GetPos(), ' ');
+    level.bullets.erase(bullet.GetPos());
 }
 
-bool Player::collideWith(ShootingEnemy& shootingEnemy)
+void Player::collideWith(ShootingEnemy& shootingEnemy, Level& level)
 {
     shootingEnemy.SetHp(std::max(0, shootingEnemy.GetHp() - this->GetDamage()));
-    if (shootingEnemy.GetHp() == 0)
-        return 1;
-    else
-        return 0;
+    if (shootingEnemy.GetHp() <= 0)
+    {
+        level.SetObj(shootingEnemy.GetPos(), ' ');
+        level.enemies.erase(shootingEnemy.GetPos());
+    }
 }
 
-bool Player::collideWith(FirstAidKit& firstAidKit)
+void Player::collideWith(FirstAidKit& firstAidKit, Level& level)
 {
-    firstAidKit.SetSym(' ');
     this->SetHp(std::min(this->GetMaxHp(), this->GetHp() + firstAidKit.GetHealingForce()));
-    return 0;
+
+    level.SetObj(firstAidKit.GetPos(), ' ');
+    level.firstAidKits.erase(firstAidKit.GetPos());
+}
+
+void Player::Update(Level& level)
+{
+    char action = this->GetAction(level.levelWin);
+    bool isShoot = 0;
+    Point direction = level.player->getDirection(action, isShoot);
+    if (direction.x != 0 || direction.y != 0)
+    {
+        if (isShoot)
+        {
+            bool needCollide = level.player->shoot(direction, *level.player);
+            if (needCollide)
+            {
+                //makeMove({ 0, 0 }, **level.bulletsContainer.rbegin());
+            }
+        }
+        else
+        {
+            Point newPos(this->GetPos().x + direction.x, this->GetPos().y + direction.y);
+
+            if (newPos.x <= 0 || newPos.y <= 0 || newPos.x - 1 >= level.GetHeight())
+                return;
+            if (newPos.y >= level.GetWidth() || level.GetSym(newPos) == '#')
+                return;
+
+            if (level.GetSym(newPos) == ' ' && level.GetSym(newPos) == ' ')
+            {
+                level.SetObj(this->GetPos(), ' ');
+                this->SetPos(newPos);
+                level.SetObj(this->GetPos(), this->GetSym());
+                return;
+            }
+
+            std::shared_ptr<IGameObject> obj = level.GetObj(newPos);
+            obj->Collide(*this, level);
+        }
+    }
 }

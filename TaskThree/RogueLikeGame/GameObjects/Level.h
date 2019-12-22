@@ -25,18 +25,20 @@ public:
 
     void FindGameObjects();
 
-    void PrintLevel(WINDOW *& win);
-    void CreateWindow(WINDOW*& win, size_t widthOfMap, size_t heightOfMap);
-    void CreateWPlayerStatus(WINDOW*& win);
-    void PrintPLayerStatus(WINDOW*& win);
+    void PrintLevel();
+    void CreateWindow(size_t widthOfMap, size_t heightOfMap);
+    void CreateWPlayerStatus();
+    void PrintPLayerStatus();
 
-    void SetObj(WINDOW*& win, Point pos, char obj);
+    void SetObj(Point pos, char obj);
     std::shared_ptr<IGameObject> GetObj(Point pos);
     char GetSym(Point pos);
     
     int GetWidth();
     int GetHeight();
 
+    std::vector<std::string> levelMap;
+    WINDOW* levelWin;
     
     std::shared_ptr<Player> player;
 
@@ -51,6 +53,6 @@ public:
     std::vector<std::shared_ptr<Bullet>> bulletsContainer;
 
 private:
-    std::vector<std::string> levelMap;
+    WINDOW* playerStatus;
 };
 

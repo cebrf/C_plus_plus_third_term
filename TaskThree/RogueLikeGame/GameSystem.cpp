@@ -5,10 +5,10 @@ GameSystem::GameSystem(const std::string& levelFileName, const std::string& Enem
 {
     level.GetCharactersTypes(EnemiesFileName);
     level.FindGameObjects();
-    level.CreateWindow(levelWin, level.GetWidth(), level.GetHeight());
-    level.PrintLevel(levelWin);
-    level.CreateWPlayerStatus(playerStatus);
-    level.PrintPLayerStatus(playerStatus);
+    level.CreateWindow(level.GetWidth(), level.GetHeight());
+    level.PrintLevel();
+    level.CreateWPlayerStatus();
+    level.PrintPLayerStatus();
 }
 
 void GameSystem::Start()
@@ -24,45 +24,130 @@ void GameSystem::Start()
         level.bulletsContainer.push_back(std::shared_ptr<Bullet>(new Bullet(pos, Point(direction.x, direction.y), character.GetShootingDamage())));
         if (level.GetSym(pos) == ' ')
         {
-            level.SetObj(levelWin, (*level.bulletsContainer.rbegin())->GetPos(), (*level.bulletsContainer.rbegin())->GetSym());
+            level.SetObj((*level.bulletsContainer.rbegin())->GetPos(), (*level.bulletsContainer.rbegin())->GetSym());
             return 0;
         }
         return 1; // need collide
     };
     level.player->shoot = this->shoot;
 
+    makeMove = [&](const std::pair<int, int> direction, IGameObject& character)
+    {
+        /*Point newPos(character.GetPos().x + direction.first, character.GetPos().y + direction.second);
+
+        if (newPos.x <= 0 || newPos.y <= 0 || newPos.x - 1 >= level.GetHeight())
+            return 1;
+        if (newPos.y >= level.GetWidth() || level.GetSym(newPos) == '#')
+            return 1;
+
+        if (level.GetSym(newPos) == ' ' && level.GetSym(newPos) == ' ')
+        {
+            level.SetObj(levelWin, character.GetPos(), ' ');
+            character.SetPos(newPos);
+            level.SetObj(levelWin, character.GetPos(), character.GetSym());
+            return 0;
+        }
+
+        std::shared_ptr<IGameObject> obj = level.GetObj(newPos);
+        character.Collide(*obj);
 
 
+        if (level.GetSym(newPos) == '+')
+        {
+            ///
+            int  i = 0;
+            for (; i < level.firstAidKits.size(); i++)
+            {
+                if (level.firstAidKitsContainer[i]->GetPos().x == newPos.x && level.firstAidKitsContainer[i]->GetPos().y == newPos.y)
+                    break;
+            }
+            ///
+
+            if (level.firstAidKits.size() > i)
+            {
+                character.Collide(*level.firstAidKitsContainer[i]);
+
+                level.SetObj(levelWin, character.GetPos(), ' ');
+                character.SetPos(newPos);
+                level.SetObj(levelWin, character.GetPos(), character.GetSym());
+            }
+            return 0;
+        }
+
+        if (level.GetSym(newPos) == 'v' || level.GetSym(newPos) == '^' || level.GetSym(newPos) == '>' || level.GetSym(newPos) == '<')
+        {
+            ///
+            int i = 0;
+            for (; i < level.bullets.size(); i++)
+            {
+                if (level.bulletsContainer[i]->GetPos().x == newPos.x && level.bulletsContainer[i]->GetPos().y == newPos.y)
+                    break;
+            }
+            ///
+
+            level.SetObj(levelWin, level.bulletsContainer[i]->GetPos(), ' ');
+            bool killed = level.bulletsContainer[i]->Collide(character);
+            if (killed)
+            {
+                level.SetObj(levelWin, character.GetPos(), ' ');
+            }
+            return 0;
+        }
+
+        if (level.GetSym(newPos) == level.player->GetSym())
+        {
+            bool killed = level.player->Collide(character);
+            if (killed)
+            {
+                death(); // TODO show menu
+            }
+            return 0;
+        }
+
+
+        {
+            int i = 0;
+            for (; i < level.enemiesContainer.size(); i++)
+                if (level.enemiesContainer[i]->GetPos().x == newPos.x && level.enemiesContainer[i]->GetPos().y == newPos.y)
+                    break;
+
+
+            if (i == level.enemiesContainer.size())
+            {
+                int aa = 20;
+            }
+            bool killed = level.bulletsContainer[i]->Collide(character);
+            if (killed)
+                level.SetObj(levelWin, newPos, ' ');
+            return 0;
+        }*/
+        return 0;
+    };
+    level.player->makeMove = this->makeMove;
+
+    ///////////////////////////////////////////////////
     while (true)
     {
         for (int e = 0; e < 5; e++)
         { // move of player
-            
-            char move = level.player->GetMove(levelWin);
-            bool isShoot = 0;
-            Point direction = level.player->getDirection(move, isShoot);
-
-            if (direction.x != 0 || direction.y != 0)
-                if (isShoot)
-                {
-                    bool needCollide = level.player->shoot(direction, *level.player);
-                    if (needCollide)
-                    {
-                        makeMove({ 0, 0 }, **level.bulletsContainer.rbegin());
-                    }
-                }
-                else
-                    makeMove({ direction.x, direction.y }, *level.player);
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            level.PrintPLayerStatus();
+            if (level.player->GetHp() <= 0)
+            {
+                death();
+            }
+            else
+            {
+                level.player->Update(level);
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
         }
 
         /*{ // move of enemies
-            for (auto enemy = level.enemies.begin(); enemy != level.enemies.end(); enemy++)
+            for (auto enemy = level.enemiesContainer.begin(); enemy != level.enemiesContainer.end(); enemy++)
             {
                 if ((*enemy)->GetHp() > 0)
                 {
-                    char move = (*enemy)->GetMove(levelWin);
+                    char move = (*enemy)->GetAction(levelWin);
                     bool isShoot = 0;
                     Point direction = (*enemy)->getDirection(move, isShoot);
                     if (isShoot)
@@ -70,7 +155,7 @@ void GameSystem::Start()
                         bool needCollide = shoot(direction, *(*enemy));
                         if (needCollide)
                         {
-                            makeMove({ 0, 0 }, *level.bullets.rbegin());
+                            makeMove({ 0, 0 }, **level.bulletsContainer.rbegin());
                         }
                     }
                     else
@@ -79,7 +164,7 @@ void GameSystem::Start()
             }
             for (int i = 0; i < level.enemies.size();)
             {
-                if (level.enemies[i]->GetHp() <= 0)
+                if (level.enemiesContainer[i]->GetHp() <= 0)
                     level.enemies.erase(next(level.enemies.begin(), i));
                 else
                     i++;
@@ -87,7 +172,7 @@ void GameSystem::Start()
         }*/
 
         /*{ //move of arrows
-            for (int i = 0; i < level.bullets.size(); i++)
+            for (int i = 0; i < level.bulletsContainer.size(); i++)
             {
                 if (level.bulletsContainer[i]->GetSym() != ' ')
                 {
@@ -109,96 +194,10 @@ void GameSystem::Start()
     }
 }
 
-bool GameSystem::makeMove(const std::pair<int, int> direction, IGameObject& character)
-{
-    level.PrintPLayerStatus(playerStatus);
-
-    Point newPos(character.GetPos().x + direction.first, character.GetPos().y + direction.second);
-    if (newPos.x <= 0 || newPos.y <= 0 || newPos.x - 1 >= level.GetHeight() ||
-        newPos.y >= level.GetWidth() || level.GetSym(newPos) == '#')
-        return 1;
-
-    if (level.GetSym(newPos) == ' ' && level.GetSym(newPos) == ' ')
-    {
-        level.SetObj(levelWin, character.GetPos(), ' ');
-        character.SetPos(newPos);
-        level.SetObj(levelWin, character.GetPos(), character.GetSym());
-        return 0;
-    }
-
-    if (level.GetSym(newPos) == '+')
-    {
-        int  i = 0;
-        for (; i < level.firstAidKits.size(); i++)
-        {
-            if (level.firstAidKitsContainer[i]->GetPos().x == newPos.x && level.firstAidKitsContainer[i]->GetPos().y == newPos.y)
-                break;
-        }
-        if (level.firstAidKits.size() > i)
-        {
-            character.Collide(*level.firstAidKitsContainer[i]);
-
-            level.SetObj(levelWin, character.GetPos(), ' ');
-            character.SetPos(newPos);
-            level.SetObj(levelWin, character.GetPos(), character.GetSym());
-        }
-        return 0;
-    }
-
-    if (level.GetSym(newPos) == 'v' || level.GetSym(newPos) == '^' || level.GetSym(newPos) == '>' || level.GetSym(newPos) == '<')
-    {
-        int i = 0;
-        for (; i < level.bullets.size(); i++)
-        {
-            if (level.bulletsContainer[i]->GetPos().x == newPos.x && level.bulletsContainer[i]->GetPos().y == newPos.y)
-                break;
-        }
-
-        level.SetObj(levelWin, level.bulletsContainer[i]->GetPos(), ' ');
-        bool killed = level.bulletsContainer[i]->Collide(character);
-        if (killed)
-        {
-            level.SetObj(levelWin, character.GetPos(), ' ');
-            if (character.GetSym() == '@')
-                death(); // TODO show menu
-        }
-        level.PrintPLayerStatus(playerStatus);
-        return 0;
-    }
-
-    if (level.GetSym(newPos) == level.player->GetSym())
-    {
-        bool killed = level.player->Collide(character);
-        if (killed)
-        {
-            death(); // TODO show menu
-        }
-        return 0;
-    }
-    
-    
-    {
-        int i = 0;
-        for (; i < level.enemiesContainer.size(); i++)
-            if (level.enemiesContainer[i]->GetPos().x == newPos.x && level.enemiesContainer[i]->GetPos().y == newPos.y)
-                break;
-        
-
-        if (i == level.enemiesContainer.size())
-        {
-            int aa = 20;
-        }
-        bool killed = level.bulletsContainer[i]->Collide(character);
-        if (killed)
-            level.SetObj(levelWin, newPos, ' ');
-        return 0;
-    }
-}
-
 void GameSystem::death()
 {
-    level.PrintPLayerStatus(playerStatus);
-    wclear(levelWin);
-    mvwprintw(levelWin, 10, 10, "YOU ARE DEAD!");
-    wrefresh(levelWin);
+    level.PrintPLayerStatus();
+    wclear(level.levelWin);
+    mvwprintw(level.levelWin, 10, 10, "YOU ARE DEAD!");
+    wrefresh(level.levelWin);
 }

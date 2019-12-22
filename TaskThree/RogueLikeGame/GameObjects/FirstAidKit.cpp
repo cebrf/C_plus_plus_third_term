@@ -5,7 +5,7 @@ FirstAidKit::FirstAidKit(Point pos, char sym, int healingForce) :
 
 FirstAidKit::~FirstAidKit() = default;
 
-char FirstAidKit::GetMove(WINDOW*& win)
+char FirstAidKit::GetAction(WINDOW*& win)
 {
     return ' ';
 }
@@ -20,34 +20,35 @@ int FirstAidKit::GetHealingForce()
     return healingForce;
 }
 
-bool FirstAidKit::Collide(IGameObject& other)
+void FirstAidKit::Collide(IGameObject& other, Level& level)
 {
-    return other.collideWith(*this);
+    other.collideWith(*this, level);
 }
 
-bool FirstAidKit::collideWith(Player& player)
+void FirstAidKit::collideWith(Player& player, Level& level)
 {
     this->SetSym(' ');
     player.SetHp(std::min(player.GetMaxHp(), player.GetHp() + this->GetHealingForce()));
-    return 0;
 }
 
-bool FirstAidKit::collideWith(Enemy& enemy)
+void FirstAidKit::collideWith(Enemy& enemy, Level& level)
 {
-    return 0;
+    return;
 }
 
-bool FirstAidKit::collideWith(Bullet& bullet)
+void FirstAidKit::collideWith(Bullet& bullet, Level& level)
 {
-    return 0;
+    return;
 }
 
-bool FirstAidKit::collideWith(ShootingEnemy& shootingEnemy)
+void FirstAidKit::collideWith(ShootingEnemy& shootingEnemy, Level& level)
 {
-    return 0;
+    return;
 }
 
-bool FirstAidKit::collideWith(FirstAidKit& firstAidKit)
+void FirstAidKit::collideWith(FirstAidKit& firstAidKit, Level& level)
 {
-    return 0;
+    return;
 }
+
+void FirstAidKit::Update(Level& level) { }

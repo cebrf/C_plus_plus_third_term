@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include <algorithm>
 #include "FirstAidKit.h"
+#include "Level.h"
 
 class Player :
     public IShootingCharacter
@@ -15,14 +16,17 @@ public:
     Player(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage);
     ~Player();
 
-    char GetMove(WINDOW*& win) override;
+    char GetAction(WINDOW*& win) override;
 
-    bool Collide(IGameObject&) override;
-    bool collideWith(Player&) override;
-    bool collideWith(Enemy&) override;
-    bool collideWith(Bullet&) override;
-    bool collideWith(ShootingEnemy&) override;
-    bool collideWith(FirstAidKit&) override;
+    void Collide(IGameObject&, Level&) override;
+    void collideWith(Player&, Level&) override;
+    void collideWith(Enemy&, Level&) override;
+    void collideWith(Bullet&, Level&) override;
+    void collideWith(ShootingEnemy&, Level&) override;
+    void collideWith(FirstAidKit&, Level&) override;
+
+    void Update(Level& level) override;
+
 protected:
 
 private:

@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "FirstAidKit.h"
 #include "ShootingEnemy.h"
+#include "Level.h"
 
 class Bullet :
     public IGameObject
@@ -18,14 +19,16 @@ public:
     Point GetDirection();
     int GetDamage();
 
-    char GetMove(WINDOW*& win) override;
+    char GetAction(WINDOW*& win) override;
 
-    bool Collide(IGameObject&) override;
-    bool collideWith(Player&) override;
-    bool collideWith(Enemy&) override;
-    bool collideWith(Bullet&) override;
-    bool collideWith(ShootingEnemy&) override;
-    bool collideWith(FirstAidKit&) override;
+    void Collide(IGameObject&, Level& level) override;
+    void collideWith(Player&, Level& level) override;
+    void collideWith(Enemy&, Level& level) override;
+    void collideWith(Bullet&, Level& level) override;
+    void collideWith(ShootingEnemy&, Level& level) override;
+    void collideWith(FirstAidKit&, Level& level) override;
+
+    void Update(Level& level) override;
 
 protected:
 

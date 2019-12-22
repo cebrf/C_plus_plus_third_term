@@ -1,11 +1,13 @@
 #pragma once
 #include "../pdcurses/curses.h"
+#include <functional>
 
 class Player;
 class Enemy;
 class Bullet;
 class ShootingEnemy;
 class FirstAidKit;
+class Level;
 
 struct Point
 {
@@ -32,16 +34,21 @@ public:
     void SetPos(Point p);
     void SetSym(char sym);
 
-    virtual char GetMove(WINDOW*& win) = 0;
+    virtual char GetAction(WINDOW*& win) = 0;
 
-    virtual bool Collide(IGameObject&) = 0;
-    virtual bool collideWith(Player&) = 0;
-    virtual bool collideWith(Enemy&) = 0;
-    virtual bool collideWith(Bullet&) = 0;
-    virtual bool collideWith(ShootingEnemy&) = 0;
-    virtual bool collideWith(FirstAidKit&) = 0;
+    virtual void Collide(IGameObject&, Level& level) = 0;
+    virtual void collideWith(Player&, Level& level) = 0;
+    virtual void collideWith(Enemy&, Level& level) = 0;
+    virtual void collideWith(Bullet&, Level& level) = 0;
+    virtual void collideWith(ShootingEnemy&, Level& level) = 0;
+    virtual void collideWith(FirstAidKit&, Level& level) = 0;
+
+    virtual void Update(Level& level) = 0;
 
     Point getDirection(char move, bool& isShoot);
+
+    std::function<bool(const std::pair<int, int>, IGameObject&)> makeMove
+        = [](const std::pair<int, int> direction, IGameObject& character) { return 0; };
 
 protected:
 
