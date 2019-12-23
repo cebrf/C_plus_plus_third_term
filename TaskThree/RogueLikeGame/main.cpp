@@ -23,7 +23,9 @@ void play()
         wclear(&*menuWin);
         box(&*menuWin, 0, 0);
         refresh();
-        mvwprintw(&*menuWin, 0, width / 2 - 28, "[Rogue Like Game v 1.0]");
+        mvwprintw(&*menuWin, 0, width / 4 - 8, " Noname RogueLike ");
+        mvwprintw(&*menuWin, height / 2 - 1, width / 2 - 16 - 2, " 2.16.30 Beta ");
+        mvwprintw(&*menuWin, height / 2 - 1, 4, " Copyright (c) 2019 ");
         wrefresh(&*menuWin);
         keypad(&*menuWin, true);
         vector<string> choices;

@@ -153,7 +153,7 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
     wmove(&*levelWin, 1, 1);
 
     getmaxyx(&*levelWin, height, width);
-    mvwprintw(&*levelWin, height - 1, 5, " WASD-Move  IJKL-Shoot ");
+    mvwprintw(&*levelWin, height - 1, 5, " WASD-Move  IJKL-Shoot ARROWS-Shoot ");
     mvwprintw(&*levelWin, height - 1, width - 28, " ESC to open Pause Menu ");
 
     wrefresh(&*levelWin);
