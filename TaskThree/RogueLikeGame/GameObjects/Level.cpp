@@ -200,13 +200,15 @@ int Level::GetHeight()
 
 void Level::EscMenu()
 {
-    std::shared_ptr<WINDOW> menuWin = std::shared_ptr<WINDOW>(newwin(20, 100, 50, 50));
-    box(&*menuWin, 0, 0);
-    refresh();
-    wrefresh(&*menuWin);
+    wclear(&*playerStatus);
+    box(&*playerStatus, 0, 0);
+    wrefresh(&*playerStatus);
 
-    keypad(&*menuWin, true);
-    std::vector<std::string> choices = { "Continue", "Save", "Load", "Exit" };
+    int height, width;
+    getmaxyx(&*playerStatus, height, width);
+    keypad(&*playerStatus, true);
+    mvwprintw(&*playerStatus, 3, width / 2 - 3, "Pause");
+    std::vector<std::string> choices = { "Resume", "Save", "Load", "Exit" };
     int choice;
     int highlight = 0;
 
@@ -215,11 +217,11 @@ void Level::EscMenu()
         for (int i = 0; i < 4; i++)
         {
             if (i == highlight)
-                wattron(&*menuWin, A_REVERSE);
-            mvwprintw(&*menuWin, i * 2 + 5, 15, choices[i].c_str());
-            wattroff(&*menuWin, A_REVERSE);
+                wattron(&*playerStatus, A_REVERSE);
+            mvwprintw(&*playerStatus, i * 2 + 8, width / 2 - choices[i].size() / 2, choices[i].c_str());
+            wattroff(&*playerStatus, A_REVERSE);
         }
-        choice = wgetch(&*menuWin);
+        choice = wgetch(&*playerStatus);
         switch (choice)
         {
         case KEY_UP:
@@ -234,8 +236,10 @@ void Level::EscMenu()
     }
     if (highlight == 0)
     {
-        wclear(&*menuWin);
-        wrefresh(&*menuWin);
+        wclear(&*playerStatus);
+        PrintPLayerStatus();
+        box(&*playerStatus, 0, 0);
+        wrefresh(&*playerStatus);
         return;
     }
     if (highlight == 3)

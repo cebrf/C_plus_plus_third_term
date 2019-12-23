@@ -12,7 +12,10 @@ void play()
         game.Start();
 
         clear();
-        std::shared_ptr<WINDOW> menuWin = std::shared_ptr<WINDOW>(newwin(40, 80, 10, 35));
+        int height, width;
+        getmaxyx(stdscr, height, width);
+        int startX = height / 4, startY = width / 6;
+        std::shared_ptr<WINDOW> menuWin = std::shared_ptr<WINDOW>(newwin(height / 2, width / 2, startX, startY));
         box(&*menuWin, 0, 0);
         refresh();
         wrefresh(&*menuWin);
@@ -21,7 +24,7 @@ void play()
         vector<string> choices;
         if (game.GameOver)
         {
-            mvwprintw(&*menuWin, 5, 15, "Game over");
+            mvwprintw(&*menuWin, 5, width / 4 - 4, "Game over");
             choices = { "Play again", "Exit" };
         }
         else
@@ -37,7 +40,7 @@ void play()
             {
                 if (i == highlight)
                     wattron(&*menuWin, A_REVERSE);
-                mvwprintw(&*menuWin, i * 2 + 12, 15, choices[i].c_str());
+                mvwprintw(&*menuWin, i * 2 + 10, width / 4 - choices[i].size() / 2, choices[i].c_str());
                 wattroff(&*menuWin, A_REVERSE);
             }
             choice = wgetch(&*menuWin);
@@ -71,9 +74,10 @@ int main()
     noecho();
     cbreak();
 
-    int width, height;  // 80, 200
+    int height, width;
     getmaxyx(stdscr, height, width);
-    std::shared_ptr<WINDOW> menuWin = std::shared_ptr<WINDOW>(newwin(40, 100, height - 60, width - 150));
+    int startX = height / 4, startY = width / 6;
+    std::shared_ptr<WINDOW> menuWin = std::shared_ptr<WINDOW>(newwin(height / 2, width * 2 / 3, startX, startY));
     box(&*menuWin, 0, 0);
     refresh();
     wrefresh(&*menuWin);
@@ -89,7 +93,7 @@ int main()
         {
             if (i == highlight)
                 wattron(&*menuWin, A_REVERSE);
-            mvwprintw(&*menuWin, i * 2 + 10, 15, choices[i].c_str());
+            mvwprintw(&*menuWin, i * 2 + 10, width / 3 - 2, choices[i].c_str());
             wattroff(&*menuWin, A_REVERSE);
         }
         choice = wgetch(&*menuWin);
