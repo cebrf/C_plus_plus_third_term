@@ -12,6 +12,7 @@ void Level::ReadMap(int levelNumber)
     std::string fileName = "level" + std::to_string(levelNumber) + ".txt";
     std::ifstream MapFile(fileName);
     std::string buf;
+    std::getline(MapFile, levelName);
     while (std::getline(MapFile, buf)) {
         levelMap.push_back(buf);
     }
@@ -153,6 +154,7 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
     wmove(&*levelWin, 1, 1);
 
     getmaxyx(&*levelWin, height, width);
+    mvwprintw(&*levelWin, 0, 5, levelName.c_str());
     mvwprintw(&*levelWin, height - 1, 5, " WASD-Move  IJKL-Shoot ARROWS-Shoot ");
     mvwprintw(&*levelWin, height - 1, width - 28, " ESC to open Pause Menu ");
 

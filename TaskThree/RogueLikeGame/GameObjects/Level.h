@@ -61,5 +61,8 @@ public:
 
     int levelNumber;
     int levelStatus;
+
+private:
+    std::string levelName;
 };
 
