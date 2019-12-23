@@ -11,6 +11,7 @@
 #include "FirstAidKit.h"
 #include "ShootingEnemy.h"
 #include "Enemy.h"
+#include "Trophy.h"
 #include "../pdcurses/curses.h"
 #include "../nlohmann/json.hpp"
 
@@ -42,6 +43,8 @@ public:
     std::shared_ptr<WINDOW> playerStatus;
     
     std::shared_ptr<Player> player;
+    std::shared_ptr<Trophy> trophy;
+    std::shared_ptr<FirstAidKit> firstAidKitType;
 
     std::map<char, std::shared_ptr<ICharacter>> enemiesTypes;
     std::map<Point, std::shared_ptr<ICharacter>> enemies;

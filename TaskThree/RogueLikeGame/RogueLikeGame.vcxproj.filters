@@ -57,6 +57,9 @@
     <ClCompile Include="GameObjects\FirstAidKit.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\Trophy.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\IGameObject.h">
@@ -90,6 +93,9 @@
       <Filter>GameObjectsH</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\FirstAidKit.h">
+      <Filter>GameObjectsH</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Trophy.h">
       <Filter>GameObjectsH</Filter>
     </ClInclude>
   </ItemGroup>

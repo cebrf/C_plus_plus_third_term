@@ -4,7 +4,14 @@
     "hp": 50,
     "damage": 20,
     "maxHp": 50,
-    "shootingDamage" :  10
+    "shootingDamage": 10
+  },
+  "trophy": {
+    "sym": "$"
+  },
+  "firstAidKit": {
+    "sym": "+",
+    "healingForce":  5
   },
   "enemies": [
     {
@@ -38,6 +45,6 @@
   ],
   "FirstAidKit": {
     "sym": "+",
-    "healingForce":  5
+    "healingForce": 5
   }
 }

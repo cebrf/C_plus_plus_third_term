@@ -7,6 +7,7 @@ class Enemy;
 class Bullet;
 class ShootingEnemy;
 class FirstAidKit;
+class Trophy;
 class Level;
 
 struct Point
@@ -42,6 +43,7 @@ public:
     virtual void collideWith(Bullet&, Level&) = 0;
     virtual void collideWith(ShootingEnemy&, Level&) = 0;
     virtual void collideWith(FirstAidKit&, Level&) = 0;
+    virtual void collideWith(Trophy&, Level&) = 0;
 
     virtual void Update(Level&) = 0;
 

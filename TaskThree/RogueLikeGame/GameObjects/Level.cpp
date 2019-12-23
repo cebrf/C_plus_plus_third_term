@@ -15,22 +15,28 @@ void Level::GetCharactersTypes(const std::string& EnemiesFileName)
     json j;
     f >> j;
     
-    std::string sym = j["player"]["sym"];
+    std::string symP = j["player"]["sym"];
     player = std::shared_ptr<Player>(new Player());
-    player->SetSym(sym[0]);
+    player->SetSym(symP[0]);
     player->SetHp(j["player"]["hp"]);
     player->SetDamage(j["player"]["damage"]);
     player->SetMaxHp(j["player"]["maxHp"]);
     player->SetShootingDamage(j["player"]["shootingDamage"]);
 
+    std::string symT = j["trophy"]["sym"];
+    trophy = std::shared_ptr<Trophy>(new Trophy(Point(-1, -1), symT[0]));
+
+    std::string symF = j["firstAidKit"]["sym"];
+    firstAidKitType = std::shared_ptr<FirstAidKit>(new FirstAidKit(Point(-1, -1), symF[0], j["firstAidKit"]["healingForce"]));
+
     for (auto& enemy : j["enemies"].items())
     {
-        std::string sym = enemy.value()["sym"];
+        std::string symE = enemy.value()["sym"];
         if (enemy.value()["shootingDamage"] > 0)
-            enemiesTypes.emplace(sym[0], std::shared_ptr<ICharacter>(new ShootingEnemy(Point(-1, -1), sym[0],
+            enemiesTypes.emplace(symE[0], std::shared_ptr<ICharacter>(new ShootingEnemy(Point(-1, -1), symE[0],
                 enemy.value()["hp"], enemy.value()["damage"], enemy.value()["maxHp"], enemy.value()["shootingDamage"])));
         else
-            enemiesTypes.emplace(sym[0], std::shared_ptr<ICharacter>(new Enemy(Point(-1, -1), sym[0],
+            enemiesTypes.emplace(symE[0], std::shared_ptr<ICharacter>(new Enemy(Point(-1, -1), symE[0],
                 enemy.value()["hp"], enemy.value()["damage"], enemy.value()["maxHp"])));
     }
 }
@@ -41,25 +47,31 @@ void Level::FindGameObjects()
     {
         for (int j = 0; j < levelMap[i].size(); j++)
         {
-            switch (levelMap[i][j])
+            if (levelMap[i][j] == player->GetSym())
             {
-            case '@':
                 player->SetPos(Point(i + 1, j + 1));
-                break;
-            case '+':
-                firstAidKits.emplace(Point(i + 1, j + 1), std::shared_ptr<FirstAidKit>(new FirstAidKit(Point(i + 1, j + 1), '+', 5)));
-            default:
-                if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
-                {
-                    std::shared_ptr<ICharacter> enemy = enemiesTypes.find(levelMap[i][j])->second;
-                    if (enemy->GetShootingDamage() > 0)
-                        enemiesContainer.push_back(std::shared_ptr<ICharacter>(new ShootingEnemy(Point(i + 1, j + 1),
-                            levelMap[i][j], enemy->GetHp(), enemy->GetDamage(), enemy->GetMaxHp(), enemy->GetShootingDamage())));
-                    else
-                        enemiesContainer.push_back(std::shared_ptr<ICharacter>(new Enemy(Point(i + 1, j + 1),
-                            levelMap[i][j], enemy->GetHp(), enemy->GetDamage(), enemy->GetMaxHp())));
-                }
-                break;
+                continue;
+            }
+            if (levelMap[i][j] == trophy->GetSym())
+            {
+                trophy->SetPos(Point(i + 1, j + 1));
+                continue;
+            }
+            if (levelMap[i][j] == firstAidKitType->GetSym())
+            {
+                firstAidKits.emplace(Point(i + 1, j + 1), std::shared_ptr<FirstAidKit>(new FirstAidKit(Point(i + 1, j + 1),
+                    firstAidKitType->GetSym(), firstAidKitType->GetHealingForce())));
+                continue;
+            }
+            if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
+            {
+                std::shared_ptr<ICharacter> enemy = enemiesTypes.find(levelMap[i][j])->second;
+                if (enemy->GetShootingDamage() > 0)
+                    enemiesContainer.push_back(std::shared_ptr<ICharacter>(new ShootingEnemy(Point(i + 1, j + 1),
+                        levelMap[i][j], enemy->GetHp(), enemy->GetDamage(), enemy->GetMaxHp(), enemy->GetShootingDamage())));
+                else
+                    enemiesContainer.push_back(std::shared_ptr<ICharacter>(new Enemy(Point(i + 1, j + 1),
+                        levelMap[i][j], enemy->GetHp(), enemy->GetDamage(), enemy->GetMaxHp())));
             }
         }
     }
@@ -106,6 +118,11 @@ void Level::PrintLevel()
                 case '^':
                     waddch(&*levelWin, levelMap[i][j]);
                     break;
+                case '$':
+                    wattron(&*levelWin, COLOR_PAIR(6));
+                    waddch(&*levelWin, levelMap[i][j]);
+                    wattroff(&*levelWin, COLOR_PAIR(6));
+                    break;
                 default:
                     wattron(&*levelWin, COLOR_PAIR(2));
                     waddch(&*levelWin, levelMap[i][j]);
@@ -115,9 +132,9 @@ void Level::PrintLevel()
             }
             else
             {
-                wattron(&*levelWin, COLOR_PAIR(4));
+                //wattron(&*levelWin, COLOR_PAIR(4));
                 waddch(&*levelWin, '?');
-                wattroff(&*levelWin, COLOR_PAIR(4));
+                //wattroff(&*levelWin, COLOR_PAIR(4));
             }
         }
     }
@@ -136,6 +153,7 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
     init_pair(3, COLOR_CYAN, COLOR_BLACK);
     init_pair(4, COLOR_BLACK, COLOR_WHITE);
     init_pair(5, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(6, COLOR_BLUE, COLOR_BLACK);
 
     int height = heightOfMap + 2,
         width = widthOfMap + 2,
@@ -173,6 +191,8 @@ void Level::SetObj(Point pos, char obj)
 
 std::shared_ptr<IGameObject> Level::GetObj(Point pos)
 {
+    if (trophy->GetPos().x == pos.x && trophy->GetPos().y == pos.y)
+        return trophy;
     if (player->GetPos().x == pos.x && player->GetPos().y == pos.y)
         return player;
     if (enemies.find(pos) != enemies.end())

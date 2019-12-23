@@ -32,22 +32,24 @@ void FirstAidKit::collideWith(Player& player, Level& level)
 
 void FirstAidKit::collideWith(Enemy& enemy, Level& level)
 {
-    return;
+    return enemy.collideWith(*this, level);
 }
 
 void FirstAidKit::collideWith(Bullet& bullet, Level& level)
 {
-    return;
+    return bullet.collideWith(*this, level);
 }
 
 void FirstAidKit::collideWith(ShootingEnemy& shootingEnemy, Level& level)
 {
-    return;
+    return shootingEnemy.collideWith(*this, level);
 }
 
 void FirstAidKit::collideWith(FirstAidKit& firstAidKit, Level& level)
 {
-    return;
+    return firstAidKit.collideWith(*this, level);
 }
+
+void FirstAidKit::collideWith(Trophy& trophy, Level& level) { }
 
 void FirstAidKit::Update(Level& level) { }

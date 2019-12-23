@@ -30,10 +30,7 @@ void Player::collideWith(Enemy& enemy, Level& level)
     }
 }
 
-void Player::collideWith(Player& player, Level& level)
-{
-    // no multiplayer
-}
+void Player::collideWith(Player& player, Level& level) { }
 
 void Player::collideWith(Bullet& bullet, Level& level)
 {
@@ -60,6 +57,8 @@ void Player::collideWith(FirstAidKit& firstAidKit, Level& level)
     level.SetObj(firstAidKit.GetPos(), ' ');
     level.firstAidKits.erase(firstAidKit.GetPos());
 }
+
+void Player::collideWith(Trophy& trophy, Level& level) { }
 
 void Player::Update(Level& level)
 {

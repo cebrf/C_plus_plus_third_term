@@ -3,6 +3,7 @@
 
 #include "Bullet.h"
 #include "Enemy.h"
+#include "Trophy.h"
 #include "Player.h"
 #include "FirstAidKit.h"
 #include "Level.h"
@@ -22,6 +23,7 @@ public:
     void collideWith(Bullet&, Level&) override;
     void collideWith(ShootingEnemy&, Level&) override;
     void collideWith(FirstAidKit&, Level&) override;
+    void collideWith(Trophy&, Level&) override;
 
     void Update(Level&) override;
 

@@ -59,6 +59,8 @@ void Enemy::collideWith(FirstAidKit& firstAidKit, Level& level)
     level.firstAidKits.erase(firstAidKit.GetPos());
 }
 
+void Enemy::collideWith(Trophy& trophy, Level& level) { }
+
 void Enemy::Update(Level& level)
 {
     char action = this->GetAction(*level.levelWin); 

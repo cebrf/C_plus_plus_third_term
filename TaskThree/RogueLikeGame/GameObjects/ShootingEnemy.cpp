@@ -60,6 +60,8 @@ void ShootingEnemy::collideWith(FirstAidKit& firstAidKit, Level& level)
     level.firstAidKits.erase(firstAidKit.GetPos());
 }
 
+void ShootingEnemy::collideWith(Trophy& trophy, Level& level) { }
+
 void ShootingEnemy::Update(Level& level)
 {
     char action = this->GetAction(*level.levelWin);

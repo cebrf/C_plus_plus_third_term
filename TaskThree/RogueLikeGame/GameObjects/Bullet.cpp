@@ -77,6 +77,12 @@ void Bullet::collideWith(FirstAidKit& firstAidKit, Level& level)
     level.bullets.erase(this->GetPos());
 }
 
+void Bullet::collideWith(Trophy& trophy, Level& level)
+{
+    level.SetObj(this->GetPos(), ' ');
+    level.bullets.erase(this->GetPos());
+}
+
 void Bullet::Update(Level& level)
 {
     Point newPos(this->GetPos().x + direction.x, this->GetPos().y + direction.y);

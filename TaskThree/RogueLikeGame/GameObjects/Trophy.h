@@ -1,20 +1,18 @@
 #pragma once
+#include "IGameObject.h"
 #include "ICharacter.h"
 #include "Player.h"
 #include "Bullet.h"
-#include "Level.h"
 #include "FirstAidKit.h"
-#include "Trophy.h"
 #include "ShootingEnemy.h"
-#include "../pdcurses/curses.h"
-#include <vector>
+#include "Level.h"
 
-class Enemy :
-    public ICharacter
+class Trophy :
+    public IGameObject
 {
 public:
-    Enemy(Point, char, int, int, int);
-    ~Enemy();
+    Trophy(Point, char);
+    ~Trophy();
 
     char GetAction(WINDOW&) override;
 
@@ -31,5 +29,5 @@ public:
 protected:
 
 private:
-};
 
+};

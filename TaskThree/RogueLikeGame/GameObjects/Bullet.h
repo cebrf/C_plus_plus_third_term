@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "FirstAidKit.h"
 #include "ShootingEnemy.h"
+#include "Trophy.h"
 #include "Level.h"
 
 class Bullet :
@@ -27,6 +28,7 @@ public:
     void collideWith(Bullet&, Level&) override;
     void collideWith(ShootingEnemy&, Level&) override;
     void collideWith(FirstAidKit&, Level&) override;
+    void collideWith(Trophy&, Level&) override;
 
     void Update(Level&) override;
 
