@@ -18,12 +18,14 @@
 class GameSystem
 {
 public:
-    GameSystem(const int);
-    void Start();
-    bool GameStatus = 0;
+    GameSystem();
+    void Start(int, int = 0);
+    int GetGameStatus();
+    int GetLevelNum();
 
 protected:
 
 private:
+    void Play();
     Level level;
 };

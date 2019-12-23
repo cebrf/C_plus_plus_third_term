@@ -109,5 +109,6 @@
   <ItemGroup>
     <None Include="enemiesLevel1.json" />
     <None Include="enemiesLevel2.json" />
+    <None Include="save.json" />
   </ItemGroup>
 </Project>

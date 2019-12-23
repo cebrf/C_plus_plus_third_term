@@ -20,7 +20,7 @@ using json = nlohmann::json;
 class Level
 {
 public:
-    Level(int);
+    Level();
 
     void GetCharactersTypes(const int);
     void ReadMap(const int);

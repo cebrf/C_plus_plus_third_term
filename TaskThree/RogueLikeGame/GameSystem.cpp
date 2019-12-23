@@ -1,12 +1,17 @@
 #include "GameSystem.h"
 
-GameSystem::GameSystem(const int levelNumber) :
-    level(levelNumber - 1)
+GameSystem::GameSystem() { }
+
+void GameSystem::Start(int levelNumber, int hp)
 {
+    if (hp > 0)
+        level.player->SetHp(hp);
+    level.levelNumber = levelNumber - 1;
     level.NextLevel();
+    Play();
 }
 
-void GameSystem::Start()
+void GameSystem::Play()
 {
     while (true)
     {
@@ -25,7 +30,7 @@ void GameSystem::Start()
             break;
         }
 
-        //for (int e = 0; e < 5; e++)
+        for (int e = 0; e < 5; e++)
         {
             level.PrintPLayerStatus();
             level.player->Update(level);
@@ -53,4 +58,13 @@ void GameSystem::Start()
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+}
+
+int GameSystem::GetGameStatus()
+{
+    return level.levelStatus;
+}
+int GameSystem::GetLevelNum()
+{
+    return level.levelNumber;
 }

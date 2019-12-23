@@ -1,7 +1,7 @@
 #include "Level.h"
 
-Level::Level(int levelNumber) :
-    levelNumber(levelNumber),
+Level::Level() :
+    levelNumber(0),
     levelStatus(0),
     trophy(std::shared_ptr<Trophy>(new Trophy(Point(-1, -1), ' '))),
     player(std::shared_ptr<Player>(new Player())),
@@ -24,15 +24,13 @@ void Level::GetCharactersTypes(const int levelNumber)
     json j;
     f >> j;
     
+    std::string symP = j["player"]["sym"];
+    player->SetSym(symP[0]);
     if (levelNumber == 1)
-    {
-        std::string symP = j["player"]["sym"];
-        player->SetSym(symP[0]);
         player->SetHp(j["player"]["hp"]);
-        player->SetDamage(j["player"]["damage"]);
-        player->SetMaxHp(j["player"]["maxHp"]);
-        player->SetShootingDamage(j["player"]["shootingDamage"]);
-    }
+    player->SetDamage(j["player"]["damage"]);
+    player->SetMaxHp(j["player"]["maxHp"]);
+    player->SetShootingDamage(j["player"]["shootingDamage"]);
 
     std::string symT = j["trophy"]["sym"];
     trophy->SetSym(symT[0]);
@@ -240,33 +238,28 @@ void Level::EscMenu()
     getmaxyx(&*playerStatus, height, width);
     keypad(&*playerStatus, true);
     mvwprintw(&*playerStatus, 3, width / 2 - 3, "Pause");
-    std::vector<std::string> choices = { "Resume", "Save", "Load", "Exit" };
-    int choice;
-    int highlight = 0;
+    std::vector<std::string> choices = { "Resume", "Reset", "Exit" };
+    int choice = 0, chosenKey = -1;
 
     while (1)
     {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < choices.size(); i++)
         {
-            if (i == highlight)
-                wattron(&*playerStatus, A_REVERSE);
-            mvwprintw(&*playerStatus, i * 2 + 8, width / 2 - choices[i].size() / 2, choices[i].c_str());
-            wattroff(&*playerStatus, A_REVERSE);
+            if (i == choice)
+                mvwprintw(&*playerStatus, i * 2 + 10, width / 4 - 4, ("> " + choices[i]).c_str());
+            else
+                mvwprintw(&*playerStatus, i * 2 + 10, width / 4 - 4, ("  " + choices[i]).c_str());
         }
-        choice = wgetch(&*playerStatus);
-        switch (choice)
-        {
-        case KEY_UP:
-            highlight = std::max(0, highlight - 1);
-            break;
-        case KEY_DOWN:
-            highlight = std::min(3, highlight + 1);
-            break;
-        }
-        if (choice == 10)
+
+        chosenKey = wgetch(&*playerStatus);
+        if (chosenKey == 259)
+            choice = std::max(0, choice - 1);
+        else if (chosenKey == 258)
+            choice = std::min(static_cast<int>(choices.size()) - 1, choice + 1);
+        else if (chosenKey == 10 || chosenKey == 27)
             break;
     }
-    if (highlight == 0)
+    if (choices[choice] == "Resume" || chosenKey == 27)
     {
         wclear(&*playerStatus);
         PrintPLayerStatus();
@@ -274,7 +267,18 @@ void Level::EscMenu()
         wrefresh(&*playerStatus);
         return;
     }
-    if (highlight == 3)
+    if (choices[choice] == "Reset")
+    {
+        std::fstream saveFile("save.json");
+        json save;
+        saveFile >> save;
+        if (save["levelNum"] > 0)
+            player->SetHp(save["hp"]);
+        levelNumber = save["levelNum"] - 1;
+        NextLevel();
+        return;
+    }
+    if (choices[choice] == "Exit")
     {
         levelStatus = 3;
         return;
@@ -301,4 +305,11 @@ void Level::NextLevel()
     PrintLevel();
     CreateWPlayerStatus();
     PrintPLayerStatus();
+
+    
+    json save;
+    save["levelNum"] = levelNumber;
+    save["hp"] = player->GetHp();
+    std::ofstream saveFile("save.json");
+    saveFile << save;
 }
