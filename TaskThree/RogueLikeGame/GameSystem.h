@@ -18,12 +18,11 @@
 class GameSystem
 {
 public:
-    GameSystem(const std::string&, const std::string&);
+    GameSystem(const int);
     void Start();
-    bool GameOver = 0;
+    bool GameStatus = 0;
 
 protected:
-    void death();
 
 private:
     Level level;

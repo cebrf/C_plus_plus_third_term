@@ -12,7 +12,6 @@ Player::~Player() = default;
 char Player::GetAction(WINDOW& win)
 {
     return wgetch(&win);
-    //flushinp(); // does it work?
 }
 
 void Player::Collide(IGameObject& other, Level& level)
@@ -35,7 +34,11 @@ void Player::collideWith(Player& player, Level& level) { }
 void Player::collideWith(Bullet& bullet, Level& level)
 {
     this->SetHp(std::max(0, this->GetHp() - bullet.GetDamage()));
-
+    if (this->GetHp() <= 0)
+    {
+        level.SetObj(this->GetPos(), ' ');
+        level.levelStatus = 1;
+    }
     level.SetObj(bullet.GetPos(), ' ');
     level.bullets.erase(bullet.GetPos());
 }
@@ -58,7 +61,10 @@ void Player::collideWith(FirstAidKit& firstAidKit, Level& level)
     level.firstAidKits.erase(firstAidKit.GetPos());
 }
 
-void Player::collideWith(Trophy& trophy, Level& level) { }
+void Player::collideWith(Trophy& trophy, Level& level)
+{
+    level.levelStatus = 2;
+}
 
 void Player::Update(Level& level)
 {

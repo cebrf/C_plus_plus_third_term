@@ -1,7 +1,15 @@
 #include "Level.h"
 
-Level::Level(const std::string& fileName)
+Level::Level(int levelNumber) :
+    levelNumber(levelNumber),
+    levelStatus(0),
+    trophy(std::shared_ptr<Trophy>(new Trophy(Point(-1, -1), ' '))),
+    player(std::shared_ptr<Player>(new Player())),
+    firstAidKitType(std::shared_ptr<FirstAidKit>(new FirstAidKit(Point(-1, -1), ' ', -1))) { }
+
+void Level::ReadMap(int levelNumber)
 {
+    std::string fileName = "level" + std::to_string(levelNumber) + ".txt";
     std::ifstream MapFile(fileName);
     std::string buf;
     while (std::getline(MapFile, buf)) {
@@ -9,25 +17,29 @@ Level::Level(const std::string& fileName)
     }
 }
 
-void Level::GetCharactersTypes(const std::string& EnemiesFileName)
+void Level::GetCharactersTypes(const int levelNumber)
 {
-    std::fstream f(EnemiesFileName);
+    std::string fileName = "enemiesLevel" + std::to_string(levelNumber) + ".json";
+    std::fstream f(fileName);
     json j;
     f >> j;
     
-    std::string symP = j["player"]["sym"];
-    player = std::shared_ptr<Player>(new Player());
-    player->SetSym(symP[0]);
-    player->SetHp(j["player"]["hp"]);
-    player->SetDamage(j["player"]["damage"]);
-    player->SetMaxHp(j["player"]["maxHp"]);
-    player->SetShootingDamage(j["player"]["shootingDamage"]);
+    if (levelNumber == 1)
+    {
+        std::string symP = j["player"]["sym"];
+        player->SetSym(symP[0]);
+        player->SetHp(j["player"]["hp"]);
+        player->SetDamage(j["player"]["damage"]);
+        player->SetMaxHp(j["player"]["maxHp"]);
+        player->SetShootingDamage(j["player"]["shootingDamage"]);
+    }
 
     std::string symT = j["trophy"]["sym"];
-    trophy = std::shared_ptr<Trophy>(new Trophy(Point(-1, -1), symT[0]));
+    trophy->SetSym(symT[0]);
 
     std::string symF = j["firstAidKit"]["sym"];
-    firstAidKitType = std::shared_ptr<FirstAidKit>(new FirstAidKit(Point(-1, -1), symF[0], j["firstAidKit"]["healingForce"]));
+    firstAidKitType->SetHealingForce(j["firstAidKit"]["healingForce"]);
+    firstAidKitType->SetSym(symF[0]);
 
     for (auto& enemy : j["enemies"].items())
     {
@@ -264,7 +276,29 @@ void Level::EscMenu()
     }
     if (highlight == 3)
     {
-        needExit = 1;
+        levelStatus = 3;
         return;
     }
+}
+
+void Level::NextLevel()
+{
+    levelNumber++;
+    levelStatus = 0;
+
+    levelMap.clear();
+    enemiesTypes.clear();
+    enemies.clear();
+    enemiesContainer.clear();
+    firstAidKits.clear();
+    bullets.clear();
+    bulletsContainer.clear();
+
+    ReadMap(levelNumber);
+    GetCharactersTypes(levelNumber);
+    FindGameObjects();
+    CreateWindow(GetWidth(), GetHeight());
+    PrintLevel();
+    CreateWPlayerStatus();
+    PrintPLayerStatus();
 }

@@ -1,14 +1,9 @@
 #include "GameSystem.h"
 
-GameSystem::GameSystem(const std::string& levelFileName, const std::string& EnemiesFileName) :
-    level(levelFileName)
+GameSystem::GameSystem(const int levelNumber) :
+    level(levelNumber - 1)
 {
-    level.GetCharactersTypes(EnemiesFileName);
-    level.FindGameObjects();
-    level.CreateWindow(level.GetWidth(), level.GetHeight());
-    level.PrintLevel();
-    level.CreateWPlayerStatus();
-    level.PrintPLayerStatus();
+    level.NextLevel();
 }
 
 void GameSystem::Start()
@@ -17,20 +12,25 @@ void GameSystem::Start()
     {
         level.PrintLevel();
 
-        if (level.player->GetHp() <= 0)
+        switch (level.levelStatus)
         {
-            GameOver = 1;
+        case 1:
+        case 3:
             return;
+        case 2:
+            if (level.levelNumber < 2)
+                level.NextLevel();
+            else
+                return;
+            break;
         }
 
-        for (int e = 0; e < 5; e++)
+        //for (int e = 0; e < 5; e++)
         {
             level.PrintPLayerStatus();
             level.player->Update(level);
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
-
-        if (level.needExit) { return; }
 
         {
             for (auto enemy = level.enemiesContainer.begin(); enemy != level.enemiesContainer.end(); enemy++)
@@ -53,12 +53,4 @@ void GameSystem::Start()
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
-}
-
-void GameSystem::death()
-{
-    level.PrintPLayerStatus();
-    wclear(&*level.levelWin);
-    mvwprintw(&*level.levelWin, 10, 10, "YOU ARE DEAD!");
-    wrefresh(&*level.levelWin);
 }

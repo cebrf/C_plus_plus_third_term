@@ -8,7 +8,7 @@ void play()
 {
     while (1)
     {
-        GameSystem game("level1.txt", "enemiesLevel1.json");
+        GameSystem game(1);
         game.Start();
 
         clear();
@@ -22,7 +22,7 @@ void play()
 
         keypad(&*menuWin, true);
         vector<string> choices;
-        if (game.GameOver)
+        if (game.GameStatus == 1)
         {
             mvwprintw(&*menuWin, 5, width / 4 - 4, "Game over");
             choices = { "Play again", "Exit" };

@@ -30,7 +30,10 @@ void Enemy::collideWith(Player& player, Level& level)
 {
     player.SetHp(std::max(0, player.GetHp() - this->GetDamage()));
     if (player.GetHp() <= 0)
+    {
         level.SetObj(player.GetPos(), ' ');
+        level.levelStatus = 1;
+    }
 }
 
 void Enemy::collideWith(Bullet& bullet, Level& level)

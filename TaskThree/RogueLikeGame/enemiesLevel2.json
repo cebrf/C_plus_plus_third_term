@@ -1,0 +1,50 @@
+﻿{
+  "player": {
+    "sym": "@",
+    "hp": 50,
+    "damage": 20,
+    "maxHp": 50,
+    "shootingDamage": 10
+  },
+  "trophy": {
+    "sym": "$"
+  },
+  "firstAidKit": {
+    "sym": "+",
+    "healingForce":  5
+  },
+  "enemies": [
+    {
+      "sym": "z",
+      "hp": 30,
+      "damage": 10,
+      "maxHp": 30,
+      "shootingDamage": 0
+    },
+    {
+      "sym": "D",
+      "hp": 200,
+      "damage": 100,
+      "maxHp": 200,
+      "shootingDamage": 0
+    },
+    {
+      "sym": "Y",
+      "hp": 1000,
+      "damage": 1000,
+      "maxHp": 1000,
+      "shootingDamage": 0
+    },
+    {
+      "sym": "s",
+      "hp": 20,
+      "damage": 5,
+      "maxHp": 20,
+      "shootingDamage": 3
+    }
+  ],
+  "FirstAidKit": {
+    "sym": "+",
+    "healingForce": 5
+  }
+}

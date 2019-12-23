@@ -20,16 +20,16 @@ using json = nlohmann::json;
 class Level
 {
 public:
-    Level(const std::string&);
+    Level(int);
 
-    void GetCharactersTypes(const std::string&);
-
+    void GetCharactersTypes(const int);
+    void ReadMap(const int);
     void FindGameObjects();
-
     void PrintLevel();
     void CreateWindow(size_t, size_t);
     void CreateWPlayerStatus();
     void PrintPLayerStatus();
+    void NextLevel();
 
     void SetObj(Point, char);
     std::shared_ptr<IGameObject> GetObj(Point);
@@ -57,8 +57,8 @@ public:
     std::vector<std::shared_ptr<Bullet>> bulletsContainer;
 
     void EscMenu();
-    bool needExit = 0;
 
-private:
+    int levelNumber;
+    int levelStatus;
 };
 
