@@ -146,6 +146,7 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
     levelWin = std::shared_ptr<WINDOW>(newwin(height, width, startX, startY));
 
     nodelay(&*levelWin, true);
+    keypad(&*levelWin, true);
     cbreak();
 
     box(&*levelWin, 0, 0);

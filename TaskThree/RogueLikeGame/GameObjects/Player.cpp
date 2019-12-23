@@ -11,7 +11,15 @@ Player::~Player() = default;
 
 char Player::GetAction(WINDOW& win)
 {
-    return wgetch(&win);
+    char action = wgetch(&win);
+    if (action == 3)
+        return 'i';
+    if (action == 2)
+        return 'k';
+    if (action == 4)
+        return 'j';
+    if (action == 5)
+        return 'l';
 }
 
 void Player::Collide(IGameObject& other, Level& level)
