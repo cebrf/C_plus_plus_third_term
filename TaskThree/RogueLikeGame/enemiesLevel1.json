@@ -26,22 +26,6 @@
       "colour": 2
     },
     {
-      "sym": "D",
-      "hp": 200,
-      "damage": 100,
-      "maxHp": 200,
-      "shootingDamage": 0,
-      "colour": 2
-    },
-    {
-      "sym": "Y",
-      "hp": 1000,
-      "damage": 1000,
-      "maxHp": 1000,
-      "shootingDamage": 0,
-      "colour": 2
-    },
-    {
       "sym": "s",
       "hp": 20,
       "damage": 5,
