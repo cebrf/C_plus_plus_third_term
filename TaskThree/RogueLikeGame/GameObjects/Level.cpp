@@ -151,6 +151,11 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
 
     box(&*levelWin, 0, 0);
     wmove(&*levelWin, 1, 1);
+
+    getmaxyx(&*levelWin, height, width);
+    mvwprintw(&*levelWin, height - 1, 5, " WASD-Move  IJKL-Shoot ");
+    mvwprintw(&*levelWin, height - 1, width - 28, " ESC to open Pause Menu ");
+
     wrefresh(&*levelWin);
 }
 
@@ -164,6 +169,9 @@ void Level::CreateWPlayerStatus()
 
 void Level::PrintPLayerStatus()
 {
+    int height, width;
+    getmaxyx(&*playerStatus, height, width);
+    mvwprintw(&*playerStatus, 0, width / 2 - 3, "[Info]");
     mvwprintw(&*playerStatus, 2, 5, "%s%d", "Hp:  ", player->GetHp());
     wrefresh(&*playerStatus);
 }
@@ -212,7 +220,7 @@ void Level::EscMenu()
     int height, width;
     getmaxyx(&*playerStatus, height, width);
     keypad(&*playerStatus, true);
-    mvwprintw(&*playerStatus, 3, width / 2 - 3, "Pause");
+    mvwprintw(&*playerStatus, 0, width / 2 - 6, "[Pause Menu]");
     std::vector<std::string> choices = { "Resume", "Reset", "Exit" };
     int choice = 0, chosenKey = -1;
 
@@ -221,9 +229,9 @@ void Level::EscMenu()
         for (int i = 0; i < choices.size(); i++)
         {
             if (i == choice)
-                mvwprintw(&*playerStatus, i * 2 + 10, width / 4 - 4, ("> " + choices[i]).c_str());
+                mvwprintw(&*playerStatus, i * 3 + 6, width / 2 - 4, ("> " + choices[i]).c_str());
             else
-                mvwprintw(&*playerStatus, i * 2 + 10, width / 4 - 4, ("  " + choices[i]).c_str());
+                mvwprintw(&*playerStatus, i * 3 + 6, width / 2 - 4, ("  " + choices[i]).c_str());
         }
 
         chosenKey = wgetch(&*playerStatus);

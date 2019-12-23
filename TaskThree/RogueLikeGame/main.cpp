@@ -7,7 +7,6 @@ using namespace std;
 
 void play()
 {
-    std::fstream saveFile("save.json");
     initscr();
     curs_set(0);
     noecho();
@@ -24,6 +23,7 @@ void play()
         wclear(&*menuWin);
         box(&*menuWin, 0, 0);
         refresh();
+        mvwprintw(&*menuWin, 0, width / 2 - 28, "[Rogue Like Game v 1.0]");
         wrefresh(&*menuWin);
         keypad(&*menuWin, true);
         vector<string> choices;
@@ -32,15 +32,15 @@ void play()
         {
         case 0:
         case 3:
-            mvwprintw(&*menuWin, 5, width / 4 - 2, "Menu");
+            mvwprintw(&*menuWin, 5, width / 4 - 3, "Menu");
             choices = { "New game", "Load", "Exit" };
             break;
         case 1:
-            mvwprintw(&*menuWin, 5, width / 4 - 4, "Game over");
+            mvwprintw(&*menuWin, 5, width / 4 - 5, "Game over");
             choices = { "Try again", "Exit" };
             break;
         case 2:
-            mvwprintw(&*menuWin, 5, width / 4 - 11, "Congratulations! You win");
+            mvwprintw(&*menuWin, 5, width / 4 - 12, "Congratulations! You win");
             choices = { "New game", "Exit" };
             break;
         }
@@ -51,9 +51,9 @@ void play()
             for (int i = 0; i < choices.size(); i++)
             {
                 if (i == choice)
-                    mvwprintw(&*menuWin, i * 2 + 10, width / 4 - 4, ("> " + choices[i]).c_str());
+                    mvwprintw(&*menuWin, i * 3 + 10, width / 4 - 5, ("> " + choices[i]).c_str());
                 else
-                    mvwprintw(&*menuWin, i * 2 + 10, width / 4 - 4, ("  " + choices[i]).c_str());
+                    mvwprintw(&*menuWin, i * 3 + 10, width / 4 - 5, ("  " + choices[i]).c_str());
             }
 
             int chosenKey = wgetch(&*menuWin);
