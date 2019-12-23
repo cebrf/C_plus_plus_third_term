@@ -31,17 +31,21 @@ void Level::GetCharactersTypes(const int levelNumber)
     player->SetDamage(j["player"]["damage"]);
     player->SetMaxHp(j["player"]["maxHp"]);
     player->SetShootingDamage(j["player"]["shootingDamage"]);
+    colours.emplace(symP[0], j["player"]["colour"]);
 
     std::string symT = j["trophy"]["sym"];
+    colours.emplace(symT[0], j["trophy"]["colour"]);
     trophy->SetSym(symT[0]);
 
     std::string symF = j["firstAidKit"]["sym"];
+    colours.emplace(symF[0], j["firstAidKit"]["colour"]);
     firstAidKitType->SetHealingForce(j["firstAidKit"]["healingForce"]);
     firstAidKitType->SetSym(symF[0]);
 
     for (auto& enemy : j["enemies"].items())
     {
         std::string symE = enemy.value()["sym"];
+        colours.emplace(symE[0], enemy.value()["colour"]);
         if (enemy.value()["shootingDamage"] > 0)
             enemiesTypes.emplace(symE[0], std::shared_ptr<ICharacter>(new ShootingEnemy(Point(-1, -1), symE[0],
                 enemy.value()["hp"], enemy.value()["damage"], enemy.value()["maxHp"], enemy.value()["shootingDamage"])));
@@ -58,22 +62,13 @@ void Level::FindGameObjects()
         for (int j = 0; j < levelMap[i].size(); j++)
         {
             if (levelMap[i][j] == player->GetSym())
-            {
                 player->SetPos(Point(i + 1, j + 1));
-                continue;
-            }
-            if (levelMap[i][j] == trophy->GetSym())
-            {
+            else if (levelMap[i][j] == trophy->GetSym())
                 trophy->SetPos(Point(i + 1, j + 1));
-                continue;
-            }
-            if (levelMap[i][j] == firstAidKitType->GetSym())
-            {
+            else if (levelMap[i][j] == firstAidKitType->GetSym())
                 firstAidKits.emplace(Point(i + 1, j + 1), std::shared_ptr<FirstAidKit>(new FirstAidKit(Point(i + 1, j + 1),
                     firstAidKitType->GetSym(), firstAidKitType->GetHealingForce())));
-                continue;
-            }
-            if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
+            else if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
             {
                 std::shared_ptr<ICharacter> enemy = enemiesTypes.find(levelMap[i][j])->second;
                 if (enemy->GetShootingDamage() > 0)
@@ -85,15 +80,10 @@ void Level::FindGameObjects()
             }
         }
     }
-
     for (int i = 0; i < enemiesContainer.size(); i++)
     {
         enemies.emplace(enemiesContainer[i]->GetPos(), enemiesContainer[i]);
     }
-    /*for (int i = 0; i < firstAidKitsContainer.size(); i++)
-    {
-        firstAidKits.emplace(firstAidKitsContainer[i]->GetPos(), firstAidKitsContainer[i]);
-    }*/
 }
 
 void Level::PrintLevel()
@@ -107,44 +97,28 @@ void Level::PrintLevel()
             {
                 switch (levelMap[i][j])
                 {
-                case '+':
-                    wattron(&*levelWin, COLOR_PAIR(3));
-                    waddch(&*levelWin, levelMap[i][j]);
-                    wattroff(&*levelWin, COLOR_PAIR(3));
-                    break;
-                case '#':
-                    wattron(&*levelWin, COLOR_PAIR(5));
-                    waddch(&*levelWin, levelMap[i][j]);
-                    wattroff(&*levelWin, COLOR_PAIR(5));
-                    break;
-                case '@':
-                    wattron(&*levelWin, COLOR_PAIR(1));
-                    waddch(&*levelWin, levelMap[i][j]);
-                    wattroff(&*levelWin, COLOR_PAIR(1));
-                    break;
                 case '<':
                 case '>':
                 case 'v':
                 case '^':
                     waddch(&*levelWin, levelMap[i][j]);
                     break;
-                case '$':
-                    wattron(&*levelWin, COLOR_PAIR(6));
+                case '#':
+                    wattron(&*levelWin, COLOR_PAIR(5));
                     waddch(&*levelWin, levelMap[i][j]);
-                    wattroff(&*levelWin, COLOR_PAIR(6));
+                    wattroff(&*levelWin, COLOR_PAIR(5));
                     break;
                 default:
-                    wattron(&*levelWin, COLOR_PAIR(2));
+                    wattron(&*levelWin, COLOR_PAIR(colours[levelMap[i][j]]));
                     waddch(&*levelWin, levelMap[i][j]);
-                    wattroff(&*levelWin, COLOR_PAIR(2));
-                    break;
+                    wattroff(&*levelWin, COLOR_PAIR(colours[levelMap[i][j]]));
                 }
             }
             else
             {
-                //wattron(&*levelWin, COLOR_PAIR(4));
+                wattron(&*levelWin, COLOR_PAIR(4));
                 waddch(&*levelWin, '?');
-                //wattroff(&*levelWin, COLOR_PAIR(4));
+                wattroff(&*levelWin, COLOR_PAIR(4));
             }
         }
     }
@@ -161,7 +135,7 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
     init_pair(2, COLOR_RED, COLOR_BLACK);
     init_pair(3, COLOR_CYAN, COLOR_BLACK);
-    init_pair(4, COLOR_BLACK, COLOR_WHITE);
+    init_pair(4, COLOR_BLUE, COLOR_BLACK);
     init_pair(5, COLOR_YELLOW, COLOR_BLACK);
     init_pair(6, COLOR_BLUE, COLOR_BLACK);
 
@@ -297,6 +271,7 @@ void Level::NextLevel()
     firstAidKits.clear();
     bullets.clear();
     bulletsContainer.clear();
+    colours.clear();
 
     ReadMap(levelNumber);
     GetCharactersTypes(levelNumber);
