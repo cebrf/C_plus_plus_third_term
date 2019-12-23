@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <io.h>
 #include <functional>
 #include "pdcurses/curses.h"
 

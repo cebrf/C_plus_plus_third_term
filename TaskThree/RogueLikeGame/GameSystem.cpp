@@ -23,7 +23,8 @@ void GameSystem::Play()
         case 3:
             return;
         case 2:
-            if (level.levelNumber < 2)
+            std::string nextLevelPath = "level" + std::to_string(level.levelNumber + 1) + ".txt";
+            if (_access(nextLevelPath.c_str(), 0) == 0)
                 level.NextLevel();
             else
                 return;
