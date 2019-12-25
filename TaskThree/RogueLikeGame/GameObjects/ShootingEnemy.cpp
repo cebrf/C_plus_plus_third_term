@@ -73,6 +73,11 @@ void ShootingEnemy::Update(Level& level)
     if (direction.x != 0 || direction.y != 0)
     {
         Point newPos(this->GetPos().x + direction.x, this->GetPos().y + direction.y);
+        if (newPos.x <= 0 || newPos.y <= 0 || newPos.x - 1 >= level.GetHeight())
+            return;
+        if (newPos.y >= level.GetWidth() || level.GetSym(newPos) == '#')
+            return;
+
         if (isShoot && level.GetSym(newPos) == ' ')
         {
             std::shared_ptr<Bullet> newBullet = std::shared_ptr<Bullet>(new Bullet(newPos, Point(direction.x, direction.y), this->GetShootingDamage()));
@@ -82,12 +87,7 @@ void ShootingEnemy::Update(Level& level)
         }
         else
         {
-            if (newPos.x <= 0 || newPos.y <= 0 || newPos.x - 1 >= level.GetHeight())
-                return;
-            if (newPos.y >= level.GetWidth() || level.GetSym(newPos) == '#')
-                return;
-
-            if (level.GetSym(newPos) == ' ' && level.GetSym(newPos) == ' ')
+            if (level.GetSym(newPos) == ' ')
             {
                 wattron(&*level.levelWin, COLOR_PAIR(2));
 

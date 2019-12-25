@@ -31,6 +31,16 @@ void GameSystem::Play()
             break;
         }
 
+        {
+            for (auto bullet = level.bulletsContainer.begin(); bullet != level.bulletsContainer.end(); bullet++)
+                if (level.bullets.find((*bullet)->GetPos()) != level.bullets.end())
+                    (*bullet)->Update(level);
+
+            level.bulletsContainer.clear();
+            for (auto bullet = level.bullets.begin(); bullet != level.bullets.end(); bullet++)
+                level.bulletsContainer.push_back(bullet->second);
+        }
+
         for (int e = 0; e < 5; e++)
         {
             level.PrintPLayerStatus();
@@ -46,16 +56,6 @@ void GameSystem::Play()
             level.enemiesContainer.clear();
             for (auto enemy = level.enemies.begin(); enemy != level.enemies.end(); enemy++)
                 level.enemiesContainer.push_back(enemy->second);
-        }
-
-        {
-            for (auto bullet = level.bulletsContainer.begin(); bullet != level.bulletsContainer.end(); bullet++)
-                if (level.bullets.find((*bullet)->GetPos()) != level.bullets.end())
-                    (*bullet)->Update(level);
-
-            level.bulletsContainer.clear();
-            for (auto bullet = level.bullets.begin(); bullet != level.bullets.end(); bullet++)
-                level.bulletsContainer.push_back(bullet->second);
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
