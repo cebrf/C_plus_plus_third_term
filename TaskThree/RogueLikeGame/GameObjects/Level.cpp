@@ -142,8 +142,8 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
 
     int height = heightOfMap + 2,
         width = widthOfMap + 2,
-        startX = 10,
-        startY = 10;
+        startX = 3,
+        startY = 6;
     levelWin = std::shared_ptr<WINDOW>(newwin(height, width, startX, startY));
 
     nodelay(&*levelWin, true);
@@ -163,7 +163,7 @@ void Level::CreateWindow(size_t widthOfMap, size_t heightOfMap)
 
 void Level::CreateWPlayerStatus()
 {
-    playerStatus = std::shared_ptr<WINDOW>(newwin(20, 20, 10, 130));
+    playerStatus = std::shared_ptr<WINDOW>(newwin(20, 20, 10, 134));
     nodelay(&*playerStatus, true);
     box(&*playerStatus, 0, 0);
     wrefresh(&*playerStatus);
@@ -171,10 +171,12 @@ void Level::CreateWPlayerStatus()
 
 void Level::PrintPLayerStatus()
 {
+    wclear(&*playerStatus);
     int height, width;
     getmaxyx(&*playerStatus, height, width);
     mvwprintw(&*playerStatus, 0, width / 2 - 3, "[Info]");
-    mvwprintw(&*playerStatus, 2, 5, "%s%d", "Hp:  ", player->GetHp());
+    std::string massage = "Hp: " + std::to_string(player->GetHp());
+    mvwprintw(&*playerStatus, 2, 5, massage.c_str());
     wrefresh(&*playerStatus);
 }
 
