@@ -87,7 +87,7 @@ void ShootingEnemy::Update(Level& level)
 
         if (isShoot && level.GetSym(newPos) == ' ')
         {
-            std::shared_ptr<Bullet> newBullet = std::shared_ptr<Bullet>(new Bullet(newPos, Point(direction.x, direction.y), this->GetShootingDamage()));
+            std::shared_ptr<Bullet> newBullet = std::make_shared<Bullet>(newPos, Point(direction.x, direction.y), this->GetShootingDamage());
             level.bulletsContainer.push_back(newBullet);
             level.bullets.emplace(newPos, newBullet);
             level.SetObj(newBullet->GetPos(), newBullet->GetSym());

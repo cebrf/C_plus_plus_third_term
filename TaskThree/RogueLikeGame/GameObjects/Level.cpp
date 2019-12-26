@@ -3,9 +3,9 @@
 Level::Level() :
     levelNumber(0),
     levelStatus(0),
-    trophy(std::shared_ptr<Trophy>(new Trophy(Point(-1, -1), ' '))),
-    player(std::shared_ptr<Player>(new Player())),
-    firstAidKitType(std::shared_ptr<FirstAidKit>(new FirstAidKit(Point(-1, -1), ' ', -1))) { }
+    trophy(std::make_shared<Trophy>(Point(-1, -1), ' ')),
+    player(std::make_shared<Player>()),
+    firstAidKitType(std::make_shared<FirstAidKit>(Point(-1, -1), ' ', -1)) { }
 
 void Level::ReadMap(int levelNumber)
 {
@@ -51,11 +51,11 @@ void Level::GetCharactersTypes(const int levelNumber)
         std::string symE = enemy.value()["sym"];
         colours.emplace(symE[0], enemy.value()["colour"]);
         if (enemy.value()["shootingDamage"] > 0)
-            enemiesTypes.emplace(symE[0], std::shared_ptr<ICharacter>(new ShootingEnemy(Point(-1, -1), symE[0],
-                enemy.value()["hp"], enemy.value()["xp"], enemy.value()["damage"], enemy.value()["maxHp"], enemy.value()["shootingDamage"])));
+            enemiesTypes.emplace(symE[0], std::make_shared<ShootingEnemy>(Point(-1, -1), symE[0],
+                enemy.value()["hp"], enemy.value()["xp"], enemy.value()["damage"], enemy.value()["maxHp"], enemy.value()["shootingDamage"]));
         else
-            enemiesTypes.emplace(symE[0], std::shared_ptr<ICharacter>(new Enemy(Point(-1, -1), symE[0],
-                enemy.value()["hp"], enemy.value()["xp"], enemy.value()["damage"], enemy.value()["maxHp"])));
+            enemiesTypes.emplace(symE[0], std::make_shared<Enemy>(Point(-1, -1), symE[0],
+                enemy.value()["hp"], enemy.value()["xp"], enemy.value()["damage"], enemy.value()["maxHp"]));
     }
 }
 
@@ -70,17 +70,17 @@ void Level::FindGameObjects()
             else if (levelMap[i][j] == trophy->GetSym())
                 trophy->SetPos(Point(i + 1, j + 1));
             else if (levelMap[i][j] == firstAidKitType->GetSym())
-                firstAidKits.emplace(Point(i + 1, j + 1), std::shared_ptr<FirstAidKit>(new FirstAidKit(Point(i + 1, j + 1),
-                    firstAidKitType->GetSym(), firstAidKitType->GetHealingForce())));
+                firstAidKits.emplace(Point(i + 1, j + 1), std::make_shared<FirstAidKit>(Point(i + 1, j + 1),
+                    firstAidKitType->GetSym(), firstAidKitType->GetHealingForce()));
             else if (enemiesTypes.find(levelMap[i][j]) != enemiesTypes.end())
             {
                 std::shared_ptr<ICharacter> enemy = enemiesTypes.find(levelMap[i][j])->second;
                 if (enemy->GetShootingDamage() > 0)
-                    enemiesContainer.push_back(std::shared_ptr<ICharacter>(new ShootingEnemy(Point(i + 1, j + 1),
-                        levelMap[i][j], enemy->GetHp(), enemy->GetXp(), enemy->GetDamage(), enemy->GetMaxHp(), enemy->GetShootingDamage())));
+                    enemiesContainer.push_back(std::make_shared<ShootingEnemy>(Point(i + 1, j + 1),
+                        levelMap[i][j], enemy->GetHp(), enemy->GetXp(), enemy->GetDamage(), enemy->GetMaxHp(), enemy->GetShootingDamage()));
                 else
-                    enemiesContainer.push_back(std::shared_ptr<ICharacter>(new Enemy(Point(i + 1, j + 1),
-                        levelMap[i][j], enemy->GetHp(), enemy->GetXp(), enemy->GetDamage(), enemy->GetMaxHp())));
+                    enemiesContainer.push_back(std::make_shared<Enemy>(Point(i + 1, j + 1),
+                        levelMap[i][j], enemy->GetHp(), enemy->GetXp(), enemy->GetDamage(), enemy->GetMaxHp()));
             }
         }
     }

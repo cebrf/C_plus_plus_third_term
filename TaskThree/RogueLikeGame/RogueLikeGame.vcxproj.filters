@@ -105,12 +105,10 @@
   <ItemGroup>
     <Text Include="level1.txt" />
     <Text Include="level2.txt" />
-    <Text Include="level3.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="enemiesLevel1.json" />
     <None Include="enemiesLevel2.json" />
     <None Include="save.json" />
-    <None Include="enemiesLevel3.json" />
   </ItemGroup>
 </Project>
