@@ -46,7 +46,7 @@ void ShootingEnemy::collideWith(Bullet & bullet, Level& level)
     if (this->GetHp() <= 0)
     {
         if (level.player->GetShootingDamage())
-            level.player->SetXp(level.player->GetXp() + this->GetXp());
+           level.player->SetXp(level.player->GetXp() + this->GetXp());
         level.SetObj(this->GetPos(), ' ');
         level.enemies.erase(this->GetPos());
     }

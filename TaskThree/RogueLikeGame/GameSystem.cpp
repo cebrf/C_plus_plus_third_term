@@ -35,13 +35,19 @@ void GameSystem::Play()
         }
 
         {
-            level.bulletsContainer.clear();
-            for (auto bullet = level.bullets.begin(); bullet != level.bullets.end(); bullet++)
-                level.bulletsContainer.push_back(bullet->second);
-
             for (auto bullet = level.bulletsContainer.begin(); bullet != level.bulletsContainer.end(); bullet++)
                 if (level.bullets.find((*bullet)->GetPos()) != level.bullets.end())
                     (*bullet)->Update(level);
+
+            /*level.bulletsContainer.clear();
+            for (auto bullet = level.bullets.begin(); bullet != level.bullets.end(); bullet++)
+                level.bulletsContainer.push_back(bullet->second);*/
+
+            for (int i = 0; i < level.bulletsContainer.size(); i++)
+            {
+                if (level.bullets.find(level.bulletsContainer[i]->GetPos()) == level.bullets.end())
+                    level.bulletsContainer.erase(next(level.bulletsContainer.begin(), i));
+            }
         }
 
         for (int e = 0; e < 5; e++)

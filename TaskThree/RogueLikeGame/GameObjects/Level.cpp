@@ -97,7 +97,7 @@ void Level::PrintLevel()
         wmove(&*levelWin, i + 1, 1);
         for (int j = 0; j < levelMap[i].size(); j++)
         {
-            //if (std::abs(player->GetPos().x - i - 1) <= 5 && std::abs(player->GetPos().y - j - 1) <= 10)
+            if (std::abs(player->GetPos().x - i - 1) <= 5 && std::abs(player->GetPos().y - j - 1) <= 10)
             {
                 switch (levelMap[i][j])
                 {
@@ -118,12 +118,12 @@ void Level::PrintLevel()
                     wattroff(&*levelWin, COLOR_PAIR(colours[levelMap[i][j]]));
                 }
             }
-            /*else
+            else
             {
                 wattron(&*levelWin, COLOR_PAIR(4));
                 waddch(&*levelWin, '?');
                 wattroff(&*levelWin, COLOR_PAIR(4));
-            }*/
+            }
         }
     }
     wrefresh(&*levelWin);
