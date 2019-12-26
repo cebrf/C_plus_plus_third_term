@@ -1,7 +1,7 @@
 #include "ShootingEnemy.h"
 
-ShootingEnemy::ShootingEnemy(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage) :
-    IShootingCharacter(pos, sym, hp, damage, maxHp, shootingDamage) { };
+ShootingEnemy::ShootingEnemy(Point pos, char sym, int hp, int xp, int damage, int maxHp, int shootingDamage) :
+    IShootingCharacter(pos, sym, hp, xp, damage, maxHp, shootingDamage) { };
 
 ShootingEnemy::~ShootingEnemy() = default;
 

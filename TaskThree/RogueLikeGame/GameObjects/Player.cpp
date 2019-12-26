@@ -1,10 +1,10 @@
 #include "Player.h"
 
 Player::Player() :
-    IShootingCharacter(Point(-1, -1), ' ', -1, -1, -1, -1) { };
+    IShootingCharacter(Point(-1, -1), ' ', -1, 0, -1, -1, -1) { };
 
-Player::Player(Point pos, char sym, int hp, int damage, int maxHp, int shootingDamage) :
-    IShootingCharacter(pos, sym, hp, damage, maxHp, shootingDamage) { };
+Player::Player(Point pos, char sym, int hp, int xp, int damage, int maxHp, int shootingDamage) :
+    IShootingCharacter(pos, sym, hp, hp, damage, maxHp, shootingDamage) { };
 
 Player::~Player() = default;
 

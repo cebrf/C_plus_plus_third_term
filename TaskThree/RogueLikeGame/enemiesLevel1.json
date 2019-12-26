@@ -20,6 +20,7 @@
     {
       "sym": "z",
       "hp": 30,
+      "xp": 10,
       "damage": 10,
       "maxHp": 30,
       "shootingDamage": 0,
@@ -28,6 +29,7 @@
     {
       "sym": "s",
       "hp": 20,
+      "xp": 15,
       "damage": 5,
       "maxHp": 20,
       "shootingDamage": 3,

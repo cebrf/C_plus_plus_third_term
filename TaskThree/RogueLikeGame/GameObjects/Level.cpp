@@ -49,10 +49,10 @@ void Level::GetCharactersTypes(const int levelNumber)
         colours.emplace(symE[0], enemy.value()["colour"]);
         if (enemy.value()["shootingDamage"] > 0)
             enemiesTypes.emplace(symE[0], std::shared_ptr<ICharacter>(new ShootingEnemy(Point(-1, -1), symE[0],
-                enemy.value()["hp"], enemy.value()["damage"], enemy.value()["maxHp"], enemy.value()["shootingDamage"])));
+                enemy.value()["hp"], enemy.value()["xp"], enemy.value()["damage"], enemy.value()["maxHp"], enemy.value()["shootingDamage"])));
         else
             enemiesTypes.emplace(symE[0], std::shared_ptr<ICharacter>(new Enemy(Point(-1, -1), symE[0],
-                enemy.value()["hp"], enemy.value()["damage"], enemy.value()["maxHp"])));
+                enemy.value()["hp"], enemy.value()["xp"], enemy.value()["damage"], enemy.value()["maxHp"])));
     }
 }
 
@@ -74,10 +74,10 @@ void Level::FindGameObjects()
                 std::shared_ptr<ICharacter> enemy = enemiesTypes.find(levelMap[i][j])->second;
                 if (enemy->GetShootingDamage() > 0)
                     enemiesContainer.push_back(std::shared_ptr<ICharacter>(new ShootingEnemy(Point(i + 1, j + 1),
-                        levelMap[i][j], enemy->GetHp(), enemy->GetDamage(), enemy->GetMaxHp(), enemy->GetShootingDamage())));
+                        levelMap[i][j], enemy->GetHp(), enemy->GetXp(), enemy->GetDamage(), enemy->GetMaxHp(), enemy->GetShootingDamage())));
                 else
                     enemiesContainer.push_back(std::shared_ptr<ICharacter>(new Enemy(Point(i + 1, j + 1),
-                        levelMap[i][j], enemy->GetHp(), enemy->GetDamage(), enemy->GetMaxHp())));
+                        levelMap[i][j], enemy->GetHp(), enemy->GetXp(), enemy->GetDamage(), enemy->GetMaxHp())));
             }
         }
     }

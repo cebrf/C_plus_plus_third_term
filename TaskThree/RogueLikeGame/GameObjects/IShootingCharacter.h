@@ -8,7 +8,7 @@ class IShootingCharacter :
 public:
 
 protected:
-    IShootingCharacter(Point, char, int, int, int, int);
+    IShootingCharacter(Point, char, int, int, int, int, int);
     ~IShootingCharacter();
 
 

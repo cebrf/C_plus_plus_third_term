@@ -13,7 +13,7 @@ class Enemy :
     public ICharacter
 {
 public:
-    Enemy(Point, char, int, int, int);
+    Enemy(Point, char, int, int, int, int);
     ~Enemy();
 
     char GetAction(WINDOW&) override;

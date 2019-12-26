@@ -12,7 +12,7 @@ class ShootingEnemy :
     public IShootingCharacter
 {
 public:
-    ShootingEnemy(Point, char, int, int, int, int);
+    ShootingEnemy(Point, char, int, int, int, int, int);
     ~ShootingEnemy();
 
     char GetAction(WINDOW&) override;
