@@ -83,7 +83,7 @@ void play()
             json save;
             saveFile >> save;
             if (save["levelNum"] > 1)
-                game.Start(save["levelNum"], save["hp"]);
+                game.Start(save["levelNum"], save["hp"], save["xp"]);
             continue;
         }
         if (choices[choice] == "Try again")
@@ -91,7 +91,7 @@ void play()
             std::fstream saveFile("save.json");
             json save;
             saveFile >> save;
-            game.Start(save["levelNum"], save["hp"]);
+            game.Start(save["levelNum"], save["hp"], save["xp"]);
             continue;
         }
         if (choices[choice] == "Exit")

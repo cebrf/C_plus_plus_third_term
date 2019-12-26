@@ -32,6 +32,7 @@ void Player::collideWith(Enemy& enemy, Level& level)
     enemy.SetHp(std::max(0, enemy.GetHp() - this->GetDamage()));
     if (enemy.GetHp() <= 0)
     {
+        this->SetXp(this->GetXp() + enemy.GetXp());
         level.SetObj(enemy.GetPos(), ' ');
         level.enemies.erase(enemy.GetPos());
     }
@@ -41,7 +42,8 @@ void Player::collideWith(Player& player, Level& level) { }
 
 void Player::collideWith(Bullet& bullet, Level& level)
 {
-    this->SetHp(std::max(0, this->GetHp() - bullet.GetDamage()));
+    if (this->GetShootingDamage() != bullet.GetDamage())
+        this->SetHp(std::max(0, this->GetHp() - bullet.GetDamage()));
     if (this->GetHp() <= 0)
     {
         level.SetObj(this->GetPos(), ' ');
@@ -56,6 +58,7 @@ void Player::collideWith(ShootingEnemy& shootingEnemy, Level& level)
     shootingEnemy.SetHp(std::max(0, shootingEnemy.GetHp() - this->GetDamage()));
     if (shootingEnemy.GetHp() <= 0)
     {
+        this->SetXp(this->GetXp() + shootingEnemy.GetXp());
         level.SetObj(shootingEnemy.GetPos(), ' ');
         level.enemies.erase(shootingEnemy.GetPos());
     }

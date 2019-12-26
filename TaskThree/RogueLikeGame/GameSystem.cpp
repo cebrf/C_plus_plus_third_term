@@ -2,10 +2,13 @@
 
 GameSystem::GameSystem() { }
 
-void GameSystem::Start(int levelNumber, int hp)
+void GameSystem::Start(int levelNumber, int hp, int xp)
 {
     if (hp > 0)
+    {
         level.player->SetHp(hp);
+        level.player->SetXp(xp);
+    }
     level.levelNumber = levelNumber - 1;
     level.NextLevel();
     Play();
@@ -32,13 +35,13 @@ void GameSystem::Play()
         }
 
         {
-            for (auto bullet = level.bulletsContainer.begin(); bullet != level.bulletsContainer.end(); bullet++)
-                if (level.bullets.find((*bullet)->GetPos()) != level.bullets.end())
-                    (*bullet)->Update(level);
-
             level.bulletsContainer.clear();
             for (auto bullet = level.bullets.begin(); bullet != level.bullets.end(); bullet++)
                 level.bulletsContainer.push_back(bullet->second);
+
+            for (auto bullet = level.bulletsContainer.begin(); bullet != level.bulletsContainer.end(); bullet++)
+                if (level.bullets.find((*bullet)->GetPos()) != level.bullets.end())
+                    (*bullet)->Update(level);
         }
 
         for (int e = 0; e < 5; e++)

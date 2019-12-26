@@ -20,7 +20,7 @@ class GameSystem
 {
 public:
     GameSystem();
-    void Start(int, int = 0);
+    void Start(int, int = 0, int = 0);
     int GetGameStatus();
     int GetLevelNum();
 

@@ -28,7 +28,10 @@ void Level::GetCharactersTypes(const int levelNumber)
     std::string symP = j["player"]["sym"];
     player->SetSym(symP[0]);
     if (levelNumber == 1)
+    {
         player->SetHp(j["player"]["hp"]);
+        player->SetXp(0);
+    }
     player->SetDamage(j["player"]["damage"]);
     player->SetMaxHp(j["player"]["maxHp"]);
     player->SetShootingDamage(j["player"]["shootingDamage"]);
@@ -94,7 +97,7 @@ void Level::PrintLevel()
         wmove(&*levelWin, i + 1, 1);
         for (int j = 0; j < levelMap[i].size(); j++)
         {
-            if (std::abs(player->GetPos().x - i - 1) <= 5 && std::abs(player->GetPos().y - j - 1) <= 10)
+            //if (std::abs(player->GetPos().x - i - 1) <= 5 && std::abs(player->GetPos().y - j - 1) <= 10)
             {
                 switch (levelMap[i][j])
                 {
@@ -115,12 +118,12 @@ void Level::PrintLevel()
                     wattroff(&*levelWin, COLOR_PAIR(colours[levelMap[i][j]]));
                 }
             }
-            else
+            /*else
             {
                 wattron(&*levelWin, COLOR_PAIR(4));
                 waddch(&*levelWin, '?');
                 wattroff(&*levelWin, COLOR_PAIR(4));
-            }
+            }*/
         }
     }
     wrefresh(&*levelWin);
@@ -176,11 +179,11 @@ void Level::PrintPLayerStatus()
     int height, width;
     getmaxyx(&*playerStatus, height, width);
     mvwprintw(&*playerStatus, 0, width / 2 - 3, "[Info]");
-    mvwprintw(&*playerStatus, 6, 4, "%s%d", "Hp: ", player->GetHp());
-    //mvwprintw(&*playerStatus, 6, 4, "%s%d", "Xp: ", player->GetXp());
-    mvwprintw(&*playerStatus, 9, 4, "%s%d", "Damage: ", player->GetDamage());
-    mvwprintw(&*playerStatus, 12, 4, "Shooting");
-    mvwprintw(&*playerStatus, 13, 6, "%s%d", "Damage: ", player->GetShootingDamage());
+    mvwprintw(&*playerStatus, 4, 4, "%s%d", "Hp: ", player->GetHp());
+    mvwprintw(&*playerStatus, 7, 4, "%s%d", "Xp: ", player->GetXp());
+    mvwprintw(&*playerStatus, 10, 4, "%s%d", "Damage: ", player->GetDamage());
+    mvwprintw(&*playerStatus, 13, 4, "Shooting");
+    mvwprintw(&*playerStatus, 14, 6, "%s%d", "Damage: ", player->GetShootingDamage());
     wrefresh(&*playerStatus);
 }
 
@@ -302,6 +305,7 @@ void Level::NextLevel()
     json save;
     save["levelNum"] = levelNumber;
     save["hp"] = player->GetHp();
+    save["xp"] = player->GetXp();
     std::ofstream saveFile("save.json");
     saveFile << save;
 }
