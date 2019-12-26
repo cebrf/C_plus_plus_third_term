@@ -5,6 +5,9 @@
 
 using namespace std;
 
+#define _WIN32_WINNT 0x0500
+#include <windows.h>
+
 void play()
 {
     initscr();
@@ -13,7 +16,7 @@ void play()
     cbreak();
     int height, width;
     getmaxyx(stdscr, height, width);
-    int startX = height / 4, startY = width / 6;
+    int startX = height / 4, startY = width / 4;
     std::shared_ptr<WINDOW> menuWin = std::shared_ptr<WINDOW>(newwin(height / 2, width / 2, startX, startY));
     GameSystem game;
     
@@ -100,6 +103,11 @@ void play()
 
 int main()
 {
+    HWND consoleWindow = GetConsoleWindow();
+    SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE)
+        & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX);
+
+
     play();
     return 0;
 }

@@ -172,11 +172,15 @@ void Level::CreateWPlayerStatus()
 void Level::PrintPLayerStatus()
 {
     wclear(&*playerStatus);
+    box(&*playerStatus, 0, 0);
     int height, width;
     getmaxyx(&*playerStatus, height, width);
     mvwprintw(&*playerStatus, 0, width / 2 - 3, "[Info]");
-    std::string massage = "Hp: " + std::to_string(player->GetHp());
-    mvwprintw(&*playerStatus, 2, 5, massage.c_str());
+    mvwprintw(&*playerStatus, 6, 4, "%s%d", "Hp: ", player->GetHp());
+    //mvwprintw(&*playerStatus, 6, 4, "%s%d", "Xp: ", player->GetXp());
+    mvwprintw(&*playerStatus, 9, 4, "%s%d", "Damage: ", player->GetDamage());
+    mvwprintw(&*playerStatus, 12, 4, "Shooting");
+    mvwprintw(&*playerStatus, 13, 6, "%s%d", "Damage: ", player->GetShootingDamage());
     wrefresh(&*playerStatus);
 }
 
