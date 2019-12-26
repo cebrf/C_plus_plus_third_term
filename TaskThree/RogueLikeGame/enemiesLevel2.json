@@ -43,6 +43,15 @@
       "maxHp": 20,
       "shootingDamage": 5,
       "colour": 2
+    },
+    {
+      "sym": "q",
+      "hp": 2,
+      "xp": 1,
+      "damage": 1,
+      "maxHp": 2,
+      "shootingDamage": 1,
+      "colour": 2
     }
   ]
 }

@@ -267,7 +267,10 @@ void Level::EscMenu()
         json save;
         saveFile >> save;
         if (save["levelNum"] > 0)
+        {
             player->SetHp(save["hp"]);
+            player->SetXp(save["xp"]);
+        }
         levelNumber = save["levelNum"] - 1;
         NextLevel();
         return;
